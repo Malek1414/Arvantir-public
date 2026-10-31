@@ -200,7 +200,8 @@ def next_page(soup: BeautifulSoup, base: str, seen: set) -> Optional[str]:
 NAV_NOISE = re.compile(r"(navigation|sprungziel|impressum|datenschutz|kontakt|startseite|öffnet|cookie|"
                        r"login|anmelden|newsletter|suche|menü|menu|barrierefrei|hauptinhalt|zum inhalt|"
                        r"nach oben|drucken|teilen|sitemap|agb|presse|karriere|über uns|footer|header|"
-                       r"geschäftsstelle|vorstand|mitglied werden|termine|aktuelles|downloads)", re.I)
+                       r"geschäftsstelle|vorstand|mitglied werden|termine|aktuelles|downloads|^details$|^mehr erfahren$|"
+                       r"^weiterlesen$|^zum profil$|^mehr$)", re.I)
 
 
 def company_like(e: Dict) -> bool:

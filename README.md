@@ -1,6 +1,6 @@
 # Arvantir
 
-> Public snapshot of our private dev repo from the GTM Hackathon Berlin (31 Oct 2026). Internal notes, the kickoff recording and the scraped training data are left out.
+> Public snapshot of our private dev repo from the GTM Hackathon Berlin (31 Oct 2026). Internal notes, the kickoff recording, the pitch workspace and the scraped training data are left out.
 
 **GTM Hackathon Berlin, Halloween Edition** (hosted by Arvana × GTMengineer.dev), 31 Oct 2026.
 

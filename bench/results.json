@@ -1,0 +1,294 @@
+{
+ "mode": "gold",
+ "pairs": 330,
+ "labelers": [
+  "gold"
+ ],
+ "results": [
+  {
+   "system": "Feste Gewichte (Tier A-D)",
+   "n": 330,
+   "ndcg10": 0.6084849879411748,
+   "mrr": 0.25,
+   "tau": 0.5051904897594527,
+   "agree": 0.7964111207170075,
+   "needs_human": 0.0,
+   "ms_per_lead": 0.34334659576416016,
+   "per_group": [
+    {
+     "group": "lead:aerzte_apotheken",
+     "n": 41,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 0.8292682926829268
+    },
+    {
+     "group": "lead:family_offices",
+     "n": 19,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 0.8421052631578947
+    },
+    {
+     "group": "lead:immobilien_asset_manager",
+     "n": 20,
+     "ndcg10": 0.9930783166417603,
+     "mrr": 1.0,
+     "tau": 0.6902709054440107,
+     "agree": 0.9
+    },
+    {
+     "group": "source:baeckereien_metzgereien",
+     "n": 1,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 1.0
+    },
+    {
+     "group": "lead:baeckereien_metzgereien",
+     "n": 49,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 0.8163265306122449
+    },
+    {
+     "group": "lead:it_dienstleister",
+     "n": 50,
+     "ndcg10": 0.3180177908183378,
+     "mrr": 0.25,
+     "tau": 0.17426892865734195,
+     "agree": 0.78
+    },
+    {
+     "group": "lead:maschinenbau",
+     "n": 50,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 0.98
+    },
+    {
+     "group": "lead:steuerberater",
+     "n": 50,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 0.52
+    },
+    {
+     "group": "lead:waschanlagen",
+     "n": 50,
+     "ndcg10": 0.5143588563634262,
+     "mrr": 1.0,
+     "tau": 0.6510316351770055,
+     "agree": 0.5
+    }
+   ],
+   "cost_per_1000": 0.0
+  },
+  {
+   "system": "mMiniLM Basis",
+   "n": 330,
+   "ndcg10": 0.45551087456767986,
+   "mrr": 0.15669515669515668,
+   "tau": 0.2453696908787212,
+   "agree": 0.949954648526077,
+   "needs_human": 0.0,
+   "ms_per_lead": 15.737878915035363,
+   "per_group": [
+    {
+     "group": "lead:aerzte_apotheken",
+     "n": 41,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 1.0
+    },
+    {
+     "group": "lead:family_offices",
+     "n": 19,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 1.0
+    },
+    {
+     "group": "lead:immobilien_asset_manager",
+     "n": 20,
+     "ndcg10": 0.8829374068620365,
+     "mrr": 1.0,
+     "tau": 0.5224292591605755,
+     "agree": 0.85
+    },
+    {
+     "group": "source:baeckereien_metzgereien",
+     "n": 1,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 1.0
+    },
+    {
+     "group": "lead:baeckereien_metzgereien",
+     "n": 49,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 0.9795918367346939
+    },
+    {
+     "group": "lead:it_dienstleister",
+     "n": 50,
+     "ndcg10": 0.017600599789436892,
+     "mrr": 0.07692307692307693,
+     "tau": 0.011304668378884431,
+     "agree": 0.84
+    },
+    {
+     "group": "lead:maschinenbau",
+     "n": 50,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 1.0
+    },
+    {
+     "group": "lead:steuerberater",
+     "n": 50,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 0.98
+    },
+    {
+     "group": "lead:waschanlagen",
+     "n": 50,
+     "ndcg10": 0.46599461705156625,
+     "mrr": 0.3333333333333333,
+     "tau": 0.20237514509670373,
+     "agree": 0.9
+    }
+   ],
+   "cost_per_1000": 0.0
+  },
+  {
+   "system": "mMiniLM fine-tuned (arvantir-rr-v1)",
+   "n": 330,
+   "ndcg10": 0.7636873169375594,
+   "mrr": 0.2777777777777778,
+   "tau": 0.5274849116873713,
+   "agree": 0.9844444444444443,
+   "needs_human": 0.0,
+   "ms_per_lead": 16.57191478844845,
+   "per_group": [
+    {
+     "group": "lead:aerzte_apotheken",
+     "n": 41,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 1.0
+    },
+    {
+     "group": "lead:family_offices",
+     "n": 19,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 1.0
+    },
+    {
+     "group": "lead:immobilien_asset_manager",
+     "n": 20,
+     "ndcg10": 1.0,
+     "mrr": 1.0,
+     "tau": 0.6649099662043687,
+     "agree": 1.0
+    },
+    {
+     "group": "source:baeckereien_metzgereien",
+     "n": 1,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 1.0
+    },
+    {
+     "group": "lead:baeckereien_metzgereien",
+     "n": 49,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 1.0
+    },
+    {
+     "group": "lead:it_dienstleister",
+     "n": 50,
+     "ndcg10": 0.8978986743304611,
+     "mrr": 1.0,
+     "tau": 0.3472148144943075,
+     "agree": 0.96
+    },
+    {
+     "group": "lead:maschinenbau",
+     "n": 50,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 1.0
+    },
+    {
+     "group": "lead:steuerberater",
+     "n": 50,
+     "ndcg10": NaN,
+     "mrr": 0.0,
+     "tau": NaN,
+     "agree": 1.0
+    },
+    {
+     "group": "lead:waschanlagen",
+     "n": 50,
+     "ndcg10": 0.3931632764822172,
+     "mrr": 0.5,
+     "tau": 0.5703299543634378,
+     "agree": 0.9
+    }
+   ],
+   "cost_per_1000": 0.0
+  },
+  {
+   "system": "mMiniLM fine-tuned, Nische ungesehen (LONO)",
+   "n": 70,
+   "ndcg10": 0.893525088406975,
+   "mrr": 1.0,
+   "tau": 0.5812265900945238,
+   "agree": 0.81,
+   "needs_human": 0.11428571428571432,
+   "ms_per_lead": 12.158175877162389,
+   "per_group": [
+    {
+     "group": "lead:immobilien_asset_manager",
+     "n": 20,
+     "ndcg10": 0.9876712785649564,
+     "mrr": 1.0,
+     "tau": 0.6332475868613036,
+     "agree": 0.7
+    },
+    {
+     "group": "lead:waschanlagen",
+     "n": 50,
+     "ndcg10": 0.7993788982489934,
+     "mrr": 1.0,
+     "tau": 0.5292055933277441,
+     "agree": 0.92
+    }
+   ],
+   "note": "2 Gruppen, je Nische das Modell ohne diese Nische",
+   "cost_per_1000": 0.0
+  }
+ ]
+}

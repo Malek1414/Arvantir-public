@@ -97,6 +97,38 @@ def understand(seed: str) -> Dict:
     }
 
 
+SINGULAR = {"ärzte": "arzt", "zahnärzte": "zahnarzt", "steuerberater": "steuerberater",
+            "family offices": "family office", "lps": "vermögensverwaltung"}
+CITIES = ["berlin", "münchen"]
+
+
+def _singular(word: str) -> str:
+    w = word.strip().lower()
+    if w in SINGULAR:
+        return SINGULAR[w]
+    if w.endswith("eien"):
+        return w[:-2]          # bäckereien -> bäckerei
+    if w.endswith("en") and not w.endswith("leister"):
+        return w[:-1]          # apotheken -> apotheke, waschanlagen -> waschanlage
+    return w
+
+
+def branchenbuch(niche: str) -> List[Dict]:
+    """Rückfall für lokale Betriebe: Gelbe Seiten je Nischen-Teil und Stadt (statisches HTML, Name + PLZ)."""
+    from urllib.parse import quote
+    parts = [p for p in re.split(r"\s*(?:&|\bund\b|,|/)\s*", niche) if len(p.strip()) > 2]
+    out = []
+    for p in parts:
+        term = _singular(p)
+        for city in CITIES:
+            out.append({"url": f"https://www.gelbeseiten.de/suche/{quote(term)}/{quote(city)}",
+                        "title": f"Branchenbuch: {p} in {city.title()}",
+                        "content": f"Branchenbuch-Liste vieler {p} Betriebe in {city.title()} mit Adresse, "
+                                   f"Postleitzahl und Website. Verzeichnis lokaler Firmen.",
+                        "origin": "branchenbuch"})
+    return out
+
+
 def curated(niche: str) -> List[Dict]:
     """Quellen aus der Recherche des Searchify-Terminals, passend zur Nische."""
     path = ROOT / "research" / "sources.json"
@@ -131,7 +163,7 @@ def discover(seed: str, limit: int = 15, per_query: int = 8) -> Dict:
             seen.add(key)
             hits.append({"url": url, "title": h.get("title", ""),
                          "content": h.get("content", ""), "origin": f"suche: {q}"})
-    for c in curated(plan["niche"]):
+    for c in curated(plan["niche"]) + branchenbuch(plan["niche"]):
         key = c["url"].rstrip("/")
         if key not in seen:
             seen.add(key)
@@ -142,11 +174,12 @@ def discover(seed: str, limit: int = 15, per_query: int = 8) -> Dict:
     for h, d, s in zip(hits, docs, raw):
         h["doc"] = d
         h["score"] = to_100(s)
-        if h["origin"] == "kuratiert":  # vom Menschen geprüft, leicht vorziehen
+        if h["origin"] in ("kuratiert", "branchenbuch"):  # geprüft bzw. verlässlich lesbar, leicht vorziehen
             h["score"] = min(100, h["score"] + 10)
-        h["type"] = _guess_type(h["url"], h["title"] + " " + h["content"])
+        h["type"] = "Branchenbuch" if h["origin"] == "branchenbuch" else \
+            _guess_type(h["url"], h["title"] + " " + h["content"])
         h["reason"] = (h["content"] or h["title"])[:180]
-    hits = [h for h in hits if h["origin"] == "kuratiert" or h["score"] >= MIN_SCORE]
+    hits = [h for h in hits if h["origin"] in ("kuratiert", "branchenbuch") or h["score"] >= MIN_SCORE]
     hits.sort(key=lambda h: -h["score"])
     log_pairs("source", plan["niche"], plan["list_query"], hits, "doc")
     return {**plan, "sources": hits[:limit], "candidates_total": len(hits)}

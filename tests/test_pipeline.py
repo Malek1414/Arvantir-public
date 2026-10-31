@@ -77,3 +77,22 @@ def test_cell(v, exp):
 def test_icp_for_picks_matching_niche():
     icp = p.icp_for("Waschanlagen")
     assert "Waschanlagen" in icp or "Waschstraßen" in icp
+
+
+def test_foreign_seat_caps_tier():
+    from arvantir.pipeline import foreign_seat
+    assert foreign_seat({"name": "Atman sp. z o.o.", "website": "https://www.atman.pl/"})
+    assert foreign_seat({"name": "Generali Asset Management S.p.A."})
+    assert foreign_seat({"name": "Celeste", "website": "http://www.celeste.fr"})
+    assert not foreign_seat({"name": "M&G Luxembourg S.A., Niederlassung Deutschland"})
+    assert not foreign_seat({"name": "adesso as a service GmbH", "website": "https://www.adesso-service.com"})
+    assert not foreign_seat({"name": "Euro Apotheke", "website": "https://euro-apotheke.de"})
+
+
+def test_chain_without_website_collapses_by_name():
+    from arvantir.pipeline import collapse_chains
+    c = [{"name": "Esso", "postcode": "10115"}, {"name": "ESSO", "postcode": "80331"},
+         {"name": "Max AutoWasch", "postcode": "12489"}]
+    r = collapse_chains(c)
+    assert len(r) == 2 and r[0]["kette"] and r[0]["niche_fields"]["filialen"] == 2
+    assert not r[1].get("kette")

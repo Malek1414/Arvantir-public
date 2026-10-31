@@ -24,6 +24,10 @@ ROLE = re.compile(
     r"\s*[:\-–]?\s*", re.I)
 NAME = re.compile(r"^(?:(?:Dr|Prof|Dipl\.-\w+)\.?\s+)*[A-ZÄÖÜ][a-zäöüß]+(?:-[A-ZÄÖÜ][a-zäöüß]+)?"
                   r"(?:\s+(?:von|van|de|der|zu|vom)\b)?(?:\s+[A-ZÄÖÜ][a-zäöüß]+(?:-[A-ZÄÖÜ][a-zäöüß]+)?){1,2}$")
+# Kein Personenname: Behörden, Kammern, Länder, Rechts-/Berufsangaben (Bug 14:55: "Bundesrepublik Deutschland (Apothekerin)")
+NOT_A_NAME = re.compile(r"\b(Bundesrepublik|Deutschland|Österreich|Schweiz|Kammer|\w*kammer|Amtsgericht|Behörde|Aufsicht|"
+                        r"Ministerium|Regierungspräsidium|Gesundheitsamt|Landkreis|Landesamt|Bundesamt|Verband|"
+                        r"Berufsbezeichnung|Berufsordnung|Approbation|Datenschutz|Impressum|Kontakt|Telefon|Straße)\b", re.I)
 EMAIL = re.compile(r"[A-Za-z0-9._%+\-]+\s?(?:@|\(at\)|\[at\]|\sat\s)\s?[A-Za-z0-9.\-]+\s?(?:\.|\(dot\)|\[dot\])\s?[A-Za-z]{2,}")
 PHONE = re.compile(r"(?:Tel(?:efon)?|Fon|Phone|T)\.?\s*[:\-]?\s*(\+?[\d][\d\s/()\-.]{5,}\d)", re.I)
 FAX = re.compile(r"(?:Tele)?[Ff]ax\.?\s*[:\-]?\s*(\+?[\d][\d\s/()\-.]{5,}\d)")
@@ -81,7 +85,8 @@ def _names_after_role(text: str) -> List[Tuple[str, str]]:
             hits = []
             for part in re.split(r",|;|\s+und\s+|\s+&\s+|\s+sowie\s+", line):
                 part = re.sub(r"\(.*?\)", "", part).strip(" .:")
-                if NAME.match(part) and not re.search(r"GmbH|AG\b|KG\b|Straße|Str\.", part):
+                if (NAME.match(part) and not re.search(r"GmbH|AG\b|KG\b|Straße|Str\.", part)
+                        and not NOT_A_NAME.search(part)):
                     hits.append((part, role))
             if not hits and (i > 0 or found):
                 break  # erste Zeile ohne Namen beendet die Liste

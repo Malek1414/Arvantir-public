@@ -49,6 +49,7 @@ def test_discover_filters_and_ranks(monkeypatch):
         "social": {"url": "https://www.linkedin.com/company/baecker", "title": "LinkedIn", "content": "x"},
     }
     monkeypatch.setattr(d, "search", lambda q, max_results=8: list(hits.values()))
+    monkeypatch.setattr(d, "branchenbuch", lambda niche: [])
     monkeypatch.setattr(d, "curated", lambda niche: [])
     seen_docs = []
 
@@ -77,6 +78,7 @@ def test_discover_dedupes_urls_and_survives_failing_search(monkeypatch):
 
     monkeypatch.setattr(d, "search", flaky)
     monkeypatch.setattr(d, "curated", lambda niche: [])
+    monkeypatch.setattr(d, "branchenbuch", lambda niche: [])
     monkeypatch.setattr(d, "rr_score", lambda q, docs: [L(90)] * len(docs))
     res = d.discover("Waschanlagen")
     assert len(res["sources"]) == 1
@@ -87,4 +89,5 @@ def test_curated_sources_get_bonus(monkeypatch):
     monkeypatch.setattr(d, "rr_score", lambda q, docs: [L(15)] * len(docs))  # 15 < MIN_SCORE
     res = d.discover("Waschanlagen")
     assert res["sources"], "kuratierte Quellen aus research/sources.json fehlen"
-    assert all(s["origin"] == "kuratiert" and s["score"] == 25 for s in res["sources"])
+    assert all(s["origin"] in ("kuratiert", "branchenbuch") and s["score"] == 25 for s in res["sources"])
+    assert any(s["origin"] == "branchenbuch" and "gelbeseiten.de/suche/waschanlage/" in s["url"] for s in res["sources"])

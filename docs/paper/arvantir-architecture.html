@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Arvantir: Architecture and Method</title>
+<style>
+@page { size: A4; margin: 18mm 17mm 20mm 17mm; @bottom-center { content: counter(page); font-size: 8.5pt; } }
+body { font-family: "Times New Roman", Times, Georgia, serif; font-size: 10.5pt; line-height: 1.38; color: #111; background: #fff; margin: 0; }
+h1 { font-size: 19pt; text-align: center; margin: 0 0 3pt; font-weight: bold; letter-spacing: .2pt; }
+.sub { text-align: center; font-size: 11.5pt; font-style: italic; margin-bottom: 8pt; }
+.authors { text-align: center; font-size: 10.5pt; margin-bottom: 2pt; }
+.affil { text-align: center; font-size: 9pt; font-style: italic; margin-bottom: 12pt; }
+.abstract { margin: 0 26pt 8pt; font-size: 9.5pt; text-align: justify; }
+.abstract b { font-variant: small-caps; }
+.keywords { margin: 0 26pt 14pt; font-size: 9pt; }
+h2 { font-size: 11.5pt; margin: 14pt 0 4pt; font-variant: small-caps; letter-spacing: .3pt; }
+h2, h3 { page-break-after: avoid; break-after: avoid; }
+h3 { font-size: 10.5pt; margin: 9pt 0 2pt; font-style: italic; font-weight: normal; }
+p { margin: 0 0 6pt; text-align: justify; hyphens: auto; }
+figure { margin: 6pt 0 12pt; page-break-inside: avoid; break-inside: avoid; }
+figcaption { font-size: 9pt; margin-top: 4pt; text-align: justify; }
+figcaption b { font-weight: bold; }
+svg text { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+table { border-collapse: collapse; width: 100%; font-size: 9pt; margin: 4pt 0 4pt; page-break-inside: avoid; }
+th, td { padding: 2.5pt 5pt; text-align: right; vertical-align: top; }
+th:first-child, td:first-child { text-align: left; }
+table.l td, table.l th { text-align: left; }
+thead th { border-top: 1.2pt solid #000; border-bottom: .6pt solid #000; font-weight: bold; }
+tbody tr:last-child td { border-bottom: 1.2pt solid #000; }
+.tbl { break-inside: avoid; page-break-inside: avoid; margin-bottom: 8pt; }
+.tcap { font-size: 9pt; margin: 8pt 0 2pt; }
+code { font-family: "Menlo", "Courier New", monospace; font-size: 8.6pt; }
+pre { font-family: "Menlo", "Courier New", monospace; font-size: 8.2pt; background: #f4f4f4; padding: 5pt 7pt; margin: 4pt 0 8pt; white-space: pre-wrap; break-inside: avoid; }
+ol, ul { margin: 0 0 6pt 16pt; padding: 0; }
+li { margin-bottom: 2pt; text-align: justify; }
+.note { font-size: 8.8pt; color: #333; }
+.pb { page-break-before: always; }
+table.cmp { font-size: 8pt; } table.cmp td, table.cmp th { padding: 2pt 3pt; border-bottom: .3pt solid #ddd; }
+.refs li { font-size: 9pt; margin-bottom: 3pt; }
+</style>
+</head>
+<body>
+
+<h1>Arvantir: Finding the Dark TAM from Public Sources</h1>
+<div class="sub">Architecture, method and evaluation of a one-day build</div>
+<div class="authors">Sami Magdouli &nbsp;&middot;&nbsp; Malek Hassan</div>
+<div class="affil">GTM Hackathon Berlin (Arvana &times; GTMengineer.dev), Track GTM Engineering, Challenge 1, 31 October 2026</div>
+
+<div class="abstract"><b>Abstract.</b> Lead databases cover companies with a digital footprint on professional networks. Local and niche businesses, such as butchers, pharmacies, car washes or real-estate asset managers, are largely missing, so outbound lists for these niches stay thin and are often sorted by hand. Arvantir is a pipeline that takes a niche in plain words and returns a ranked lead list built only from public sources. It discovers the directories where a niche is listed, extracts the companies without a hand-written scraper per site, resolves one row per company, reads the decision maker from the company's own legal notice, attaches recent buying signals, ranks every company against the client's customer profile with a cross-encoder re-ranker instead of fixed weights, and proposes a legally sound outreach channel. The output lands in the client's existing Clay workflow. We built it in about four and a half hours with two people coordinating six parallel coding agents under a strict file-ownership contract. On the day the pipeline ran end to end on six niches and ranked 347 leads, 134 of them with a named decision maker. Against an offline index of 17 million companies, 86 % of the doctors and pharmacies we found by domain were missing. A re-ranker fine-tuned on our own data reached NDCG@10 of 0.764 against 0.608 for a fixed-weight scorer on 330 hand-labelled pairs, and agreed with the hand labels on fit or no fit in 98 % of cases. We describe the architecture, the way we worked, the label-quality problems we found and fixed, what the numbers do and do not show, and how Arvantir would work together with the agency's existing stack, today and at its potential.</div>
+<div class="keywords"><b>Keywords:</b> lead generation, dark TAM, web data extraction, entity resolution, cross-encoder re-ranking, weak supervision, knowledge distillation, agentic software development.</div>
+
+<h2>1&nbsp; Introduction</h2>
+<p>Arvana is a Berlin B2B outbound agency. Its delivery chain starts from a list of companies and then researches, qualifies and writes to them. In the kickoff of the hackathon the agency named the gap that hurts most: some industries are barely present in lead databases and hard to scrape, for example bakeries, butchers, car washes, niche IT service providers, doctors and pharmacies, and, as the hard case, real-estate asset managers including their portfolio size. Many of these companies are listed somewhere public, in association member lists, partner directories, registers or comparison portals. The jury's rule for all challenges was <i>"don't show us the leads, show the engine that produces them"</i>, and it announced it would test the system on a niche we had not seen.</p>
+<p>We call the companies that no lead database knows the <b>dark TAM</b> (total addressable market). Our research the day before (Section 3.1) showed three further problems on the client side: customer complaints centred on outdated data and too few leads, replies flowed back into lead selection only by hand, and the agency told us that sorting leads with agents "doesn't work well" so they prefer to sort by hand.</p>
+<p>This paper makes five contributions:</p>
+<ol>
+<li><b>An eight-stage engine</b> that turns a niche in plain words into a ranked, deduplicated lead list with a decision maker, a reason, a source link and a channel, without per-site scrapers and without a paid API call per lead (Section 4).</li>
+<li><b>A re-ranker in place of fixed weights</b>: a 118M-parameter multilingual cross-encoder scores each company jointly with the customer profile and is fine-tuned on pairs the pipeline logs itself (Section 5).</li>
+<li><b>An honest evaluation</b> on six niches, including an offline darkness check against 17 million companies, a gold set with documented annotator disagreement, and a label-cleaning step whose effect we can trace to one concrete failure (Section 6).</li>
+<li><b>A comparison of today and potential</b>: what the agency does today, what Arvantir measurably does today, what it could do, and how both fit together (Section 7).</li>
+<li><b>A working method</b> for building such a system in one afternoon: research first, an interface contract, six coding agents with strict file ownership, an offline test suite on real saved pages, and a benchmark that is honest by construction (Section 3).</li>
+</ol>
+
+<h2>2&nbsp; Background and related work</h2>
+<h3>2.1 The client's current workflow</h3>
+<p>Arvana's go-to-market logic is public as twelve Claude Code skills in three stages (research, qualification, copy), operated from Claude Code with data in Clay tables. We read these repositories in full and recorded every claim with a source (<code>research/ARVANA_WORKFLOW.md</code>). Two findings shaped the design. First, <b>all twelve skills start from a finished list or a domain; none of them finds accounts</b>. The sourcing step is missing, and that is where Arvantir docks. Second, their <code>icp-scorer</code> grades each lead on its own with fixed weights: hard must-filters first, then per criterion full, half or zero points, with "unknown is not the same as not met" recorded as a data gap, and tiers A to D. We kept their vocabulary (tiers, confidence, data gaps, source per finding) so our output fits their chain without translation.</p>
+<h3>2.2 Searchify</h3>
+<p>Arvantir is built on Searchify, our own search, extract and re-rank package with a local search service. Searchify stays unchanged; Arvantir is the go-to-market layer on top of it. Discover, rank and signals call Searchify (dashed lines in Figure 2).</p>
+<h3>2.3 Methods we draw on</h3>
+<p><b>Re-ranking with cross-encoders.</b> A cross-encoder reads query and document together and outputs one relevance score; it is slower than a bi-encoder but much more precise, which is why it is used as the second stage of retrieval systems. We use <code>cross-encoder/mmarco-mMiniLMv2-L12-H384-v1</code>, a multilingual MiniLM trained on the translated MS MARCO passage ranking set, which handles German pages. <b>List extraction without wrappers.</b> Classic web data extraction learns a wrapper per site; we instead detect repeated record blocks by structure and content, in the spirit of record-boundary detection work. <b>Entity resolution.</b> We resolve companies with a hierarchy of keys (register number, then domain, then name plus postcode) and keep raw pages as an immutable system of record from which clean tables are derived, following the derived-data principle described by Kleppmann. <b>Weak supervision and distillation.</b> Training labels come from rules and, when available, a large teacher model; the small model then learns to imitate them, and hand labels are used only for testing.</p>
+
+<h2>3&nbsp; How we worked</h2>
+<h3>3.1 Research before code</h3>
+<p>On 30 October we ran seven research agents on the client: customer reviews, the public skills, the case study of their technical lead, pricing of lead vendors. This produced the problem statement in Section 1 and the hypothesis that a re-ranker, a reason per lead and a measured agreement with hand sorting would address the trust problem. On the day we recorded and transcribed the kickoff talk, chose Challenge 1 at noon, and wrote the plan into the repository before any code: <code>context/DARK_TAM_PLAN.md</code> (engine and build order), <code>context/FINETUNE_PLAN.md</code> (tasks, labels, splits, metrics) and <code>context/BUILD_PLAN.md</code>. A separate research terminal collected candidate sources for all six niches into <code>research/SOURCES.md</code>, and another mapped the agency's client logos to the niches their customers sell into (<code>research/ARVANA_ICPS.md</code>, <code>research/icps.json</code>), which became the customer-profile queries for the re-ranker.</p>
+<h3>3.2 Team and agents</h3>
+<p>Two people steered six Claude Code terminals that shared one working copy of the repository. Each terminal had a written assignment and owned a fixed set of files (Table 1). Sami's terminal was also the <i>join</i>: it wired the parts together, ran the tests and pushed. Malek built the stages that touch company pages and the training run.</p>
+<div class="tbl"><div class="tcap"><b>Table 1.</b> Work split (source: <code>context/ORCHESTRATION.md</code>). Every terminal commits only its own files.</div>
+<table class="l"><thead><tr><th>Terminal</th><th>Assignment</th><th>Files</th></tr></thead><tbody>
+<tr><td>Sami (join)</td><td>discover, harvest, rank, pipeline; integration, tests, push</td><td><code>arvantir/discover.py harvest.py rank.py pipeline.py</code></td></tr>
+<tr><td>Malek</td><td>normalize, darkcheck, enrich, channel, real-browser fetch; training and benchmark</td><td><code>arvantir/normalize.py darkcheck.py enrich/ channel.py</code></td></tr>
+<tr><td>Workflow</td><td>reverse-engineer the client's workflow from public repositories</td><td><code>research/ARVANA_WORKFLOW.md</code></td></tr>
+<tr><td>Format</td><td>Claude Code skill in the client's style, Clay columns, Supabase schema</td><td><code>adapters/ skills/arvantir/</code></td></tr>
+<tr><td>Learning</td><td>collect pairs over all niches, labels, training and benchmark scripts</td><td><code>finetune/ bench/</code></td></tr>
+<tr><td>Profiles</td><td>client customers and customer profiles per niche as re-ranker queries</td><td><code>research/ARVANA_ICPS.md icps.json</code></td></tr>
+</tbody></table></div>
+<p><b>Interface contract.</b> Before the split we fixed three signatures so both halves could be built in parallel: <code>discover(niche) &rarr; [Source{url, type, title, score, reason}]</code>, <code>harvest(source) &rarr; [Candidate{name, website, city, raw, source_url}]</code> and <code>rank(candidates, niche) &rarr; [Candidate + {score 0&ndash;100, reason, confidence, needs_human}]</code>. Malek's stages plugged in between harvest and rank at 13:55 without changes to either side.</p>
+<p><b>Repository rules.</b> Because all terminals share one folder, <code>git pull --rebase</code> failed on other terminals' unsaved work; we switched to fetch-and-merge before every push and pushed every 15 to 20 minutes. Files were staged by path, never with <code>git add -A</code>, so half-finished work of another terminal could not slip into a commit. Keys lived only in <code>.env</code>. Every fetch of a third-party page went through one guarded function. Agents used plain HTTP and a reader service, and never opened a visible browser without asking. The day produced 93 commits between 12:18 and 15:53.</p>
+<h3>3.3 Tests as the integration point</h3>
+<p>We saved real list pages as fixtures (association members, partner directories, a car-wash hub with state and city pages, the BaFin institution table) and wrote an offline suite that runs without network, model calls or writes to <code>data/</code>. It covers block detection, hubs, pagination, navigation noise, SSRF, ranking tiers and the human band, the funnel, CSV escaping, the adapters and the web server's host check. Known bugs were marked <code>xfail</code> so that each one turns red as soon as it is fixed. At the time of writing the suite has 126 passing tests and runs in 8.6 s. A separate live test runs one real niche and asserts at least 50 leads, spread tiers and under 120 s.</p>
+<h3>3.4 Timeline</h3>
+<figure>
+<svg viewBox="0 0 840 230" width="100%" xmlns="http://www.w3.org/2000/svg" font-size="10">
+  <g stroke="#ccc" stroke-width="1">
+    <line x1="120" y1="18" x2="120" y2="196"/><line x1="260" y1="18" x2="260" y2="196"/><line x1="400" y1="18" x2="400" y2="196"/>
+    <line x1="540" y1="18" x2="540" y2="196"/><line x1="680" y1="18" x2="680" y2="196"/><line x1="820" y1="18" x2="820" y2="196"/>
+  </g>
+  <g fill="#333" text-anchor="middle">
+    <text x="120" y="12">12:00</text><text x="260" y="12">13:00</text><text x="400" y="12">14:00</text>
+    <text x="540" y="12">15:00</text><text x="680" y="12">16:00</text><text x="820" y="12">17:00</text>
+  </g>
+  <g fill="#111">
+    <text x="4" y="38">Context, research</text>
+    <text x="4" y="64">Engine (Sami)</text>
+    <text x="4" y="90">Engine (Malek)</text>
+    <text x="4" y="116">Formats, web, tests</text>
+    <text x="4" y="142">Learning loop</text>
+    <text x="4" y="168">Pitch, paper</text>
+  </g>
+  <g fill="#3a6ea5">
+    <rect x="162" y="26" width="135" height="16"/><rect x="610" y="26" width="12" height="16"/>
+    <rect x="255" y="52" width="325" height="16"/>
+    <rect x="307" y="78" width="238" height="16"/>
+    <rect x="300" y="104" width="287" height="16"/>
+    <rect x="307" y="130" width="333" height="16"/>
+    <rect x="535" y="156" width="129" height="16"/>
+  </g>
+  <g fill="#fff" font-size="8.5">
+    <text x="166" y="37">plans, kickoff transcript, 6 niches</text>
+    <text x="259" y="63">discover, harvest, rank, pipeline, filters</text>
+    <text x="311" y="89">normalize, darkcheck, enrich, channel</text>
+    <text x="304" y="115">skill, Clay, Supabase, web, 126 tests</text>
+    <text x="311" y="141">pairs, gold, cleaning, train, benchmark</text>
+    <text x="539" y="167">script, comparison</text>
+  </g>
+  <g stroke="#b03030" stroke-width="1.2" stroke-dasharray="3 2">
+    <line x1="152" y1="20" x2="152" y2="196"/><line x1="400" y1="20" x2="400" y2="196"/>
+    <line x1="680" y1="20" x2="680" y2="196"/><line x1="820" y1="20" x2="820" y2="196"/>
+  </g>
+  <g fill="#b03030" font-size="8.5">
+    <text x="130" y="210">12:30 team locked</text>
+    <text x="360" y="210">~14:15 GPU box down,</text><text x="360" y="221">training moves to a laptop</text>
+    <text x="640" y="210">16:00 feature stop</text>
+    <text x="760" y="210">17:00 video due</text>
+  </g>
+</svg>
+<figcaption><b>Figure 1.</b> The build day, reconstructed from commit times. Research and plans came first; the two halves of the engine were built in parallel against a fixed interface and joined at 13:55; data for the learning loop was logged from the first pipeline runs on, so training could start as soon as gold labels existed.</figcaption>
+</figure>
+
+<h2>4&nbsp; System architecture</h2>
+<p>Four principles guided the design. <b>Any niche:</b> nothing may depend on knowing the niche in advance, because the jury brings its own. <b>No per-site code:</b> sources are found and read by general rules, never by a scraper written for one page. <b>Provenance first:</b> raw pages are kept unchanged; every derived field carries source URL, method, confidence and timestamp. <b>Rules outside the model:</b> hard customer-profile rules cap a tier after ranking and are never hidden as weights inside the model, so they stay visible and auditable.</p>
+<figure>
+<svg viewBox="0 0 760 430" width="100%" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#777"/></marker>
+  </defs>
+  <!-- input -->
+  <rect x="8" y="150" width="108" height="92" fill="#fff" stroke="#111" stroke-width="1.2"/>
+  <text x="62" y="172" text-anchor="middle" font-size="12" font-weight="bold">Input</text>
+  <text x="62" y="192" text-anchor="middle" font-size="10">niche in words</text>
+  <text x="62" y="207" text-anchor="middle" font-size="10">or example lead</text>
+  <text x="62" y="222" text-anchor="middle" font-size="10">+ customer profile</text>
+  <text x="62" y="235" text-anchor="middle" font-size="10">(ICP)</text>
+  <line x1="116" y1="196" x2="146" y2="196" stroke="#111" stroke-width="1.2" marker-end="url(#a)"/>
+
+  <!-- engine frame -->
+  <rect x="148" y="28" width="420" height="300" fill="none" stroke="#111" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="358" y="20" text-anchor="middle" font-size="11" font-style="italic">Arvantir engine</text>
+
+  <!-- modules: two rows of four -->
+  <g font-size="10.5">
+    <rect x="162" y="44" width="92" height="56" fill="#eef1ff" stroke="#111"/><text x="208" y="64" text-anchor="middle" font-weight="bold">1 discover</text><text x="208" y="79" text-anchor="middle" font-size="9">find the lists</text><text x="208" y="91" text-anchor="middle" font-size="9">for the niche</text>
+    <rect x="264" y="44" width="92" height="56" fill="#eef1ff" stroke="#111"/><text x="310" y="64" text-anchor="middle" font-weight="bold">2 harvest</text><text x="310" y="79" text-anchor="middle" font-size="9">read companies,</text><text x="310" y="91" text-anchor="middle" font-size="9">no page rules</text>
+    <rect x="366" y="44" width="92" height="56" fill="#fff" stroke="#111"/><text x="412" y="64" text-anchor="middle" font-weight="bold">3 normalize</text><text x="412" y="79" text-anchor="middle" font-size="9">one company,</text><text x="412" y="91" text-anchor="middle" font-size="9">one row</text>
+    <rect x="468" y="44" width="92" height="56" fill="#fff" stroke="#111"/><text x="514" y="64" text-anchor="middle" font-weight="bold">4 darkcheck</text><text x="514" y="79" text-anchor="middle" font-size="9">is it in a lead</text><text x="514" y="91" text-anchor="middle" font-size="9">database?</text>
+
+    <rect x="468" y="160" width="92" height="56" fill="#fff" stroke="#111"/><text x="514" y="180" text-anchor="middle" font-weight="bold">5 enrich</text><text x="514" y="195" text-anchor="middle" font-size="9">legal notice:</text><text x="514" y="207" text-anchor="middle" font-size="9">decision maker</text>
+    <rect x="366" y="160" width="92" height="56" fill="#fff" stroke="#111"/><text x="412" y="180" text-anchor="middle" font-weight="bold">6 signals</text><text x="412" y="195" text-anchor="middle" font-size="9">news, hiring,</text><text x="412" y="207" text-anchor="middle" font-size="9">funding &lt; 6 mo.</text>
+    <rect x="264" y="160" width="92" height="56" fill="#eef1ff" stroke="#111"/><text x="310" y="180" text-anchor="middle" font-weight="bold">7 rank</text><text x="310" y="195" text-anchor="middle" font-size="9">cross-encoder,</text><text x="310" y="207" text-anchor="middle" font-size="9">score + reason</text>
+    <rect x="162" y="160" width="92" height="56" fill="#fff" stroke="#111"/><text x="208" y="180" text-anchor="middle" font-weight="bold">8 channel</text><text x="208" y="195" text-anchor="middle" font-size="9">letter, phone,</text><text x="208" y="207" text-anchor="middle" font-size="9">LinkedIn</text>
+  </g>
+  <g stroke="#111" stroke-width="1.1" fill="none">
+    <line x1="254" y1="72" x2="262" y2="72" marker-end="url(#a)"/>
+    <line x1="356" y1="72" x2="364" y2="72" marker-end="url(#a)"/>
+    <line x1="458" y1="72" x2="466" y2="72" marker-end="url(#a)"/>
+    <line x1="514" y1="100" x2="514" y2="158" marker-end="url(#a)"/>
+    <line x1="468" y1="188" x2="460" y2="188" marker-end="url(#a)"/>
+    <line x1="366" y1="188" x2="358" y2="188" marker-end="url(#a)"/>
+    <line x1="264" y1="188" x2="256" y2="188" marker-end="url(#a)"/>
+  </g>
+
+  <!-- searchify base -->
+  <rect x="162" y="262" width="398" height="52" fill="#f4f4f4" stroke="#111"/>
+  <text x="361" y="282" text-anchor="middle" font-size="11" font-weight="bold">Searchify (unchanged base)</text>
+  <text x="361" y="300" text-anchor="middle" font-size="9.5">search &nbsp;&middot;&nbsp; extract &nbsp;&middot;&nbsp; rerank (mMiniLM cross-encoder), used by discover, rank, signals</text>
+  <g stroke="#777" stroke-width="1" stroke-dasharray="3 3" fill="none">
+    <line x1="310" y1="262" x2="310" y2="218" marker-end="url(#g)"/>
+    <line x1="412" y1="262" x2="412" y2="218" marker-end="url(#g)"/>
+  </g>
+
+  <!-- outputs -->
+  <line x1="162" y1="216" x2="162" y2="240" stroke="#111" stroke-width="0"/>
+  <path d="M230,216 L230,240 L590,240" stroke="#111" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+  <g font-size="10">
+    <rect x="592" y="120" width="160" height="40" fill="#fff" stroke="#111"/><text x="672" y="137" text-anchor="middle" font-weight="bold">Clay table / webhook</text><text x="672" y="151" text-anchor="middle" font-size="9">CSV in Clay columns</text>
+    <rect x="592" y="170" width="160" height="40" fill="#fff" stroke="#111"/><text x="672" y="187" text-anchor="middle" font-weight="bold">Supabase</text><text x="672" y="201" text-anchor="middle" font-size="9">raw pages + derived tables</text>
+    <rect x="592" y="220" width="160" height="40" fill="#fff" stroke="#111"/><text x="672" y="237" text-anchor="middle" font-weight="bold">Web view</text><text x="672" y="251" text-anchor="middle" font-size="9">live funnel, lead card</text>
+    <rect x="592" y="290" width="160" height="40" fill="#111"/><text x="672" y="307" text-anchor="middle" fill="#fff" font-weight="bold">Client's existing</text><text x="672" y="321" text-anchor="middle" fill="#fff" font-size="9">outbound workflow</text>
+  </g>
+  <g stroke="#111" stroke-width="1" fill="none">
+    <line x1="580" y1="240" x2="580" y2="140"/><line x1="580" y1="140" x2="590" y2="140" marker-end="url(#a)"/>
+    <line x1="580" y1="190" x2="590" y2="190" marker-end="url(#a)"/>
+    <line x1="672" y1="160" x2="672" y2="168"/>
+    <path d="M752,140 L758,140 L758,310 L754,310" marker-end="url(#a)"/>
+  </g>
+
+  <!-- learning loop -->
+  <rect x="148" y="350" width="604" height="70" fill="none" stroke="#111" stroke-width="1"/>
+  <text x="160" y="366" font-size="10.5" font-style="italic">Learning loop (offline)</text>
+  <g font-size="9.5">
+    <rect x="160" y="374" width="98" height="36" fill="#fff" stroke="#111"/><text x="209" y="390" text-anchor="middle">every scored pair</text><text x="209" y="402" text-anchor="middle">(ICP, profile)</text>
+    <rect x="276" y="374" width="98" height="36" fill="#fff" stroke="#111"/><text x="325" y="390" text-anchor="middle">clean + teacher</text><text x="325" y="402" text-anchor="middle">labels</text>
+    <rect x="392" y="374" width="98" height="36" fill="#fff" stroke="#111"/><text x="441" y="390" text-anchor="middle">fine-tune on</text><text x="441" y="402" text-anchor="middle">DGX Spark / Mac</text>
+    <rect x="508" y="374" width="98" height="36" fill="#fff" stroke="#111"/><text x="557" y="390" text-anchor="middle">benchmark vs</text><text x="557" y="402" text-anchor="middle">330 gold labels</text>
+    <rect x="624" y="374" width="118" height="36" fill="#eef1ff" stroke="#111"/><text x="683" y="390" text-anchor="middle">new model back</text><text x="683" y="402" text-anchor="middle">into step 7</text>
+  </g>
+  <g stroke="#111" stroke-width="1" fill="none">
+    <line x1="258" y1="392" x2="274" y2="392" marker-end="url(#a)"/><line x1="374" y1="392" x2="390" y2="392" marker-end="url(#a)"/>
+    <line x1="490" y1="392" x2="506" y2="392" marker-end="url(#a)"/><line x1="606" y1="392" x2="622" y2="392" marker-end="url(#a)"/>
+  </g>
+</svg>
+<figcaption><b>Figure 2.</b> Arvantir pipeline. A niche and a customer profile go in; eight stages turn public web pages into a ranked, deduplicated lead list with a decision maker, a reason, a source link and a channel. Shaded stages use the unchanged Searchify base (dashed lines). The output is written in the client's existing formats (Clay, Supabase). Below: the offline loop that turns every scored pair into training data for the re-ranker.</figcaption>
+</figure>
+
+<h3>4.1 Discover: where is a niche listed?</h3>
+<p>The niche is split at "and" or "&amp;" into parts and expanded into German directory vocabulary (member lists, guild members, exhibitor lists, partner directories, comparison portals, PDF member lists), either by a language model or by templates. Each query goes through Searchify. Hits outside DACH country domains, adult and betting pages and social networks are dropped. A curated set of verified sources per niche and, for local trades, a business-directory fallback per niche part and city are added; the fallback was introduced after the doctors-and-pharmacies niche returned zero leads. The cross-encoder then scores every hit against the query "a directory or list of many companies of this niche in Germany", so list pages rise and single-company pages fall. Every scored pair is logged as training data for the source-ranking task.</p>
+<h3>4.2 Harvest: reading companies without page rules</h3>
+<p>Pages are fetched through a three-step chain: plain HTTP; for empty or script-rendered pages, a reader service that returns rendered HTML; as a last resort the user's running Chrome via the DevTools protocol, with one connection per run, a background tab per page and a screenshot as proof, capped at 40 pages. Every request goes through one function that allows only http(s), resolves the host, rejects private addresses and re-checks every redirect (SSRF guard).</p>
+<p>The harvester groups HTML elements by tag and class, keeps groups with many distinct, linked, short texts and scores them by how many entries carry a legal form (GmbH, AG, e.K.) or a postcode. Navigation, filters, alphabet bars and "Details"/"More" links are penalised; alternating zebra rows are merged. Hub pages that link to sub-lists under their own path (states, cities) are followed one level deep, and pagination is followed on the same domain only (the BaFin table yields 201 institutions this way). A source is kept only if at least five entries look like companies. A website is taken from the directory's detail page and accepted only when the domain matches the company name or the link is explicitly labelled as a website; footer portals, map and review portals and domains shared by several companies are rejected.</p>
+<h3>4.3 Normalize: one company, one row</h3>
+<p>Legal forms are split off and names folded for matching. The entity key is court plus register number where known, else the registrable domain, else name plus postcode. Branches of one domain, or the same name at several addresses without a website (fuel-station brands, for instance), become one chain record with a branch count. An early version merged equal names regardless of location and collapsed 97 car washes into 50; we now merge equal names only when postcode or domain match. Companies without a website stay in the run: they are the darkest part of the market and get a letter as channel.</p>
+<h3>4.4 Darkcheck</h3>
+<p>Darkcheck asks the AI Ark company search by domain; only companies it does not know count as dark. A miss costs no credits, a hit 0.1. Because no AI Ark key was available on the day, we added an offline stand-in (<code>knowncheck</code>): an SQLite index over the public BigPicture company dataset (17,154,017 companies, 685,799 in DACH, 2023), matched by domain and, for leads without a website, by name and city. Its results are reported as "not in a 17-million-company database", never as "not in AI Ark".</p>
+<h3>4.5 Enrich: the decision maker from the legal notice</h3>
+<p>German law requires nearly every business website to carry a legal notice (Impressum) naming the managing director or owner, an address and contact details. Enrich finds that page, de-obfuscates addresses, reads names after role words, register number and channels, and can fall back to a language model for unusual layouts. Lines naming an authority, a chamber or a state are never taken as a person; this rule came from a real run in which a supervisory authority appeared as a pharmacist, and it is covered by regression tests. For real-estate asset managers enrich also looks for niche fields such as portfolio size.</p>
+<h3>4.6 Signals</h3>
+<p>Signals attaches news, job postings (applicant-tracking systems and career pages) and funding items younger than six months, each with a date and a link. LinkedIn posts are found through a search index; their date is decoded from the post ID. The search order is a paid search API, then a second paid index, then our own free search service, so the stage still works without credits.</p>
+<h3>4.7 Rank: a re-ranker instead of fixed weights</h3>
+<p>Each company profile (name, legal-notice text, homepage text, niche fields, city, website) is scored jointly with the customer profile by the cross-encoder. The score is shown on a 0 to 100 scale; 50 is the fit threshold, and leads within &plusmn;12 points of it are flagged <code>needs_human</code>. With the base model, the displayed score mixes the absolute score and the rank within the run in equal parts so that tiers spread; after fine-tuning the mix can be set to absolute only. Scores map to the client's tiers A to D, each lead gets a confidence level and a list of data gaps, and the highest-scoring sentence of the profile, with its URL, is shown as the reason. Hard rules cap the tier afterwards: chains never rise above tier C, and a registered seat abroad (foreign legal form or country domain, unless a German branch is evident) caps at tier C and sends the lead to a human.</p>
+<h3>4.8 Channel and outputs</h3>
+<p>Under section 7 of the German Unfair Competition Act, cold e-mail and fax need prior consent, also between businesses, while letters are allowed. Arvantir therefore proposes a letter whenever a postal address is known, then phone, then LinkedIn, and records why. Results are written as CSV in the client's Clay columns (with a block list applied by domain before any webhook), into a Supabase schema whose <code>raw_pages</code> table is insert-only and whose <code>companies</code>, <code>people</code> and <code>field_values</code> tables can be rebuilt from it at any time, and to a local web view with a live funnel over server-sent events. The engine is also packaged as a Claude Code skill (<code>dark-tam-finder</code>) in the style of the client's own skills, so it runs from the same tool they already use.</p>
+
+<h2>5&nbsp; Learning the ranker</h2>
+<h3>5.1 Tasks and data</h3>
+<p>One model serves two tasks. In <b>lead ranking</b> the query is a customer profile and the document a company profile; in <b>source ranking</b> the query is "a directory listing many companies of this niche" and the document a search hit. Every pipeline run logs each pair it scores to <code>data/rank_pairs.jsonl</code>, so training data grows with use. Hard negatives come for free: companies from niche X serve as negatives for niche Y, directory pages as negatives for lead ranking, single-company pages as negatives for source ranking. A collection run over eight niche definitions and variants produced 3,624 pairs; a later set of 1,328 pairs came from six clean runs after the quality filters. E-mail addresses and phone numbers are scrubbed before data enters the repository.</p>
+<h3>5.2 Labels</h3>
+<p><b>Silver labels</b> (0 to 3) for training came from transparent rules: niche vocabulary, legal form, German location hints, and penalties for directories and large groups. The plan was to replace them with a teacher model (an open model served on an NVIDIA DGX Spark). The machine became unreachable at about 14:15 while the teacher was compiling, so all training used the rule labels and moved to a laptop GPU. <b>Gold labels</b> were drawn as a fixed sample of 400 pairs (seed 11) and labelled in a small keyboard tool as fit, maybe or no. Malek labelled 150 pairs from three niches; Claude, as a second annotator, labelled the same 150 blind and another 250 from five niches.</p>
+<h3>5.3 Annotator disagreement and adjudication</h3>
+<p>On the shared 150 pairs the two annotators agreed exactly in 30.7 % of cases, with Cohen's &kappa; of 0.033 on three classes and 0.053 on fit versus not, which is chance level. The main pattern was "fit" from the human against "no" from the model in 62 cases, for example large audit and law firms labelled as real-estate asset managers. We adjudicated by rule: agreement is kept; a disagreement on a page that is objectively not a company is set to "no" (34 pairs); every other disagreement is excluded from the test set (70 pairs). The final test set has 330 pairs: 46 agreed, 34 adjudicated, 250 from Claude alone. Positives exist in only three niches (real-estate asset managers 6 fit, IT service providers 3 fit and 4 maybe, car washes 4 fit and 19 maybe), so ranking metrics exist only there; the other niches measure how well a system rejects junk.</p>
+<h3>5.4 Label cleaning</h3>
+<p>The first training data contained junk among the pipeline's own leads: URL shorteners, adult and betting pages, test-prep blogs, travel and map portals, foreign firms for a Germany-only profile. The rule labels still gave them 1 to 3. A cleaning script (<code>finetune/clean.py</code>) only ever lowers a label to 0, never raises one, and records the rule behind each change (Table 2).</p>
+<div class="tbl"><div class="tcap"><b>Table 2.</b> Effect of label cleaning, checked against the 330 gold pairs (source: <code>bench/DATA_QUALITY.md</code>). No gold "fit" or "maybe" pair was hit by any rule.</div>
+<table><thead><tr><th>Silver labels</th><th>Changed</th><th>Fit / no-fit agreement with gold</th><th>Mean abs. error (0&ndash;3)</th></tr></thead><tbody>
+<tr><td>Uncleaned rule labels</td><td>0</td><td>79.7 %</td><td>0.891</td></tr>
+<tr><td>+ host, adult, region, boilerplate, portal, listing rules</td><td>519 of 3,621</td><td>87.9 %</td><td>0.376</td></tr>
+<tr><td>+ map records capped at "maybe" (<code>osm_only</code>)</td><td>573 of 3,621</td><td>94.8 %</td><td>0.267</td></tr>
+</tbody></table></div>
+<p>The last rule came from a failure we traced rather than guessed. In the first benchmark the fine-tuned model ranked car washes worse than the base model (NDCG@10 0.196 against 0.466). It put bare map records such as "car wash on a named street" at the top, because the rule labels gave them 3, while the gold annotator rated them "maybe" since operator and contact are unknown. The real operator websites marked "fit" in gold ended up lower; a model that had never seen car washes ranked exactly those near the top. Capping map-only records at "maybe", the same principle the gold annotator used, fixed the training signal. Part of the agreement gain therefore follows by construction; the benchmark in Section 6 is the honest test, because no gold company is in the training data.</p>
+<h3>5.5 Training and splits</h3>
+<p>We fine-tuned the cross-encoder with one output and binary cross-entropy on labels scaled to 0..1, max length 384, batch 32, learning rate 2e-5, two epochs, 10 % warm-up, evaluating on a held-out silver dev set and keeping the best checkpoint. Splits are by company, never by pair. Two models are trained on purpose. <code>arvantir-rr-v1</code> never sees a gold company and is the only model we benchmark. <code>arvantir-rr-v1-final</code>, the product model, adds the gold pairs with capped influence: at most 10 % of training rows, each once, with soft labels (fit 0.9, maybe 0.37, no 0.1), so a single click nudges the model instead of deciding it. For the unseen-niche test (leave-one-niche-out) a separate model is trained without the tested niche.</p>
+
+<h2>6&nbsp; Evaluation</h2>
+<h3>6.1 End-to-end runs</h3>
+<div class="tbl"><div class="tcap"><b>Table 3.</b> One full run per niche on the hackathon day (source: <code>bench/RUNS.md</code>). Ranked leads were capped at 60 per run.</div>
+<table><thead><tr><th>Niche</th><th>Companies read</th><th>Unique</th><th>Ranked</th><th>Decision maker</th><th>Fresh signal</th><th>Letter</th><th>Seconds</th></tr></thead><tbody>
+<tr><td>Real-estate asset managers</td><td>240</td><td>223</td><td>60</td><td>33</td><td>14</td><td>38</td><td>143.4</td></tr>
+<tr><td>IT service providers</td><td>135</td><td>134</td><td>60</td><td>20</td><td>12</td><td>25</td><td>124.2</td></tr>
+<tr><td>Doctors and pharmacies</td><td>143</td><td>139</td><td>60</td><td>32</td><td>2</td><td>54</td><td>185.0</td></tr>
+<tr><td>Bakeries and butchers</td><td>86</td><td>47</td><td>47</td><td>16</td><td>10</td><td>40</td><td>141.4</td></tr>
+<tr><td>Family offices and LPs</td><td>104</td><td>94</td><td>60</td><td>32</td><td>16</td><td>49</td><td>274.1</td></tr>
+<tr><td>Car washes</td><td>97</td><td>94</td><td>60</td><td>1</td><td>10</td><td>58</td><td>53.9</td></tr>
+<tr><td><b>Total</b></td><td>805</td><td>731</td><td><b>347</b></td><td><b>134</b></td><td>64</td><td>264</td><td></td></tr>
+</tbody></table></div>
+<p>Every run finished in under five minutes on a laptop. 39 % of ranked leads have a named decision maker from the legal notice. Car washes are the exception: most come from map records without a website, so there is no legal notice to read, and nearly all get a letter.</p>
+<h3>6.2 How dark are the leads?</h3>
+<div class="tbl"><div class="tcap"><b>Table 4.</b> Leads not found in the offline index of 17.15 million companies (source: <code>bench/RUNS.md</code>). Matching by name and city is weaker evidence than by domain.</div>
+<table><thead><tr><th>Niche</th><th>Not in index, by domain</th><th>Not in index, by name + city</th><th>Not checkable</th></tr></thead><tbody>
+<tr><td>Doctors and pharmacies</td><td>38 of 44 (86 %)</td><td>15 of 16</td><td>0</td></tr>
+<tr><td>Bakeries and butchers</td><td>17 of 27 (63 %)</td><td>20 of 20</td><td>0</td></tr>
+<tr><td>Car washes</td><td>2 of 4</td><td>53 of 53</td><td>3</td></tr>
+<tr><td>Real-estate asset managers</td><td>11 of 57 (19 %)</td><td>0 of 0</td><td>3</td></tr>
+<tr><td>Family offices and LPs</td><td>8 of 45 (18 %)</td><td>14 of 14</td><td>1</td></tr>
+<tr><td>IT service providers</td><td>8 of 58 (14 %)</td><td>1 of 1</td><td>1</td></tr>
+<tr><td><b>Total</b></td><td><b>84 of 235 (36 %)</b></td><td><b>103 of 104</b></td><td>8</td></tr>
+</tbody></table></div>
+<p>The pattern is clear even with a 2023 index: local trades are almost entirely missing from a network-style database, so that is where the dark market is. Classic B2B niches are mostly known already; there Arvantir's value is the enrichment (decision maker, portfolio size, signal, reason), not the discovery.</p>
+<h3>6.3 Ranking quality</h3>
+<div class="tbl"><div class="tcap"><b>Table 5.</b> Ranking quality on 330 gold pairs (source: <code>bench/results.md</code>). The unseen-niche row uses only the 70 pairs of the two niches tested that way. A pointwise language-model baseline was prepared but not run (no key).</div>
+<table><thead><tr><th>System</th><th>NDCG@10</th><th>MRR</th><th>Kendall &tau;</th><th>Fit / no-fit agreement</th><th>ms per lead</th><th>Cost per 1,000</th></tr></thead><tbody>
+<tr><td>Fixed weights (tiers A to D)</td><td>0.608</td><td>0.250</td><td>0.505</td><td>80 %</td><td>0.3</td><td>0</td></tr>
+<tr><td>MiniLM, not trained</td><td>0.456</td><td>0.157</td><td>0.245</td><td>95 %</td><td>15.7</td><td>0</td></tr>
+<tr><td>MiniLM, fine-tuned (<code>arvantir-rr-v1</code>)</td><td><b>0.764</b></td><td><b>0.278</b></td><td><b>0.527</b></td><td><b>98 %</b></td><td>16.6</td><td>0</td></tr>
+<tr><td>Fine-tuned, niche unseen (70 pairs)</td><td>0.894</td><td>1.000</td><td>0.581</td><td>81 %</td><td>12.2</td><td>0</td></tr>
+</tbody></table></div>
+<div class="tbl"><div class="tcap"><b>Table 6.</b> NDCG@10 per niche with positives, and the effect of the map-record rule (source: <code>bench/results.md</code>, <code>bench/results_clean519.md</code>).</div>
+<table><thead><tr><th>Niche</th><th>Fixed weights</th><th>Not trained</th><th>Fine-tuned, before map rule</th><th>Fine-tuned, final</th><th>Niche unseen</th></tr></thead><tbody>
+<tr><td>Real-estate asset managers</td><td>0.993</td><td>0.883</td><td>1.000</td><td>1.000</td><td>0.988</td></tr>
+<tr><td>IT service providers</td><td>0.318</td><td>0.018</td><td>0.804</td><td>0.898</td><td>&ndash;</td></tr>
+<tr><td>Car washes</td><td>0.514</td><td>0.466</td><td>0.196</td><td>0.393</td><td>0.799</td></tr>
+<tr><td>All gold pairs</td><td>0.608</td><td>0.456</td><td>0.667</td><td>0.764</td><td>0.894*</td></tr>
+</tbody></table>
+<div class="note">* on 70 pairs only.</div></div>
+<p>Fine-tuning lifted ranking quality from 0.456 to 0.764 NDCG@10, above the fixed-weight baseline at 0.608, and raised fit or no-fit agreement from 95 % to 98 %. The gain is largest for IT service providers, where keyword weights fail because every company page mentions "IT", "cloud" or "network". Real-estate asset managers are easy for every system. Car washes remain below fixed weights even after the fix, while the model that never saw car washes reaches 0.799: the car-wash training labels are still not good enough. The cost of the re-ranker is about 16 ms per lead on a laptop and no fee per call.</p>
+<h2>7&nbsp; Arvana today, Arvantir today, potential, and both together</h2>
+<p>Arvantir is not meant to replace the agency's stack but to sit in front of it. Table 7 compares four states: how the agency works today, what Arvantir measurably does today, what it could do with more sources and the agency's own data, and how the two fit together. The "today" column for Arvantir is measured (Sections 6.1 to 6.3); the potential column is an estimate and is marked as such.</p>
+<div class="tbl"><div class="tcap"><b>Table 7.</b> Comparison (source: <code>context/VERGLEICH.md</code>; prices from <code>research/PREISE.md</code>, vendor price pages, 31 Oct 2026). Potential = estimate, not measured.</div>
+<table class="l cmp"><thead><tr><th></th><th>Arvana today</th><th>Arvantir today (measured)</th><th>Arvantir potential (estimate)</th><th>Arvana + Arvantir together</th></tr></thead><tbody>
+<tr><td><b>Where companies come from</b></td><td>Databases, bought lists, trade fairs, LinkedIn export, old stock</td><td>Finds the lists itself: business directories, associations, registers, partner directories</td><td>More sources per niche: association PDFs, trade-fair lists</td><td>Database for known companies, Arvantir for the rest</td></tr>
+<tr><td><b>Niches such as butchers, pharmacies, car washes</b></td><td>Barely in databases</td><td>6 niches run end to end</td><td>Any niche listed publicly somewhere</td><td>No niche drops out</td></tr>
+<tr><td><b>Companies per niche</b></td><td>As many as the database knows</td><td>86 to 240 read, 60 ranked (our cap on the day)</td><td>Thousands, e.g. 9,874 sites on one car-wash directory</td><td>Full list instead of a thin one</td></tr>
+<tr><td><b>Decision maker</b></td><td>From a database, costs credits</td><td>134 of 347 leads (39 %) from the legal notice, free</td><td>About 60 to 75 % with the commercial register and a paid source for the top leads only</td><td>Legal notice first, credits only for top leads</td></tr>
+<tr><td><b>Sorting</b></td><td>ICP score with fixed weights, much by hand</td><td>Trained re-ranker: NDCG@10 0.764 (fixed weights 0.608), 98 % fit/no-fit agreement with hand labels</td><td>Above 0.8 with Arvana's own hand sorting as training data</td><td>Re-ranker sorts first, people check only the uncertain band</td></tr>
+<tr><td><b>Reason per lead</b></td><td>Tier without a sentence</td><td>Sentence plus source link, data gaps, confidence</td><td>Same, with better sources</td><td>The SDR sees why a lead is on top</td></tr>
+<tr><td><b>Freshness</b></td><td>Database snapshot; customers complain about outdated data</td><td>Fetched today; signals younger than 6 months (news, hiring, funding)</td><td>Plus LinkedIn posts from today (needs search credits)</td><td>Every lead carries the date of its source</td></tr>
+<tr><td><b>Channel</b></td><td>E-mail and LinkedIn</td><td>Letter, phone or LinkedIn per lead under &sect; 7 UWG (bakeries and butchers: 40 of 47 letter)</td><td>Letters sent via a print-and-mail API</td><td>E-mail where allowed, letters for local businesses</td></tr>
+<tr><td><b>Cost per 1,000</b></td><td>AI Ark 9.80 USD per 1,000 contacts with e-mail, Lusha 94 USD, Deutsche Post Direkt 479 EUR per 1,000 company addresses</td><td>No licence or API cost per lead; AI Ark check 0 credits for dark companies, 0.1 for known ones</td><td>Credits only for top leads</td><td>Database stays cheap for known companies; Arvantir costs nothing for the rest</td></tr>
+<tr><td><b>Into the system</b></td><td>Clay table</td><td>CSV in Clay format, Supabase schema, webhook, Claude Code skill</td><td>Directly as a Clay source</td><td>Arvantir fills the Clay table, everything after stays as it is</td></tr>
+</tbody></table></div>
+<p><b>How the two work together.</b> The agency's twelve skills begin where a list exists; Arvantir produces that list for the niches no database covers and hands it over in the agency's own columns and tiers. From there the existing chain (research, qualification, copy) runs unchanged. In return, the agency's hand sorting and the replies of its campaigns are exactly the training data the re-ranker lacks (Section 8), so each campaign makes the next ranking better.</p>
+<p><b>Honest about cost.</b> Databases are already cheap per contact for the companies they know. Arvantir's advantage is not price but coverage of the companies that are not in them; for local businesses the fair price comparison is bought address data at 479 EUR per 1,000 addresses, without decision maker and without ranking. In our runs no paid API was called per lead.</p>
+
+<h2>8&nbsp; Discussion</h2>
+<p><b>What made one afternoon enough.</b> Three choices carried most of the weight. Building on an existing search and re-rank package meant the hard retrieval parts already worked. The interface contract let two halves be built in parallel and joined in one merge. Logging every scored pair from the first run on meant the learning loop had data before anyone sat down to train.</p>
+<p><b>Most fixes came from looking at real runs.</b> Several rules in the system exist because a specific run went wrong: a niche with zero leads led to the directory fallback; a supervisory authority read as a pharmacist led to the authority filter; 97 car washes collapsing into 50 led to location-aware merging; fuel-station brands led to chain detection; foreign companies in a Germany-only list led to the seat-abroad cap; map records at the top of the ranking led to the <code>osm_only</code> label rule. Each fix has a test or a benchmark row that would show a regression.</p>
+<p><b>Labels are the ceiling.</b> The weakest part of the system is not the model but the definition of "fit". Two careful annotators disagreed at chance level, and a single wrong label rule could make fine-tuning worse than no fine-tuning. The most valuable next data is the client's own hand-sorted leads, which encode what "fit" means for them.</p>
+<p><b>Why a re-ranker fits the trust problem.</b> A fixed-weight score cannot explain why a lead is on top beyond its checklist, and it breaks when every page contains the keywords. The re-ranker shows the sentence and link that drove its score, marks the uncertain band for a human, and can be retrained on the client's own sorting, so agreement with the client becomes a measured number rather than a promise.</p>
+
+<h2>9&nbsp; Limitations</h2>
+<ul>
+<li><b>Darkness against AI Ark is not measured.</b> Without a key, darkcheck returns "unknown". The offline index is a different and older database.</li>
+<li><b>The gold set is small and mostly single-annotator.</b> 250 of 330 labels come from one annotator, positives exist in only three niches, and the unseen-niche row rests on 70 pairs. Expect high variance.</li>
+<li><b>Training used rule labels only.</b> The teacher-model labels and the pointwise language-model baseline were prepared but did not run on the day.</li>
+<li><b>Runs were capped.</b> We ranked at most 60 leads per niche; one car-wash directory alone lists 9,874 sites, so coverage at full scale is untested.</li>
+<li><b>Directories are only partly dark.</b> Business directories are a reliable fallback, but the darkest sources are association PDFs, trade-fair lists and registers, which we cover only in part.</li>
+</ul>
+
+<h2>10&nbsp; Privacy, law and security</h2>
+<p>The system reads only public pages. Run files that contain names from legal notices are not committed; the benchmark summaries are generated without personal names; training data has e-mail addresses and phone numbers removed; the public static export of the web view masks decision makers, contact details and legal-notice reasons. Channel choice follows section 7 of the Unfair Competition Act, so no cold e-mail or fax is proposed without consent. Third-party fetches go through the SSRF guard; CSV cells are escaped against formula injection; the web view binds to localhost and checks the host header against DNS rebinding; keys live only in environment files.</p>
+
+<h2>11&nbsp; Conclusion and next steps</h2>
+<p>Arvantir shows that the sourcing step missing from an agency's agent workflow can be built from public sources: find the lists, read them without per-site code, resolve companies, take the decision maker from the legal notice and rank with a model that explains itself. The measured gain over fixed weights is real but rests on a small, imperfect gold set, and we report it with those limits. The next step is a closed loop: hot and warm replies become seeds and training signal, pooled across the agency's clients, so the ranker learns who answers, not only who fits. Pooling is necessary because a single client rarely has enough replies; detecting a lift from 2 % to 4 % reply rate needs about 1,141 sends per arm at &alpha; = 0.05 and power 0.8.</p>
+
+<h2>Appendix A&nbsp; Reproducing the results</h2>
+<pre>uv pip install -p .venv/bin/python -r requirements.txt
+.venv/bin/python -m pytest -q                       # offline suite, ~9 s
+.venv/bin/python -m arvantir run "Waschanlagen"     # one full run, JSON + CSV in data/
+python -m finetune.clean                            # label cleaning + report
+python -m finetune.train                            # benchmark model, no gold companies
+python -m finetune.train --lono --niches=&lt;niche&gt;    # unseen-niche model
+python -m finetune.bench                            # bench/results.md, results.json, chart.png
+python -m arvantir.knowncheck bench data/run_*.json # offline darkness check</pre>
+<div class="tbl"><div class="tcap"><b>Table 9.</b> Where things live in the repository.</div>
+<table class="l"><thead><tr><th>Part</th><th>Path</th></tr></thead><tbody>
+<tr><td>Engine stages</td><td><code>arvantir/discover.py harvest.py normalize.py darkcheck.py knowncheck.py enrich/ signals.py rank.py channel.py pipeline.py realbrowser.py</code></td></tr>
+<tr><td>Learning loop</td><td><code>finetune/data.py heuristics.py label_teacher.py label_gold.py clean.py train.py train_final.py bench.py</code></td></tr>
+<tr><td>Client formats</td><td><code>adapters/clay.py supabase.py supabase.sql</code>, <code>skills/arvantir/</code></td></tr>
+<tr><td>Evidence</td><td><code>bench/RUNS.md results.md results_clean519.md DATA_QUALITY.md gold_adjudication.json</code></td></tr>
+<tr><td>Plans and research</td><td><code>context/</code>, <code>research/</code></td></tr>
+</tbody></table></div>
+
+<h2>References</h2>
+<ol class="refs">
+<li>Arvana / S. Mundt. <i>claude-gtm-skills</i> and <i>kampagnen-cockpit-case-study</i>, public GitHub repositories, read on 31 Oct 2026.</li>
+<li>Nogueira, R., Cho, K. (2019). Passage Re-ranking with BERT. arXiv:1901.04085.</li>
+<li>Bonifacio, L. et al. (2021). mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset. arXiv:2108.13897.</li>
+<li>Wang, W. et al. (2020). MiniLM: Deep Self-Attention Distillation for Task-Agnostic Compression of Pre-Trained Transformers. NeurIPS 2020.</li>
+<li>Reimers, N., Gurevych, I. (2019). Sentence-BERT. EMNLP 2019 (sentence-transformers library, CrossEncoder).</li>
+<li>Kleppmann, M. (2017). <i>Designing Data-Intensive Applications</i>, ch. 11&ndash;12 (derived data). O'Reilly.</li>
+<li>Ratner, A. et al. (2017). Snorkel: Rapid Training Data Creation with Weak Supervision. VLDB 2017.</li>
+<li>Hinton, G., Vinyals, O., Dean, J. (2015). Distilling the Knowledge in a Neural Network. arXiv:1503.02531.</li>
+<li>J&auml;rvelin, K., Kek&auml;l&auml;inen, J. (2002). Cumulated Gain-based Evaluation of IR Techniques. ACM TOIS 20(4).</li>
+<li>Cohen, J. (1960). A Coefficient of Agreement for Nominal Scales. Educational and Psychological Measurement 20(1).</li>
+<li>Gesetz gegen den unlauteren Wettbewerb (UWG), &sect; 7; Digitale-Dienste-Gesetz (DDG), &sect; 5.</li>
+</ol>
+
+<p class="note" style="margin-top:10pt">Code and data: github.com/Malek1414/Arvantir (private). All figures in this paper are taken from files in that repository; where a number is an estimate or untested, the text says so.</p>
+</body>
+</html>

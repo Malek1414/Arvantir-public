@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Arvantir Teleprompter</title>
+<style>
+:root{--bg:#0a0a0a;--ink:#f5f5f5;--muted:#8a8a8a;--blue:#6f86ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:600 clamp(30px,4.4vw,58px)/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:1100px;margin:0 auto;padding:45vh 6vw 80vh}
+section{margin-bottom:1.6em}
+.who{font-size:.36em;font-weight:500;color:var(--muted);letter-spacing:.02em;margin-bottom:.35em}
+.B p{color:#dfe5ff}
+.B .who{color:var(--blue)}
+.mark{position:fixed;left:0;right:0;top:40vh;height:2px;background:rgba(111,134,255,.35);pointer-events:none}
+.hud{position:fixed;right:16px;bottom:14px;font:500 14px -apple-system,sans-serif;color:var(--muted)}
+</style></head><body><div class="mark"></div><main>
+<section class="A"><div class="who">Sami · 0:00 · face</div><p>On Thursday, Arvana told us something honest. Sorting leads with agents does not work. So they do it by hand. We wanted to build the machine you can actually trust.</p></section>
+<section class="A"><div class="who">Sami · 0:10 · demo, Emin Fleisch card</div><p>In Munich there is a butcher called Emin Fleisch. A real business, with a real person in charge. Today, Arvantir found it, named that person, scored it 100 out of 100, and said: send a letter, not an email.</p></section>
+<section class="B"><div class="who">Malek · 0:25 · animation</div><p>Here is how. You type any niche. Arvantir runs eight steps. Discover finds where these firms really live: guild directories, member lists, trade fairs. Harvest reads every firm. Normalize merges branches into one row. Darkcheck asks if any database already knows them. Enrich reads the legal notice and finds the person in charge. Signals looks for fresh news. Rank scores the fit. Channel picks the way in.</p></section>
+<section class="B"><div class="who">Malek · 0:55 · animation, bars</div><p>Rank is our own model. We fine-tuned a small reranker on 3,327 labelled pairs from 1,212 companies. Training took 13 minutes. On 330 hand-checked leads, it agrees with a human 98 percent of the time. A fixed scoring formula reaches 80. And it costs nothing per lead.</p></section>
+<section class="B"><div class="who">Malek · 1:12 · demo, table</div><p>And this is not a slide. The whole pipeline runs today, end to end, and plugs straight into what you already use: a Clay table by CSV or webhook, a Supabase database, a Claude Code skill. No migration, no new tool for your team.</p></section>
+<section class="A"><div class="who">Sami · 1:25 · demo, table</div><p>Today it ran on six niches. 347 ranked leads. 134 with the name of the person in charge, straight from the company&#x27;s own legal notice.</p></section>
+<section class="A"><div class="who">Sami · 1:38 · face</div><p>Emin Fleisch is not in a database of 17 million companies. Neither are 186 other firms we found today. For doctors and pharmacies, that is 86 percent. Every one of them ranked, with a reason it fits.</p></section>
+<section class="A"><div class="who">Sami · 1:53 · face</div><p>Give us the niche you gave up on. On Monday, you get the list nobody else has.</p></section>
+</main><div class="hud" id="hud"></div>
+<script>
+let speed=1.2,on=false,last=0;
+const hud=document.getElementById("hud");
+const show=()=>hud.textContent=(on?"läuft":"Pause")+" · Tempo "+speed.toFixed(1)+" · Leertaste start/stopp, Pfeile hoch/runter Tempo, R von vorn";
+function tick(t){if(on&&last)scrollBy(0,speed*(t-last)/16);last=t;requestAnimationFrame(tick)}
+addEventListener("keydown",e=>{if(e.code==="Space"){on=!on;e.preventDefault()}if(e.key==="ArrowUp"){speed+=.2;e.preventDefault()}if(e.key==="ArrowDown"){speed=Math.max(.2,speed-.2);e.preventDefault()}if(e.key==="r"||e.key==="R")scrollTo(0,0);show()});
+addEventListener("click",()=>{on=!on;show()});
+show();requestAnimationFrame(tick);
+</script></body></html>

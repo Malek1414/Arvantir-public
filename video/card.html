@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;height:100vh;display:flex;align-items:center;background:#fff;color:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.w{max-width:1400px;margin:0 auto;padding:0 160px;width:100%}
+svg[hidden]{display:none}
+svg{width:84px;height:84px;color:#2346ff;margin-bottom:44px;display:block}
+h1{font-size:84px;font-weight:600;letter-spacing:-.03em;line-height:1.04;margin:0}
+h1 span{color:#6b6b6b;display:block}
+.k{font-size:24px;color:#6b6b6b;margin-bottom:28px}
+.in{animation:in .7s cubic-bezier(.2,.7,.2,1) both}
+.in2{animation:in .7s cubic-bezier(.2,.7,.2,1) .5s both}
+@keyframes in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+</style></head><body><div class="w">
+<svg id="m" viewBox="0 0 64 64" hidden><circle cx="32" cy="27" r="18" fill="none" stroke="currentColor" stroke-width="5"/><path d="M25 36 L29 18 L34 18 L30 36Z M32 36 L36 18 L41 18 L37 36Z" fill="currentColor"/><path d="M9 49 Q32 63 55 49" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg>
+<div class="k in" id="k"></div><h1><b class="in" id="t" style="font-weight:600;display:block"></b><span class="in2" id="s"></span></h1></div>
+<script>const q=new URLSearchParams(location.search);t.textContent=q.get("t")||"";s.textContent=q.get("s")||"";k.textContent=q.get("k")||"";if(q.get("logo"))m.removeAttribute("hidden");</script>
+</body></html>

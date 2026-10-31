@@ -1,57 +1,55 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arvantir Architektur</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Ccircle cx=%2732%27 cy=%2727%27 r=%2718%27 fill=%27none%27 stroke=%27%230a0a0a%27 stroke-width=%275%27/%3E%3Cpath d=%27M25 36 L29 18 L34 18 L30 36Z M32 36 L36 18 L41 18 L37 36Z%27 fill=%27%235b3df5%27/%3E%3Cpath d=%27M9 49 Q32 63 55 49%27 fill=%27none%27 stroke=%27%230a0a0a%27 stroke-width=%275%27 stroke-linecap=%27round%27/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<title>Arvantir Architecture</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Ccircle cx=%2727%27 cy=%2737%27 r=%2721%27 fill=%27%230a0a0a%27/%3E%3Ccircle cx=%2748%27 cy=%2716%27 r=%279%27 fill=%27%232346ff%27/%3E%3C/svg%3E">
 <style>
 :root{
-  --bg:#ffffff; --soft:#f5f6fb; --ink:#0a0a0a; --ink2:#2a2a2a; --muted:#6b6b6b; --line:#e6e6ec;
-  --blue:#2346ff; --violet:#7a3cf0; --grad:linear-gradient(100deg,#2346ff 0%,#5b3df5 55%,#8a3ff0 100%);
-  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --bg:#ffffff; --soft:#f7f7f7; --ink:#0a0a0a; --ink2:#2a2a2a; --muted:#6b6b6b; --line:#e6e6ec;
+  --blue:#2346ff; --violet:#2346ff; --grad:#2346ff; --track:#f2f2f2;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
-body{background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif;overflow-x:hidden}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit}
-.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
 header{display:flex;align-items:center;justify-content:space-between;padding:20px 0;gap:12px}
-.brand{font-weight:800;letter-spacing:-.4px;font-size:20px;display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo{width:32px;height:32px;color:var(--ink)}
+.brand{font-weight:700;letter-spacing:-.04em;font-size:21px;display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo{width:26px;height:26px;color:var(--blue)}
 .brand .word span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 nav{display:flex;gap:6px}
-nav a{font:500 14px Inter,sans-serif;text-decoration:none;padding:8px 14px;border-radius:10px;color:var(--ink2)}
-nav a.on{background:var(--ink);color:#fff}
+nav{gap:24px}nav a{font-size:15px;text-decoration:none;color:var(--muted)}nav a:hover{color:var(--ink)}
+nav a.on{color:var(--ink)}
 .hero{padding:22px 0 26px}
-.eyebrow{font:500 12px var(--mono);letter-spacing:2px;text-transform:uppercase;color:var(--violet);margin-bottom:12px}
-h1{font-size:clamp(30px,4.6vw,54px);line-height:1.05;letter-spacing:-.035em;font-weight:800;max-width:980px}
-h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.eyebrow{font-size:15px;color:var(--muted);margin-bottom:14px}
+h1{font-size:clamp(34px,5.6vw,64px);line-height:1.03;letter-spacing:-.03em;font-weight:600;max-width:980px}
+h1 em{font-style:normal;color:var(--muted)}
 .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:13px;color:var(--muted)}
 .legend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:6px}
-.legend .l1{background:var(--grad)}
+.legend .l1{border:1.5px solid var(--ink);background:#fff}
 .legend .l2{border:1.5px dashed #a9a9b8}
-.legend .l3{border-top:1.5px dashed var(--violet);height:0;width:18px;border-radius:0;vertical-align:3px}
+.legend .l3{border-top:1.5px dashed var(--blue);height:0;width:18px;border-radius:0;vertical-align:3px}
 
-.lbl{font:500 11px var(--mono);letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.lbl{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:10px}
 .board{position:relative;display:grid;grid-template-columns:190px 34px 1fr 34px 220px;align-items:stretch;gap:0}
 .col{display:flex;flex-direction:column;gap:10px}
 .arrow{display:flex;align-items:center;justify-content:center;color:#b9b9c8}
 .arrow svg{width:26px;height:26px}
 .panel{border:1px solid var(--line);border-radius:18px;padding:16px;background:var(--soft)}
 .node{position:relative;border-radius:12px;padding:11px 12px;background:#fff;border:1.5px solid transparent;cursor:default;transition:transform .15s,box-shadow .15s;outline:none}
-.node:hover,.node:focus{transform:translateY(-2px);box-shadow:0 10px 24px rgba(35,70,255,.12)}
+.node:hover,.node:focus{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.08)}
 .node b{display:block;font-size:14px;font-weight:700;letter-spacing:-.01em}
 .node small{display:block;font-size:12px;color:var(--muted);line-height:1.35;margin-top:2px}
-.node .n{position:absolute;top:8px;right:10px;font:500 10px var(--mono);color:#a3a3b5}
-.node.live{background:linear-gradient(#fff,#fff) padding-box,var(--grad) border-box;border-color:transparent}
+.node .n{position:absolute;top:8px;right:10px;font:500 11px var(--mono);color:#a3a3b5}
+.node.live{background:#fff;border:1.5px solid var(--ink)}
 .node.live b{color:var(--ink)}
-.node.live::before{content:"";position:absolute;left:12px;bottom:-1.5px;right:12px;height:3px;border-radius:3px;background:var(--grad);opacity:.9}
+.node.live::before{content:"";position:absolute;left:12px;top:13px;width:7px;height:7px;border-radius:50%;background:var(--blue);display:none}
 .node.off{border:1.5px dashed #b4b4c4;background:#fbfbfd}
 .node.off b{color:#7a7a8a}
-.node .tag{display:none;margin-top:6px;font:500 10px var(--mono);letter-spacing:1px;text-transform:uppercase;color:#9a6b00;background:#fff6dc;border-radius:6px;padding:2px 6px;width:max-content}
+.node .tag{display:none;margin-top:6px;font-size:11px;font-weight:600;color:var(--muted);background:var(--track);border-radius:6px;padding:2px 6px;width:max-content}
 .node.off .tag{display:block}
 .input{background:#fff;border:1px solid var(--line)}
 .input .node{background:var(--soft)}
@@ -64,9 +62,9 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 .sf .node{background:var(--soft);border:1.5px solid #d9d9e6}
 .sf .head{display:flex;justify-content:flex-start;align-items:baseline;gap:12px;margin-bottom:8px}
 .sf .head b{font-size:13px}
-.sf .head span{font:500 10px var(--mono);letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.sf .head span{font-size:12px;color:var(--muted)}
 .outs .node{background:#fff;border:1px solid var(--line)}
-.outs .skills{background:var(--grad);border:0;color:#fff}
+.outs .skills{background:var(--ink);border:0;color:#fff}
 .outs .skills b{color:#fff}
 .outs .skills small{color:#fff}
 .skills{margin-top:6px;border-radius:14px;padding:14px;color:#fff;background:var(--grad)}
@@ -75,21 +73,21 @@ h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 .down{display:flex;justify-content:center;color:#b9b9c8}
 .down svg{width:22px;height:22px}
 #links{position:absolute;inset:0;pointer-events:none;overflow:visible}
-.claim{margin:28px 0 8px;padding:20px 22px;border-radius:16px;background:var(--ink);color:#fff;font-size:clamp(18px,2.2vw,26px);font-weight:700;letter-spacing:-.02em;line-height:1.25}
-.claim em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.claim{margin:28px 0 8px;padding:20px 22px;border-radius:16px;background:var(--ink);color:#fff;font-size:clamp(18px,2.2vw,26px);font-weight:600;letter-spacing:-.02em;line-height:1.25}
+.claim em{font-style:normal;color:#8ea0ff}
 section.loop{margin-top:30px;padding-top:26px;border-top:1px solid var(--line)}
 .chain{display:grid;grid-template-columns:repeat(6,1fr);gap:10px 22px;position:relative}
 .chain .node{background:#fff;border:1px solid var(--line)}
 .chain .node:not(:last-child)::after{content:"";position:absolute;right:-17px;top:50%;width:12px;height:12px;border-top:1.5px solid #b9b9c8;border-right:1.5px solid #b9b9c8;transform:translateY(-50%) rotate(45deg)}
-.chain .node.live{background:linear-gradient(#fff,#fff) padding-box,var(--grad) border-box;border:1.5px solid transparent}
+.chain .node.live{background:#fff;border:1.5px solid var(--ink)}
 .chain .node.off{border:1.5px dashed #b4b4c4;background:#fbfbfd}
-.num{font:600 13px var(--mono);color:var(--blue);margin-top:4px;display:block}
-.back{margin-top:10px;display:flex;align-items:center;gap:10px;color:var(--violet);font:500 12px var(--mono);letter-spacing:.6px}
+.num{font-size:13px;font-weight:600;color:var(--blue);font-variant-numeric:tabular-nums;margin-top:4px;display:block}
+.back{margin-top:10px;display:flex;align-items:center;gap:10px;color:var(--violet);font-size:13px;font-weight:500}
 .back svg{flex:1;height:22px}
 .bench{margin-top:14px;max-width:420px}
 .tip{position:absolute;z-index:20;max-width:300px;padding:10px 12px;border-radius:10px;background:var(--ink);color:#fff;font-size:13px;line-height:1.4;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s}
 .tip.on{opacity:1;transform:none}
-.tip code{font:12px var(--mono);color:#b6a8ff}
+
 footer{padding:30px 0 40px;color:var(--muted);font-size:13px}
 @media (max-width:980px){
   .board{grid-template-columns:1fr}
@@ -108,18 +106,27 @@ footer{padding:30px 0 40px;color:var(--muted);font-size:13px}
   nav a{padding:7px 10px;font-size:13px}
   .sf .row{grid-template-columns:1fr}
 }
+.aa{margin:8px 0 40px}
+.aa-again{margin-top:14px;font:inherit;font-size:14px;font-weight:500;background:#f2f2f2;color:#0a0a0a;border:0;border-radius:10px;padding:8px 14px;cursor:pointer}
+body.solo{overflow:hidden}
+body.solo header,body.solo .hero,body.solo .board,body.solo section.loop,body.solo footer,body.solo .lbl,body.solo .aa-again{display:none!important}
+body.solo .wrap{max-width:none;padding:0}
+body.solo .aa{height:100vh;display:flex;align-items:center;justify-content:center;margin:0}
+body.solo .aa svg{width:auto!important;height:94vh!important;max-width:96vw}
+/* Präsi-Fassung: nur Titel und Animation */
+.eyebrow,.legend,.board,section.loop,footer,.lbl{display:none!important}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <a class="brand" href="/"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2346ff"/><stop offset="1" stop-color="#8a3ff0"/></linearGradient></defs><circle cx="32" cy="27" r="18" fill="none" stroke="currentColor" stroke-width="5"/><path d="M25 36 L29 18 L34 18 L30 36Z M32 36 L36 18 L41 18 L37 36Z" fill="url(#g)"/><path d="M9 49 Q32 63 55 49" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><span class="word">Arvan<span>tir</span></span></a>
-    <nav><a href="/">Demo</a><a class="on" href="/architecture">Architektur</a></nav>
+    <a class="brand" href="/"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><circle cx="27" cy="37" r="21" fill="#0a0a0a"/><circle cx="48" cy="16" r="9" fill="#2346ff"/></svg>arvantir</a>
+    <nav><a href="/">Home</a><a class="on" href="/architecture">How it works</a></nav>
   </header>
 
   <div class="hero">
     <div class="eyebrow">Architektur</div>
-    <h1>Von der Nische zur Clay-Table. <em>Ohne Lead-Datenbank.</em></h1>
+    <h1>From a niche to a ranked list.</h1>
     <div class="legend">
       <span><i class="l1"></i>läuft</span>
       <span><i class="l2"></i>in Arbeit</span>
@@ -127,6 +134,8 @@ footer{padding:30px 0 40px;color:var(--muted);font-size:13px}
     </div>
   </div>
 
+  <div class="aa" data-arch-anim></div>
+  <div class="lbl" style="margin-top:8px">Im Detail</div>
   <div class="board" id="board">
     <svg id="links" aria-hidden="true"></svg>
 
@@ -134,8 +143,8 @@ footer{padding:30px 0 40px;color:var(--muted);font-size:13px}
       <div class="lbl">Eingabe</div>
       <div class="panel input" style="display:flex;flex-direction:column;gap:10px;flex:1">
         <div class="node live" tabindex="0" data-tip="Eine Nische als Freitext oder ein Beispiel-Lead. Die Jury kann jede Nische eingeben."><b>Nische</b><small>Freitext oder Beispiel-Lead</small></div>
-        <div class="node live" tabindex="0" data-tip="ICP je Nische aus research/icps.json, abgeleitet aus Arvanas echten Kunden. Eigener ICP überschreibt ihn."><b>ICP</b><small>icps.json oder eigener Text</small></div>
-        <div class="node live" tabindex="0" data-tip="Sperrliste wie sperrliste.txt aus Arvanas Case Study, normalisiert (Groß/Klein, www., Leerzeichen)."><b>Sperrliste</b><small>Bestandskunden, Wettbewerber</small></div>
+        <div class="node live" tabindex="0" data-tip="ICP je Nische, oder ein eigener Text."><b>ICP</b><small>icps.json oder eigener Text</small></div>
+        <div class="node live" tabindex="0" data-tip="Domains, die nie in der Liste landen dürfen, normalisiert."><b>Sperrliste</b><small>Bestandskunden, Wettbewerber</small></div>
       </div>
     </div>
 
@@ -160,20 +169,16 @@ footer{padding:30px 0 40px;color:var(--muted);font-size:13px}
 
     <div class="col outs">
       <div class="lbl">Ausgabe</div>
-      <div class="node live" tabindex="0" data-tip="CSV oder Webhook mit den Spalten aus Arvanas leads_export.csv plus Tier, Datenlücken, Konfidenz. Formel-Injection escapt."><b>Clay</b><small>Spalten wie leads_export.csv</small></div>
+      <div class="node live" tabindex="0" data-tip="CSV oder Webhook, mit Tier und Quelle an jeder Zeile."><b>Clay</b><small>CSV oder Webhook</small></div>
       <div class="node live" tabindex="0" data-tip="raw_pages unveränderlich als System of Record, companies und field_values jederzeit daraus neu baubar."><b>Supabase</b><small>raw_pages + abgeleitete Tabellen</small></div>
       <div class="node live" tabindex="0" data-tip="Diese Website: Funnel live per SSE, Tabelle, Lead-Karte mit Quelle und Datenlücken."><b>Website</b><small>Funnel live, Lead-Karte</small></div>
-      <div class="down" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v15M6 13l6 6 6-6"/></svg></div>
-      <div class="skills node" tabindex="0" data-tip="Ab hier laufen Arvanas eigene claude-gtm-skills unverändert weiter: technographic-qualifier, icp-scorer, buying-signal-detector, Copy."><b>Arvanas 12 Skills</b><small>icp-scorer, buying-signal-detector, Copy</small></div>
     </div>
   </div>
-
-  <div class="claim">Eure 12 Skills fangen bei einer Liste an. <em>Arvantir ist der Skill davor.</em></div>
 
   <section class="loop">
     <div class="lbl">Lernschleife: Re-Ranker auf Arvana trainieren</div>
     <div class="chain" id="chain"></div>
-    <div class="back" aria-hidden="true"><span>Modell zurück in rank</span><svg viewBox="0 0 600 22" preserveAspectRatio="none"><path d="M598 2 V12 H2" fill="none" stroke="#7a3cf0" stroke-width="1.5" stroke-dasharray="5 4" vector-effect="non-scaling-stroke"/></svg></div>
+    <div class="back" aria-hidden="true"><span>Modell zurück in rank</span><svg viewBox="0 0 600 22" preserveAspectRatio="none"><path d="M598 2 V12 H2" fill="none" stroke="#2346ff" stroke-width="1.5" stroke-dasharray="5 4" vector-effect="non-scaling-stroke"/></svg></div>
     <div class="bench"><div class="node" id="n-bench" tabindex="0" data-tip="finetune/bench.py: feste Gewichte gegen LLM gegen Basis-Modell gegen fine-tuned. NDCG@10, Übereinstimmung mit Arvanas Handsortierung, ms je Lead."><b>Benchmark</b><small>NDCG@10, Übereinstimmung, ms/Lead</small><span class="tag">in Arbeit</span></div></div>
   </section>
 
@@ -192,8 +197,8 @@ const ENGINE = [
   ["normalize", "eine Firma, eine Zeile", "Rechtsform, Domain, Schlüssel HRB vor Domain vor Name+PLZ. Gleicher Schlüssel in Clay und Supabase.", []],
   ["darkcheck", "nicht in AI Ark", "Abgleich mit AI Ark: nur Firmen mit 0 Treffern zählen zum Dark TAM.", []],
   ["enrich", "Impressum, Entscheider", "Entscheider und Kontakt aus dem Impressum, dazu Nischenfelder wie Portfoliogröße.", []],
-  ["signals", "frisch, unter 6 Monaten", "LinkedIn, News, Hiring, Funding. Nur Signale jünger als 6 Monate, wie Arvanas buying-signal-detector.", []],
-  ["rank", "Score, Tier A bis D", "Cross-Encoder mMiniLM: Score 0 bis 100, Tier A bis D nach Arvanas icp-scorer, Konfidenz, Datenlücken, Begründungssatz.", ["rerank", "extract"]],
+  ["signals", "frisch, unter 6 Monaten", "LinkedIn, News, Hiring, Funding. Nur Signale jünger als 6 Monate.", []],
+  ["rank", "Score, Tier A bis D", "Cross-Encoder mMiniLM: Score 0 bis 100, Tier A bis D, Konfidenz, Datenlücken, Begründungssatz.", ["rerank", "extract"]],
   ["channel", "Brief, Mail, LinkedIn, Fax", "Kanal je Lead: Brief, Mail, LinkedIn oder Fax, mit Blick auf §7 UWG.", []],
 ];
 const LOOP = [
@@ -220,7 +225,7 @@ function drawLinks() {
   svg.setAttribute("width", b.width); svg.setAttribute("height", b.height);
   let out = "";
   const sfTop = $("sf").getBoundingClientRect().top - b.top;
-  const st = 'fill="none" stroke="#7a3cf0" stroke-width="1.4" stroke-dasharray="5 4" opacity=".8"';
+  const st = 'fill="none" stroke="#2346ff" stroke-width="1.4" stroke-dasharray="5 4" opacity=".8"';
   ENGINE.forEach(([k, , , uses], i) => uses.forEach((u, j) => {
     const m = $("m-" + k).getBoundingClientRect(), s = $("sf-" + u).getBoundingClientRect();
     const x2 = s.left + s.width / 2 - b.left + (k === "discover" ? -18 : 18), y2 = s.top - b.top;
@@ -232,7 +237,7 @@ function drawLinks() {
       const x1 = m.left + m.width / 2 - b.left + (j ? 16 : -16), y1 = m.bottom - b.top, my = (y1 + y2) / 2;
       out += `<path d="M${x1} ${y1} C${x1} ${my}, ${x2} ${my}, ${x2} ${y2}" ${st}/>`;
     }
-    out += `<circle cx="${x2}" cy="${y2}" r="3" fill="#7a3cf0"/>`;
+    out += `<circle cx="${x2}" cy="${y2}" r="3" fill="#2346ff"/>`;
   }));
   svg.innerHTML = out;
 }
@@ -240,7 +245,7 @@ function drawLinks() {
 function setNode(el, ok) { if (!el) return; el.classList.toggle("live", !!ok); el.classList.toggle("off", !ok); }
 async function loadStatus() {
   try {
-    const s = await (await fetch("/status", { cache: "no-store" })).json();
+    const s = await (await fetch("/status.json", { cache: "no-store" })).json();
     ENGINE.forEach(([k]) => setNode($("m-" + k), s.modules[k]));
     const L = s.loop;
     setNode($("l-runs"), L.runs > 0); $("c-runs").textContent = L.runs ? `${L.runs} Läufe` : "";
@@ -273,5 +278,7 @@ document.fonts && document.fonts.ready.then(drawLinks);
 loadStatus();
 setInterval(loadStatus, 10000);
 </script>
+<script>if (new URLSearchParams(location.search).has("solo")) document.body.classList.add("solo");</script>
+<script src="/arch-anim.js"></script>
 </body>
 </html>

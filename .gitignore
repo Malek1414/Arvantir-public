@@ -12,3 +12,9 @@ data/run_*
 data/runs/
 data/rank_pairs.jsonl
 !data/spark/
+pitch/*/demo/
+pitch/*/takes/
+pitch/*/retell-usage.jsonl
+data/ext/
+data/*.jsonl
+data/runs_alt_vor_filtern/

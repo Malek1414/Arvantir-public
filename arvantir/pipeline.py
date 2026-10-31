@@ -40,6 +40,20 @@ def icp_for(niche: str) -> str:
     return best
 
 
+FOREIGN_FORM = re.compile(r"(S\.p\.A|S\.A\.U|\bS\.A\.|sp\. z o\.o|\bLtd\b|\bLimited\b|\bB\.V\.|\bN\.V\.|\bAB\b|"
+                          r"\bEAD\b|Fondsmægler|\bSAS\b|\bSARL\b|S\.à r\.l|\bS\.r\.l|\bA/S\b|\bOy\b|\bLLC\b|\bInc\b)")
+FOREIGN_TLD = re.compile(r"^https?://[^/]+\.(pl|it|fr|lu|nl|se|bg|be|es|uk|dk|fi|cz|pt|ie|au|us|ro|hu)(?=[/:]|$)", re.I)
+DE_BRANCH = re.compile(r"(Niederlassung|Zweigniederlassung|Deutschland|Germany|GmbH|\bAG\b|\bKG\b|\bUG\b|e\.K\.)", re.I)
+
+
+def foreign_seat(c: Dict) -> bool:
+    """Sitz vermutlich im Ausland: ausländische Rechtsform oder Länder-Domain, ohne deutsche Niederlassung im Namen."""
+    name, web = c.get("name", ""), c.get("website", "") or ""
+    if DE_BRANCH.search(name):
+        return False
+    return bool(FOREIGN_FORM.search(name) or FOREIGN_TLD.search(web))
+
+
 def collapse_chains(cands: List[Dict], min_branches: int = 3) -> List[Dict]:
     """Eine Firma, eine Zeile: Filialen derselben Domain zusammenfassen und als Kette markieren."""
     from urllib.parse import urlparse
@@ -49,11 +63,14 @@ def collapse_chains(cands: List[Dict], min_branches: int = 3) -> List[Dict]:
     groups: Dict[str, List[Dict]] = {}
     for c in cands:
         dom = _reg(urlparse(c.get("website", "")).netloc) if c.get("website") else ""
-        groups.setdefault(dom or f"_{id(c)}", []).append(c)
+        # ohne Website: gleicher Name an mehreren Orten = Filialen einer Kette (Esso, Aral, IMO Car Wash)
+        key = dom or ("name:" + re.sub(r"[^a-z0-9äöüß]+", " ", c.get("name", "").lower()).strip())
+        groups.setdefault(key or f"_{id(c)}", []).append(c)
     out = []
     for key, grp in groups.items():
         head = dict(grp[0])
-        if not key.startswith("_") and len(grp) >= min_branches:
+        branches = min_branches if not key.startswith("name:") else 2
+        if not key.startswith("_") and len(grp) >= branches:
             head["kette"] = True
             head["niche_fields"] = {**(head.get("niche_fields") or {}), "filialen": len(grp)}
             head["datenluecken_hinweis"] = "Kette, laut ICP meist ausgeschlossen"
@@ -108,6 +125,11 @@ def run(seed: str, icp: str = "", sources: int = 3, per_source: int = 80, top: i
         cands = darkcheck(cands)
         step("NICHT in AI Ark", sum(1 for c in cands if c.get("in_ai_ark") is False))
 
+    known = _optional("knowncheck", "knowncheck")
+    if known:  # Offline-Abgleich gegen eine freie Firmen-Datenbank (Data Legion / BigPicture)
+        cands = known(cands)
+        step("NICHT in Firmen-DB", sum(1 for c in cands if c.get("in_known_db") is False))
+
     enrich = _optional("enrich", "enrich")
     if enrich:
         cands = enrich(cands)
@@ -121,10 +143,25 @@ def run(seed: str, icp: str = "", sources: int = 3, per_source: int = 80, top: i
     cands = fetch_profiles(cands, limit=top)
     icp = icp or icp_for(d["niche"]) or icp_for(seed) or f"{d['niche']} in Deutschland"
     ranked = rank(cands[:top], icp, d["niche"])
-    for r in ranked:  # harter ICP-Filter nach dem Ranking: Ketten nie über Tier C
+    for r in ranked:  # harte ICP-Filter nach dem Ranking: Ketten und Auslandssitz nie über Tier C
         if r.get("kette") and r["tier"] in ("A", "B"):
             r["tier"], r["needs_human"] = "C", True
+        if foreign_seat(r):
+            r["ausland"] = True
+            r["datenluecken"] = ", ".join(x for x in (r.get("datenluecken"), "Sitz vermutlich Ausland") if x)
+            if r["tier"] in ("A", "B"):
+                r["tier"], r["needs_human"] = "C", True
+    ranked.sort(key=lambda r: ("ABCD".index(r["tier"]), -r["score"]))
     step("gerankt", len(ranked), {"needs_human": sum(r["needs_human"] for r in ranked)})
+
+    chan = _optional("channel", "channel")
+    if chan:
+        for r in ranked:
+            r.update(chan(r))
+            # Verzeichnis-Adresse reicht für den Brief, wenn das Impressum fehlt (lokale Betriebe ohne Website)
+            if r.get("kanal") == "LinkedIn" and r.get("postcode") and not r.get("website"):
+                r["kanal"], r["kanal_grund"] = "Brief", "Adresse aus dem Verzeichnis; Brief braucht keine Einwilligung"
+        step("mit Kanal", sum(1 for r in ranked if r.get("kanal")))
 
     out = {"seed": seed, "niche": d["niche"], "icp": icp, "funnel": funnel,
            "sources": picked, "leads": ranked, "seconds": round(time.time() - t0, 1)}
@@ -138,7 +175,8 @@ def run(seed: str, icp: str = "", sources: int = 3, per_source: int = 80, top: i
 
 def _csv(rows: List[Dict], path: Path) -> None:
     cols = ["name", "website", "city", "postcode", "score", "tier", "konfidenz", "datenluecken",
-            "needs_human", "decision_maker", "in_ai_ark", "signal_score", "freshest_signal_days",
+            "needs_human", "decision_maker", "in_ai_ark", "kanal", "kanal_grund", "street", "phone",
+            "signal_score", "freshest_signal_days",
             "reason", "reason_source", "source_url", "source_type"]
     with path.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")

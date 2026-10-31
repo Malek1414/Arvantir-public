@@ -90,18 +90,28 @@ def merge(a: Dict, b: Dict) -> Dict:
 
 
 def normalize(cands: List[Dict]) -> List[Dict]:
-    """Saubere, deduplizierte Kandidaten; Reihenfolge = erstes Auftreten."""
+    """Saubere, deduplizierte Kandidaten; Reihenfolge = erstes Auftreten.
+
+    Gleicher Name allein reicht NICHT: "Autowäsche" in 10115 und in 80331 sind zwei Firmen.
+    Über den Namen wird nur zusammengeführt, wenn die PLZ gleich ist oder auf einer Seite fehlt
+    und keine der beiden Seiten eine eigene, andere Domain hat.
+    """
     out: Dict[str, Dict] = {}
-    by_name: Dict[str, str] = {}
+    by_name: Dict[str, List[str]] = {}
     for raw in cands:
         c = clean(raw)
         c.setdefault("sources", [s for s in [raw.get("source_url")] if s])
         c.setdefault("aliases", [c["name_raw"]] if c.get("name_raw") else [])
         key = entity_key(c)
         nk = name_key(c.get("name", ""))
-        if key not in out and nk and nk in by_name and (
-                not c.get("domain") or by_name[nk].startswith("nm:")):
-            key = by_name[nk]  # gleicher Name, eine Seite ohne Domain: dieselbe Firma
+        if key not in out and nk:
+            for k in by_name.get(nk, []):
+                o = out[k]
+                same_plz = not c.get("postcode") or not o.get("postcode") or c["postcode"] == o["postcode"]
+                dom_ok = not c.get("domain") or not o.get("domain") or c["domain"] == o["domain"]
+                if same_plz and dom_ok:
+                    key = k  # gleicher Name, passende PLZ, keine widersprechende Domain
+                    break
         if key in out:
             merge(out[key], c)
         else:
@@ -109,7 +119,7 @@ def normalize(cands: List[Dict]) -> List[Dict]:
             c["source_count"] = len(c["sources"])
             out[key] = c
             if nk:
-                by_name.setdefault(nk, key)
+                by_name.setdefault(nk, []).append(key)
     rows = list(out.values())
     print(f"[normalize] {len(cands)} -> {len(rows)} Firmen")
     return rows

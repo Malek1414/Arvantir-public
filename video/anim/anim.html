@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Arvantir motion</title>
+<style>
+:root{--ink:#0a0a0a;--muted:#6b6b6b;--line:#e8e8ec;--track:#f2f2f2;--blue:#2346ff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#fff;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.scene{position:absolute;inset:0;display:none;padding:0 200px;flex-direction:column;justify-content:center}
+.scene.on{display:flex}
+.k{font-size:30px;color:var(--muted);margin-bottom:26px}
+h1{font-size:112px;font-weight:600;letter-spacing:-.035em;line-height:1.02}
+h1 .soft{color:var(--muted)}
+h1 .blue{color:var(--blue)}
+.up{opacity:0;animation:up .8s cubic-bezier(.2,.7,.2,1) both}
+@keyframes up{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.fade{opacity:0;animation:fade .8s ease both}
+@keyframes fade{to{opacity:1}}
+
+/* 1 Emin Fleisch */
+.card{width:1040px;border:2px solid var(--ink);border-radius:28px;padding:48px 56px;background:#fff}
+.card .name{font-size:64px;font-weight:600;letter-spacing:-.03em}
+.card .city{font-size:30px;color:var(--muted);margin-top:6px}
+.rowk{display:grid;grid-template-columns:330px 1fr;font-size:38px;margin-top:22px;align-items:center}
+.rowk span:first-child{color:var(--muted)}
+.tier{display:inline-grid;place-items:center;width:56px;height:56px;border-radius:14px;background:var(--ink);color:#fff;font-weight:700;font-size:30px;margin-left:16px;vertical-align:middle}
+.stamp{margin-top:40px;font-size:44px;font-weight:600;color:var(--blue)}
+
+/* 2 Modell */
+.bars{margin-top:60px;display:grid;gap:34px;max-width:1400px}
+.bar{display:grid;grid-template-columns:420px 1fr 170px;gap:30px;align-items:center;font-size:40px}
+.bar .t{height:30px;background:var(--track);border-radius:30px;overflow:hidden}
+.bar .t i{display:block;height:100%;width:0;border-radius:30px;background:#c4c4c4;transition:width 1.6s cubic-bezier(.2,.7,.2,1)}
+.bar.own .t i{background:var(--blue)}
+.bar .v{font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.bar.own .v,.bar.own .n{color:var(--blue);font-weight:600}
+.bar .n{color:var(--muted)}
+.note{font-size:30px;color:var(--muted);margin-top:44px}
+
+/* 3 Integration */
+.flow{display:grid;grid-template-columns:420px 260px 1fr;align-items:center;margin-top:20px}
+.src{border:3px solid var(--blue);border-radius:30px;padding:46px;font-size:56px;font-weight:600;color:var(--blue);text-align:center}
+.wires{height:520px}
+.wires path{fill:none;stroke:var(--blue);stroke-width:4;stroke-dasharray:12 10;stroke-dashoffset:0;opacity:0}
+.tiles{display:grid;gap:30px}
+.tile{border:2px solid var(--ink);border-radius:24px;padding:34px 40px;opacity:0}
+.tile b{font-size:46px;font-weight:600;display:block}
+.tile span{font-size:28px;color:var(--muted)}
+
+/* 4 Ergebnis */
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:60px;margin-top:20px}
+.num b{display:block;font-size:200px;font-weight:600;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.num span{font-size:38px;color:var(--muted)}
+.num.blue b{color:var(--blue)}
+
+/* 5 Dark TAM */
+#dots{position:absolute;inset:0}
+.dark-text{position:relative;z-index:2;background:rgba(255,255,255,.88);padding:40px 0;border-radius:24px}
+
+/* 6 Ende */
+.logo{width:150px;height:150px;color:var(--blue);margin-bottom:56px}
+/* 0 Problem */
+.list{margin-top:50px;display:grid;gap:14px;width:1100px;position:relative}
+.lrow{height:64px;border-radius:14px;background:var(--track);display:grid;grid-template-columns:380px 220px 1fr;align-items:center;padding:0 26px;gap:20px;transition:transform .5s cubic-bezier(.4,0,.2,1),opacity .6s}
+.lrow i{display:block;height:16px;border-radius:8px;background:#d6d6dc}
+.miss{position:absolute;right:200px;top:600px;width:620px;border:3px solid var(--blue);border-radius:22px;padding:30px 34px;background:#fff;opacity:0;transform:translateX(120px);transition:all .9s cubic-bezier(.2,.7,.2,1)}
+.miss b{display:block;font-size:44px;font-weight:600}
+.miss span{display:block;font-size:28px;color:var(--muted);margin-top:4px}
+.miss em{display:block;font-style:normal;font-size:28px;color:var(--blue);margin-top:14px;font-weight:600}
+.miss.on{opacity:1;transform:none}
+.lbl-dot{position:absolute;font:600 28px -apple-system,sans-serif;color:var(--blue);opacity:0;transition:opacity .6s}
+</style>
+</head>
+<body>
+
+<section class="scene" id="s0">
+  <div class="k up" id="pk">Today</div>
+  <h1 class="up" id="ph" style="animation-delay:.2s;font-size:84px">A bought list, <span class="soft">sorted by hand.</span></h1>
+  <div class="list" id="plist"></div>
+  <div class="miss" id="pmiss"><b>Emin Fleisch GmbH</b><span>Butcher, München</span><em>not in a database of 17 million companies</em></div>
+</section>
+
+<section class="scene" id="s1">
+  <div class="k up">Found today by Arvantir</div>
+  <div class="card up" style="animation-delay:.3s">
+    <div class="name">Emin Fleisch GmbH</div>
+    <div class="city">Butcher, München</div>
+    <div class="rowk up" style="animation-delay:1.3s"><span>Person in charge</span><span>named, from the legal notice</span></div>
+    <div class="rowk up" style="animation-delay:2.2s"><span>Fit score</span><span><b>100</b> / 100 <span class="tier">A</span></span></div>
+    <div class="rowk up" style="animation-delay:3.1s"><span>Way in</span><span><b>Letter</b>, not email</span></div>
+  </div>
+  <div class="stamp up" style="animation-delay:4.2s">Not in a database of 17 million companies.</div>
+</section>
+
+<section class="scene" id="s2">
+  <div class="k up">Our own model</div>
+  <h1 class="up" style="animation-delay:.2s">Agrees with a human<br><span class="blue">98 percent</span> <span class="soft">of the time.</span></h1>
+  <div class="bars">
+    <div class="bar up" style="animation-delay:.9s"><span class="n">Fixed formula</span><div class="t"><i data-w="80"></i></div><span class="v" data-n="80">0 %</span></div>
+    <div class="bar own up" style="animation-delay:1.2s"><span class="n">Arvantir</span><div class="t"><i data-w="98"></i></div><span class="v" data-n="98">0 %</span></div>
+  </div>
+  <div class="note fade" style="animation-delay:3.4s">330 hand-checked leads · 3,327 training pairs · 13 minutes to train · no cost per lead</div>
+</section>
+
+<section class="scene" id="s3">
+  <div class="k up">Runs today, end to end</div>
+  <div class="flow">
+    <div class="src up" style="animation-delay:.3s">Arvantir</div>
+    <svg class="wires" viewBox="0 0 260 520" preserveAspectRatio="none">
+      <path d="M0 260 C130 260,130 90,260 90"/><path d="M0 260 H260"/><path d="M0 260 C130 260,130 430,260 430"/>
+    </svg>
+    <div class="tiles">
+      <div class="tile"><b>Clay table</b><span>CSV or webhook</span></div>
+      <div class="tile"><b>Supabase</b><span>every field with its source</span></div>
+      <div class="tile"><b>Claude Code skill</b><span>one command</span></div>
+    </div>
+  </div>
+  <div class="note fade" style="animation-delay:3.6s">No migration. No new tool for your team.</div>
+</section>
+
+<section class="scene" id="s4">
+  <div class="k up">Today</div>
+  <div class="nums">
+    <div class="num up" style="animation-delay:.2s"><b data-n="6">0</b><span>niches</span></div>
+    <div class="num up" style="animation-delay:.6s"><b data-n="347">0</b><span>ranked leads</span></div>
+    <div class="num blue up" style="animation-delay:1s"><b data-n="134">0</b><span>with the person in charge named</span></div>
+  </div>
+</section>
+
+<section class="scene" id="s5">
+  <canvas id="dots" width="1920" height="1080"></canvas>
+  <div class="lbl-dot" id="emin" style="left:1330px;top:150px">Emin Fleisch</div>
+  <div class="dark-text">
+    <h1 class="fade" style="animation-delay:4.2s"><span class="blue">187</span> firms like it.<br><span class="soft">Not one of them in a database<br>of 17 million companies.</span></h1>
+    <div class="note fade" style="animation-delay:5.4s;font-size:40px">Doctors and pharmacies: <b style="color:var(--blue)">86 %</b></div>
+  </div>
+</section>
+
+<section class="scene" id="s6">
+  <svg class="logo up" viewBox="0 0 64 64"><circle cx="32" cy="27" r="18" fill="none" stroke="currentColor" stroke-width="5"/><path d="M25 36 L29 18 L34 18 L30 36Z M32 36 L36 18 L41 18 L37 36Z" fill="currentColor"/><path d="M9 49 Q32 63 55 49" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg>
+  <h1 class="up" style="animation-delay:.4s">Give us the niche<br>you gave up on.</h1>
+  <h1 class="up soft" style="animation-delay:1.4s;font-size:64px;margin-top:30px;color:var(--muted)">On Monday, you get the list nobody else has.</h1>
+</section>
+
+<script>
+"use strict";
+const id = new URLSearchParams(location.search).get("s") || "1";
+const sc = document.getElementById("s" + id);
+sc.classList.add("on");
+const count = (el, to, ms, suffix = "") => {
+  const t0 = performance.now();
+  const f = t => { const p = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - p, 3); el.textContent = Math.round(to * e).toLocaleString("en-US") + suffix; if (p < 1) requestAnimationFrame(f); };
+  requestAnimationFrame(f);
+};
+if (id === "2") setTimeout(() => sc.querySelectorAll(".bar").forEach(b => { b.querySelector("i").style.width = b.querySelector("i").dataset.w + "%"; count(b.querySelector(".v"), +b.querySelector(".v").dataset.n, 1600, " %"); }), 1500);
+if (id === "4") sc.querySelectorAll(".num b").forEach((b, k) => setTimeout(() => count(b, +b.dataset.n, 1400), 300 + k * 400));
+if (id === "3") {
+  sc.querySelectorAll(".wires path").forEach((p, k) => setTimeout(() => { p.style.transition = "opacity .4s"; p.style.opacity = 1; p.animate([{ strokeDashoffset: 220 }, { strokeDashoffset: 0 }], { duration: 1400, iterations: Infinity }); }, 1000 + k * 250));
+  sc.querySelectorAll(".tile").forEach((t, k) => setTimeout(() => t.animate([{ opacity: 0, transform: "translateX(-20px)" }, { opacity: 1, transform: "none" }], { duration: 600, fill: "forwards", easing: "cubic-bezier(.2,.7,.2,1)" }), 1400 + k * 450));
+}
+
+if (id === "0") {
+  const L = document.getElementById("plist");
+  const W = [[78,40],[62,55],[90,30],[55,62],[70,45],[84,38]];
+  W.forEach(([a,b]) => { const r = document.createElement("div"); r.className = "lrow"; r.innerHTML = `<i style="width:${a}%"></i><i style="width:${b}%"></i><i style="width:${(a+b)/2}%"></i>`; L.appendChild(r); });
+  const rows = [...L.children];
+  // von Hand sortieren: Zeilen tauschen mehrfach die Plätze
+  const swap = (i, j, t) => setTimeout(() => { const h = 78; rows[i].style.transform = `translateY(${(j-i)*h}px)`; rows[j].style.transform = `translateY(${(i-j)*h}px)`; setTimeout(() => { rows[i].style.transform = rows[j].style.transform = "none"; }, 650); }, t);
+  swap(0,3,1000); swap(1,4,1800); swap(2,5,2600); swap(0,2,3400);
+  setTimeout(() => { document.getElementById("ph").innerHTML = 'The firms you need <span class="blue">are not on it.</span>'; rows.forEach(r => r.style.opacity = .35); }, 4400);
+  setTimeout(() => document.getElementById("pmiss").classList.add("on"), 5200);
+}
+if (id === "5") setTimeout(() => { document.getElementById("emin").style.opacity = 1; }, 3600);
+if (id === "5") {
+  // Raster aus grauen Punkten steht für die Datenbank, 187 blaue Punkte erscheinen außerhalb
+  const c = document.getElementById("dots"), x = c.getContext("2d");
+  const grid = [], dark = [];
+  for (let gy = 90; gy < 1000; gy += 22) for (let gx = 60; gx < 1860; gx += 22) grid.push([gx, gy, Math.random()]);
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  dark.push([1310, 175, 0]);
+  while (dark.length < 187) { const a = rnd() * Math.PI * 2, r = 380 + rnd() * 420; dark.push([960 + Math.cos(a) * r * 1.6, 540 + Math.sin(a) * r * .9, rnd()]); }
+  const t0 = performance.now();
+  const draw = t => {
+    const s = (t - t0) / 1000; x.clearRect(0, 0, 1920, 1080);
+    for (const [gx, gy, d] of grid) { const a = Math.min(1, Math.max(0, (s - d * 1.2) * 2)) * .5; if (a) { x.fillStyle = `rgba(160,160,170,${a})`; x.fillRect(gx, gy, 4, 4); } }
+    if (s > 2) for (const [gx, gy, d] of dark) { const a = Math.min(1, Math.max(0, (s - 2 - d * 1.4) * 3)); if (a) { x.fillStyle = `rgba(35,70,255,${a})`; x.beginPath(); x.arc(gx, gy, 5 + 3 * (1 - a), 0, 7); x.fill(); } }
+    requestAnimationFrame(draw);
+  };
+  requestAnimationFrame(draw);
+}
+</script>
+</body>
+</html>

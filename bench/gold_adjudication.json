@@ -1,0 +1,705 @@
+{
+ "malek_vs_claude_blind": {
+  "n": 150,
+  "exact_agreement": 0.307,
+  "cohen_kappa_3class": 0.033,
+  "fit_vs_not_agreement": 0.527,
+  "cohen_kappa_fit_vs_not": 0.053,
+  "confusion_malek_x_claude": {
+   "nein->nein": 40,
+   "nein->vielleicht": 1,
+   "passt->nein": 62,
+   "passt->passt": 6,
+   "passt->vielleicht": 7,
+   "vielleicht->nein": 32,
+   "vielleicht->passt": 2
+  }
+ },
+ "adjudicated_to_nein_by_rule": {
+  "portal": 6,
+  "host": 24,
+  "region": 3,
+  "boiler": 1
+ },
+ "disputed_excluded": 70,
+ "final_gold": 330,
+ "final_by_niche": {
+  "aerzte_apotheken": {
+   "passt": 0,
+   "vielleicht": 0,
+   "nein": 41
+  },
+  "baeckereien_metzgereien": {
+   "passt": 0,
+   "vielleicht": 0,
+   "nein": 50
+  },
+  "family_offices": {
+   "passt": 0,
+   "vielleicht": 0,
+   "nein": 19
+  },
+  "immobilien_asset_manager": {
+   "passt": 6,
+   "vielleicht": 0,
+   "nein": 14
+  },
+  "it_dienstleister": {
+   "passt": 3,
+   "vielleicht": 4,
+   "nein": 43
+  },
+  "maschinenbau": {
+   "passt": 0,
+   "vielleicht": 0,
+   "nein": 50
+  },
+  "steuerberater": {
+   "passt": 0,
+   "vielleicht": 0,
+   "nein": 50
+  },
+  "waschanlagen": {
+   "passt": 4,
+   "vielleicht": 19,
+   "nein": 27
+  }
+ },
+ "who": {
+  "adjudicated": 34,
+  "malek+claude": 46,
+  "claude": 250
+ },
+ "disputed": [
+  {
+   "pair_id": "1062dd2d6b8791b0",
+   "niche": "aerzte_apotheken",
+   "name": "PSAT",
+   "url": "https://www.prepscholartutors.com/payment/1/0",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "PrepScholar US test-prep payment page, not a practice"
+  },
+  {
+   "pair_id": "16b542a981b3e02b",
+   "niche": "aerzte_apotheken",
+   "name": "akquinet outsourcing gem. GmbH",
+   "url": "http://www.akquinet.de",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "akquinet IT services company, different industry"
+  },
+  {
+   "pair_id": "4c6ae6e522800e7e",
+   "niche": "aerzte_apotheken",
+   "name": "Claranet GmbH",
+   "url": "https://www.claranet.com/de/",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Claranet IT/cloud provider, different industry"
+  },
+  {
+   "pair_id": "6a924dca48ac44f2",
+   "niche": "aerzte_apotheken",
+   "name": "Mahjong",
+   "url": "https://www.mahjongspielen.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Online Mahjong game site"
+  },
+  {
+   "pair_id": "7ca57e90fb3f2fa1",
+   "niche": "aerzte_apotheken",
+   "name": "Deutsche WertpapierService Bank AG",
+   "url": "https://www.dwpbank.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "dwpbank securities bank, different industry"
+  },
+  {
+   "pair_id": "ab65addae9812537",
+   "niche": "aerzte_apotheken",
+   "name": "Roadpass Digital",
+   "url": "https://roadpass.com",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "Roadpass Digital US travel apps company"
+  },
+  {
+   "pair_id": "2152e0ea5a0a0bda",
+   "niche": "aerzte_apotheken",
+   "name": "Arzt- und Psychotherapeutensuche",
+   "url": "http://www.kzbv.de/zahnarztsuche.1078.de.html",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "KZBV dentist search directory linking state associations"
+  },
+  {
+   "pair_id": "242ad4b9a7be426b",
+   "niche": "aerzte_apotheken",
+   "name": "",
+   "url": "https://www.mahjong.com/3D+Mahjong",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Online 3D Mahjong game directory"
+  },
+  {
+   "pair_id": "6a2c5caf12235e07",
+   "niche": "aerzte_apotheken",
+   "name": "",
+   "url": "https://order.toasttab.com/online/little-pub-stratford",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "US pub online ordering page, restaurant"
+  },
+  {
+   "pair_id": "1c1b74a48122dbdd",
+   "niche": "family_offices",
+   "name": "encourageventures e. V.",
+   "url": "https://www.encourage-ventures.com",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "Non-profit association connecting female investors and startups"
+  },
+  {
+   "pair_id": "7aeb393b96293f18",
+   "niche": "family_offices",
+   "name": "Startup Inkubator der AiCuris Anti-infective Cures AG",
+   "url": "https://www.aicuris.com/AiCubator",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "Pharma company incubator page, other industry"
+  },
+  {
+   "pair_id": "dab2c51dc2af9956",
+   "niche": "family_offices",
+   "name": "Trustventure GmbH",
+   "url": "https://www.trustventure.de",
+   "malek": "nein",
+   "claude": "vielleicht",
+   "claude_reason": "PE/VC investment and advisory firm in Germany; family-office status unknown"
+  },
+  {
+   "pair_id": "0b5f2604168b130c",
+   "niche": "family_offices",
+   "name": "Business Angels Mittelhessen e.V.",
+   "url": "https://ba-mittelhessen.de/",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "Business angel network association"
+  },
+  {
+   "pair_id": "160f2fa5cc1e173d",
+   "niche": "family_offices",
+   "name": "offeneregister[at]okfn.de",
+   "url": "",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Open data project contact snippet, no company"
+  },
+  {
+   "pair_id": "f6ac14f5f9f03fc7",
+   "niche": "family_offices",
+   "name": "Akamai Technologies GmbH",
+   "url": "http://www.akamai.de/",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "CDN/cybersecurity company, other industry"
+  },
+  {
+   "pair_id": "e029b[tel]f8",
+   "niche": "family_offices",
+   "name": "BERENBERG Joh. Berenberg, Gossler & Co. KG",
+   "url": "https://www.berenberg.de",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "Private bank, excluded"
+  },
+  {
+   "pair_id": "9c5cab12b5948f62",
+   "niche": "family_offices",
+   "name": "IACD – Netzwerk e.V.",
+   "url": "https://iacd-ev.de",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "Business angel club association (e.V.)"
+  },
+  {
+   "pair_id": "a3a3cc5e1cc3236f",
+   "niche": "family_offices",
+   "name": "High-Tech Gründerfonds Management GmbH",
+   "url": "https://www.high-tech-gruenderfonds.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "State-backed VC fund manager, not family office"
+  },
+  {
+   "pair_id": "22f0a161358fa4aa",
+   "niche": "family_offices",
+   "name": "Euronext",
+   "url": "https://www.euronext.com/fr",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Stock exchange operator, outside niche"
+  },
+  {
+   "pair_id": "836ef56bdcde7480",
+   "niche": "family_offices",
+   "name": "Digital Hub Logistics",
+   "url": "https://www.digitalhublogistics.hamburg/",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Logistics innovation hub, other category"
+  },
+  {
+   "pair_id": "37df0af5735f87ff",
+   "niche": "family_offices",
+   "name": "H&S Investment GmbH",
+   "url": "https://www.hs-investment.eu",
+   "malek": "passt",
+   "claude": "vielleicht",
+   "claude_reason": "Angel investor GmbH with own capital, BAND member; family link unknown"
+  },
+  {
+   "pair_id": "ff77a684a74d96dd",
+   "niche": "family_offices",
+   "name": "FCI FundersClub GmbH",
+   "url": "https://www.fundersclub.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Startup-investor matching intermediary, not an investor vehicle"
+  },
+  {
+   "pair_id": "ab517faf3df7f678",
+   "niche": "family_offices",
+   "name": "Business Angels Weser-Ems-Bremen m.W.",
+   "url": "https://www.b-a-web.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Business angel network association"
+  },
+  {
+   "pair_id": "e2f2e97f1beafa7a",
+   "niche": "family_offices",
+   "name": "Gesell. für Wirtschaftsförderung & Stadtentwicklung Göttingen mbH",
+   "url": "https://www.snic.de/accelerator",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Municipal economic development accelerator"
+  },
+  {
+   "pair_id": "b346208df4d84b6e",
+   "niche": "family_offices",
+   "name": "WIN.DN GmbH",
+   "url": "https://www.co-space-dueren.de/",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Municipal incubator/coworking, other category"
+  },
+  {
+   "pair_id": "f16315f827eb58b7",
+   "niche": "family_offices",
+   "name": "Greentech Hub (GT Hub)",
+   "url": "https://gt-hub.de/",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Greentech innovation hub, other category"
+  },
+  {
+   "pair_id": "e9ec66569ee306e7",
+   "niche": "family_offices",
+   "name": "A. C. Ventures GmbH",
+   "url": "https://acventures.ac",
+   "malek": "passt",
+   "claude": "vielleicht",
+   "claude_reason": "Bavarian own-capital VC/venture builder; family ownership unknown"
+  },
+  {
+   "pair_id": "38dbc4136f7f45a2",
+   "niche": "family_offices",
+   "name": "LUTZ | ABEL Rechtsanwalts PartG mbB",
+   "url": "http://www.lutzabel.com",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Law firm, service provider"
+  },
+  {
+   "pair_id": "a0957ec50f79e259",
+   "niche": "family_offices",
+   "name": "BANSON Business Angel Netzwerk e.V.",
+   "url": "https://banson.de/",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Business angel network association"
+  },
+  {
+   "pair_id": "3da1c03b2b352fff",
+   "niche": "family_offices",
+   "name": "vencora GmbH Rechtsanwaltsgesellschaft",
+   "url": "https://vencora.de/",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Law firm, service provider"
+  },
+  {
+   "pair_id": "9c2d373da3b22a1c",
+   "niche": "family_offices",
+   "name": "SKALO GmbH & Co. KG",
+   "url": "https://www.skalo.io/",
+   "malek": "passt",
+   "claude": "vielleicht",
+   "claude_reason": "Impact venture backer KG; investing activity and location unclear"
+  },
+  {
+   "pair_id": "fd4e98639db68fd4",
+   "niche": "family_offices",
+   "name": "Bundesverband Deutscher Innovations-, Technologie- und Gründerzentren e.V. (BVIZ)",
+   "url": "https://www.innovationszentren.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Federal association of innovation centers"
+  },
+  {
+   "pair_id": "0a62b83df5861f0b",
+   "niche": "family_offices",
+   "name": "KONLUS Koehler Neumann & Partner Wirtschaftsprüfer Steuerberater",
+   "url": "https://www.konlus.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Tax advisory and audit firm"
+  },
+  {
+   "pair_id": "28b0a7c[tel]",
+   "niche": "family_offices",
+   "name": "Forum KIEDRICH GmbH",
+   "url": "https://www.forum-kiedrich.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Non-profit founder/mentor network"
+  },
+  {
+   "pair_id": "3554e15e03e9eab7",
+   "niche": "family_offices",
+   "name": "TGZ Halle GmbH",
+   "url": "https://www.technologiepark-weinberg-campus.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Technology park and accelerator"
+  },
+  {
+   "pair_id": "14e274cdbe5ecee8",
+   "niche": "family_offices",
+   "name": "EBAN European Business Angel Network",
+   "url": "https://www.eban.org/",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "European business angel association"
+  },
+  {
+   "pair_id": "da0c13e46ee27a25",
+   "niche": "family_offices",
+   "name": "Gateway Ventures",
+   "url": "https://gateway.ventures/",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "Retail business angel investment platform"
+  },
+  {
+   "pair_id": "ca68d50366e5b5b6",
+   "niche": "family_offices",
+   "name": "KXP",
+   "url": "https://kxp-law.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Law firm, service provider"
+  },
+  {
+   "pair_id": "25da6084acfcc3c6",
+   "niche": "family_offices",
+   "name": "BVK Bundesverband Deutscher Kapitalbeteiligungsgesellschaften e. V.",
+   "url": "https://www.bvkap.de",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "PE/VC industry association"
+  },
+  {
+   "pair_id": "46b4dd40a11647dd",
+   "niche": "family_offices",
+   "name": "futureSAX",
+   "url": "http://www.futuresax.de/",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "State innovation platform Saxony"
+  },
+  {
+   "pair_id": "3bbfea7ab36e327f",
+   "niche": "immobilien_asset_manager",
+   "name": "Deloitte GmbH",
+   "url": "https://www.deloitte.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Audit and consulting firm, not a real-estate asset manager"
+  },
+  {
+   "pair_id": "53b7f38feab6d110",
+   "niche": "immobilien_asset_manager",
+   "name": "Wellington Management Europe GmbH",
+   "url": "https://www.wellington.com",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "Global securities asset manager, no German real-estate focus"
+  },
+  {
+   "pair_id": "9602e7d0a360f929",
+   "niche": "immobilien_asset_manager",
+   "name": "Franklin Templeton International Services S.A.R.L., Niederlassung Deutschland",
+   "url": "https://www.franklintempleton.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Luxembourg securities fund house branch, no real-estate focus"
+  },
+  {
+   "pair_id": "94dc11daa95b55ac",
+   "niche": "immobilien_asset_manager",
+   "name": "Dechert LLP",
+   "url": "https://www.dechert.com",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "International law firm"
+  },
+  {
+   "pair_id": "312e4acb4c9e225a",
+   "niche": "immobilien_asset_manager",
+   "name": "Art-Invest Real Estate Funds GmbH",
+   "url": "https://www.art-invest.de",
+   "malek": "vielleicht",
+   "claude": "passt",
+   "claude_reason": "Cologne real-estate KVG and asset manager with fund portfolio"
+  },
+  {
+   "pair_id": "cbb0ecd4e16985ff",
+   "niche": "immobilien_asset_manager",
+   "name": "PIMCO Europe GmbH",
+   "url": "https://www.pimco.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Bond-focused securities asset manager"
+  },
+  {
+   "pair_id": "2346c49a0f1e22e1",
+   "niche": "immobilien_asset_manager",
+   "name": "Clifford Chance Partnerschaft mbB",
+   "url": "https://www.cliffordchance.com",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "International law firm"
+  },
+  {
+   "pair_id": "52dbf458f56ef0e3",
+   "niche": "immobilien_asset_manager",
+   "name": "Siemens Fonds Invest GmbH",
+   "url": "https://www.siemens.de/fonds",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Corporate securities fund house, no real-estate evidence"
+  },
+  {
+   "pair_id": "116584f81f22cd9f",
+   "niche": "immobilien_asset_manager",
+   "name": "ÖKOWORLD LUX S.A.",
+   "url": "https://www.oekoworld.com",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Luxembourg sustainable equity fund house"
+  },
+  {
+   "pair_id": "48e0e68f8c247fe3",
+   "niche": "immobilien_asset_manager",
+   "name": "LBBW Asset Management Investmentgesellschaft mbH",
+   "url": "https://www.LBBW-AM.de",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "Bank securities fund house, no real-estate focus shown"
+  },
+  {
+   "pair_id": "e633965f768bee9c",
+   "niche": "immobilien_asset_manager",
+   "name": "Candriam - Zweigniederlassung Deutschland",
+   "url": "https://www.candriam.com",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "Belgian/Luxembourg securities asset manager branch"
+  },
+  {
+   "pair_id": "78524181c6478b6d",
+   "niche": "immobilien_asset_manager",
+   "name": "DJE Kapital AG",
+   "url": "https://www.dje.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Securities fund and wealth manager"
+  },
+  {
+   "pair_id": "8b699e7ae7392fa1",
+   "niche": "immobilien_asset_manager",
+   "name": "Vanguard Group Europe GmbH",
+   "url": "https://www.de.vanguard",
+   "malek": "vielleicht",
+   "claude": "nein",
+   "claude_reason": "Global ETF/index fund giant"
+  },
+  {
+   "pair_id": "51cf7fffd3d3ad10",
+   "niche": "immobilien_asset_manager",
+   "name": "Bfz-Essen GmbH",
+   "url": "http://www.bfz-essen.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Vocational training provider"
+  },
+  {
+   "pair_id": "ec9757988bfc6650",
+   "niche": "immobilien_asset_manager",
+   "name": "Immobilien-Investment-Sachverständigen e.V. und BIIS GmbH",
+   "url": "https://www.biis.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Association of real-estate valuers"
+  },
+  {
+   "pair_id": "bed36591d35f5814",
+   "niche": "immobilien_asset_manager",
+   "name": "M&G Luxembourg S.A., Niederlassung Deutschland",
+   "url": "https://www.mandg.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Luxembourg securities manager branch"
+  },
+  {
+   "pair_id": "d4d63be02b2fd09c",
+   "niche": "immobilien_asset_manager",
+   "name": "Esso",
+   "url": "https://www.openstreetmap.org/?mlat=[tel]&mlon=[tel]#map=[tel]",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "OpenStreetMap car wash entry"
+  },
+  {
+   "pair_id": "1f05a30c30176f08",
+   "niche": "immobilien_asset_manager",
+   "name": "AQUA Finanzservice",
+   "url": "https://www.aqua-finanzservice.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Withholding tax refund service"
+  },
+  {
+   "pair_id": "df5404213ef4ba96",
+   "niche": "immobilien_asset_manager",
+   "name": "Deka Vermögensmanagement GmbH",
+   "url": "https://www.deka.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Retail securities fund manager"
+  },
+  {
+   "pair_id": "12e6de170639bd09",
+   "niche": "immobilien_asset_manager",
+   "name": "Generali Asset Management S.p.A. SGR Zweigniederlassung Deutschland",
+   "url": "https://www.generali-investments.com",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Italian insurer securities asset manager branch"
+  },
+  {
+   "pair_id": "77fdc89ce80686f0",
+   "niche": "immobilien_asset_manager",
+   "name": "Investments Deutschland AG",
+   "url": "https://www.aberdeeninvestments.com/de",
+   "malek": "passt",
+   "claude": "vielleicht",
+   "claude_reason": "German AG of abrdn, real-estate focus unclear, listed parent"
+  },
+  {
+   "pair_id": "12f2d1a0e4bc6dc7",
+   "niche": "immobilien_asset_manager",
+   "name": "ACATIS Investment Kapitalverwaltungsgesellschaft mbH",
+   "url": "https://www.acatis.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Value-investing securities KVG"
+  },
+  {
+   "pair_id": "a4f6c4db769f03e0",
+   "niche": "immobilien_asset_manager",
+   "name": "Union Investment Real Estate GmbH",
+   "url": "https://www.union-investment.de/realestate",
+   "malek": "vielleicht",
+   "claude": "passt",
+   "claude_reason": "Major German real-estate KVG, unlisted cooperative group"
+  },
+  {
+   "pair_id": "708c8d8c4dbec37c",
+   "niche": "immobilien_asset_manager",
+   "name": "CACEIS Bank S.A., Germany Branch",
+   "url": "https://www.caceis.com",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Depositary and custody bank"
+  },
+  {
+   "pair_id": "291b77a568c2d05f",
+   "niche": "immobilien_asset_manager",
+   "name": "Santander Asset Management S.A. SGIIC German Branch",
+   "url": "https://www.santanderassetmanagement.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Spanish securities asset manager branch"
+  },
+  {
+   "pair_id": "be25f4544ca9ab0e",
+   "niche": "immobilien_asset_manager",
+   "name": "UI BVK Kapitalverwaltungsgesellschaft mbH",
+   "url": "https://www.universal-investment.com",
+   "malek": "passt",
+   "claude": "vielleicht",
+   "claude_reason": "Service ManCo with real-estate funds, not own asset manager"
+  },
+  {
+   "pair_id": "66c[tel]",
+   "niche": "immobilien_asset_manager",
+   "name": "PATRIZIA Real Assets Kapitalverwaltungsgesellschaft mbH",
+   "url": "https://www.patrizia.ag",
+   "malek": "passt",
+   "claude": "vielleicht",
+   "claude_reason": "Real-estate KVG but parent PATRIZIA SE listed, very large"
+  },
+  {
+   "pair_id": "0e607739c2d0273b",
+   "niche": "immobilien_asset_manager",
+   "name": "d-fine GmbH",
+   "url": "https://www.d-fine.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Quantitative consulting firm"
+  },
+  {
+   "pair_id": "3e5813a14884737e",
+   "niche": "immobilien_asset_manager",
+   "name": "Arbeitsgemeinschaft Berufsständischer Versorgungseinrichtungen e. V.",
+   "url": "https://www.abv.de",
+   "malek": "passt",
+   "claude": "nein",
+   "claude_reason": "Association of professional pension schemes"
+  },
+  {
+   "pair_id": "22699b699b5b51fc",
+   "niche": "immobilien_asset_manager",
+   "name": "Aquila Capital Investmentgesellschaft mbH",
+   "url": "https://www.aquila-capital.de",
+   "malek": "passt",
+   "claude": "vielleicht",
+   "claude_reason": "Real-assets KVG, mainly energy and infrastructure, empty page"
+  }
+ ]
+}

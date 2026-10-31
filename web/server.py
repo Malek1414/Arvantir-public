@@ -6,7 +6,10 @@ Kein CORS: Seite und API kommen vom selben Origin.
 from __future__ import annotations
 
 import asyncio
+import hashlib
+import hmac
 import importlib
+import os
 import importlib.util
 import json
 import re
@@ -16,7 +19,7 @@ import uuid
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
@@ -134,6 +137,7 @@ def result(rid: str) -> Dict:
 
 
 @app.get("/runs")
+@app.get("/runs.json")
 def runs() -> List[Dict]:
     out = []
     for p in sorted(DATA.glob("run_*.json"), reverse=True):
@@ -176,7 +180,18 @@ def architecture() -> FileResponse:
     return FileResponse(ARCH, headers={"Cache-Control": "no-store"})
 
 
+@app.get("/arch-anim.js")
+def arch_anim() -> FileResponse:
+    return FileResponse(Path(__file__).resolve().parent / "arch-anim.js", media_type="text/javascript", headers={"Cache-Control": "no-store"})
+
+
+@app.get("/logo")
+def logo() -> FileResponse:
+    return FileResponse(Path(__file__).resolve().parent / "logo.html", headers={"Cache-Control": "no-store"})
+
+
 @app.get("/status")
+@app.get("/status.json")
 def status() -> Dict:
     """Welche Module und Schritte der Lernschleife existieren schon (für die Architektur-Seite)."""
     if _status_cache["data"] and time.time() - _status_cache["t"] < 5:
@@ -205,6 +220,7 @@ def status() -> Dict:
 
 
 @app.get("/bench")
+@app.get("/bench.json")
 def bench() -> JSONResponse:
     j, m = BENCH / "results.json", BENCH / "results.md"
     if j.exists():
@@ -215,3 +231,72 @@ def bench() -> JSONResponse:
     if m.exists():
         return JSONResponse({"kind": "md", "data": m.read_text(encoding="utf-8")[:50000]})
     return JSONResponse({"kind": "none"})
+
+
+# Paper hinter Schloss: Passwort nur aus der Umgebung (.env: PAPER_PASSWORD), nie im Code.
+# Ohne gesetztes Passwort bleibt das Paper komplett zu. Nach richtiger Eingabe ein HttpOnly-Cookie.
+PAPER = ROOT / "docs" / "paper" / "arvantir-architecture.pdf"
+_fails: Dict[str, List[float]] = {}
+
+
+def _paper_secret() -> str:
+    if not os.environ.get("PAPER_PASSWORD"):
+        try:
+            from dotenv import load_dotenv
+            load_dotenv(ROOT / ".env")
+        except ImportError:
+            pass
+    return os.environ.get("PAPER_PASSWORD", "")
+
+
+PAPER_TTL = 8 * 3600
+
+
+def _paper_sig(secret: str, exp: str) -> str:
+    return hmac.new(secret.encode(), f"arvantir-paper-v1:{exp}".encode(), hashlib.sha256).hexdigest()
+
+
+def _paper_token(secret: str) -> str:
+    exp = str(int(time.time()) + PAPER_TTL)  # läuft serverseitig ab, nicht nur im Browser
+    return f"{exp}.{_paper_sig(secret, exp)}"
+
+
+def _paper_ok(request: Request) -> bool:
+    secret = _paper_secret()
+    exp, _, sig = request.cookies.get("paper", "").partition(".")
+    if not secret or not exp.isdigit() or int(exp) < time.time():
+        return False
+    return hmac.compare_digest(sig, _paper_sig(secret, exp))
+
+
+class UnlockIn(BaseModel):
+    password: str = Field(min_length=1, max_length=200)
+
+
+@app.post("/paper/unlock")
+def paper_unlock(body: UnlockIn, request: Request) -> JSONResponse:
+    ip = request.client.host if request.client else "?"
+    now = time.time()
+    recent = [t for t in _fails.get(ip, []) if now - t < 600]
+    if len(recent) >= 5:  # höchstens 5 Fehlversuche in 10 Minuten
+        raise HTTPException(429, "Too many attempts, try again later.")
+    secret = _paper_secret()
+    if not secret or not hmac.compare_digest(body.password.encode(), secret.encode()):
+        _fails[ip] = recent + [now]
+        raise HTTPException(403, "Wrong password.")
+    _fails.pop(ip, None)
+    r = JSONResponse({"ok": True})
+    r.set_cookie("paper", _paper_token(secret), httponly=True, samesite="strict", max_age=PAPER_TTL)
+    return r
+
+
+@app.get("/paper")
+def paper(request: Request) -> FileResponse:
+    if not _paper_ok(request):
+        raise HTTPException(403, "Locked.")
+    return FileResponse(PAPER, media_type="application/pdf", headers={"Cache-Control": "no-store", "Content-Disposition": "inline; filename=arvantir-paper.pdf"})
+
+
+@app.get("/paper/status")
+def paper_status(request: Request) -> Dict:
+    return {"unlocked": _paper_ok(request)}

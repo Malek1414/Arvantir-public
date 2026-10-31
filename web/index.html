@@ -1,320 +1,518 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arvantir</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Ccircle cx=%2732%27 cy=%2727%27 r=%2718%27 fill=%27none%27 stroke=%27%230a0a0a%27 stroke-width=%275%27/%3E%3Cpath d=%27M25 36 L29 18 L34 18 L30 36Z M32 36 L36 18 L41 18 L37 36Z%27 fill=%27%235b3df5%27/%3E%3Cpath d=%27M9 49 Q32 63 55 49%27 fill=%27none%27 stroke=%27%230a0a0a%27 stroke-width=%275%27 stroke-linecap=%27round%27/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Ccircle cx=%2727%27 cy=%2737%27 r=%2721%27 fill=%27%230a0a0a%27/%3E%3Ccircle cx=%2748%27 cy=%2716%27 r=%279%27 fill=%27%232346ff%27/%3E%3C/svg%3E">
 <style>
 :root{
-  --bg:#ffffff; --soft:#f6f7fb; --ink:#0a0a0a; --ink2:#2a2a2a; --muted:#6b6b6b; --line:#ececec;
-  --blue:#2346ff; --violet:#7a3cf0; --grad:linear-gradient(100deg,#2346ff 0%,#5b3df5 55%,#8a3ff0 100%);
-  --a:#16a34a; --b:#2346ff; --c:#b7791f; --d:#9a9a9a; --warn:#b45309;
-  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --bg:#ffffff; --ink:#0a0a0a; --muted:#6b6b6b; --line:#ececec; --track:#f2f2f2;
+  --blue:#2346ff; --soft:#f7f7f8; --warn:#b45309;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
-body{background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:hidden}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
 a{color:inherit}
-.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-header{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
-.brand{font-weight:800;letter-spacing:-.4px;font-size:20px;display:flex;align-items:center;gap:10px}
-.logo{width:34px;height:34px;color:#fff}
-.logo .orb{transform-origin:32px 27px}
-body.running .logo .orb{animation:seer 1.4s ease-in-out infinite}
-@keyframes seer{0%,100%{stroke:#fff}50%{stroke:#7c6bff;filter:drop-shadow(0 0 6px #5b3df5)}}
-.top{background:#0a0a0a;color:#fff;position:relative;overflow:hidden}
-.top::after{content:"";position:absolute;width:720px;height:720px;right:-260px;top:-300px;border-radius:50%;background:radial-gradient(circle,rgba(91,61,245,.35),rgba(35,70,255,0) 65%);pointer-events:none}
-.top .wrap{position:relative;z-index:1}
-.top .meta{color:#8a8a8a}
-.topnav{display:flex;gap:6px}
-.topnav a{font:500 14px Inter,sans-serif;text-decoration:none;padding:8px 14px;border-radius:10px;color:#cfcfcf}
-.topnav a.on{background:#fff;color:#0a0a0a}
-.topnav a:hover{color:#fff}
-.topnav a.on:hover{color:#0a0a0a}
-.top .sub{color:#cfcfcf}
-.eyebrow{font:500 12px var(--mono);letter-spacing:2px;text-transform:uppercase;color:#9d8cff;margin-bottom:18px}
-.meme{margin-top:26px;padding-bottom:40px;font-size:14px;color:#8a8a8a}
-.top input[type=text],.top textarea,.top select{background:#151515;border-color:#2a2a2a;color:#fff}
-.top input::placeholder,.top textarea::placeholder{color:#777}
-.top .chip{background:#151515;border-color:#2a2a2a;color:#cfcfcf}
-.top .chip:hover{border-color:#7c6bff;color:#fff}
-.top button.ghost{background:#1d1d1d;color:#fff}
-.top summary{color:#9a9a9a}
-#funnelSec{border-top:0}
-.brand .word span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.meta{font:500 11px var(--mono);letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}
-.hero{padding:44px 0 28px}
-h1{font-size:clamp(40px,7vw,84px);line-height:1;letter-spacing:-.04em;font-weight:800}
-h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.sub{margin-top:18px;max-width:640px;color:var(--ink2);font-size:18px}
-form{margin-top:32px;display:flex;gap:10px;flex-wrap:wrap}
-input[type=text],textarea,select{font:inherit;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff;color:var(--ink);min-width:0}
-input[type=text]{flex:1 1 320px}
-input:focus,textarea:focus,select:focus{outline:2px solid var(--blue);outline-offset:1px;border-color:transparent}
-button{font:600 15px Inter,sans-serif;border:0;border-radius:12px;padding:14px 22px;cursor:pointer;color:#fff;background:var(--grad)}
-button:disabled{opacity:.5;cursor:default}
-button.ghost{background:var(--soft);color:var(--ink);font-weight:500}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.chip{font:500 13px Inter,sans-serif;padding:7px 12px;border-radius:999px;background:var(--soft);color:var(--ink2);border:1px solid var(--line);cursor:pointer}
-.chip:hover{border-color:var(--blue);color:var(--blue)}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
-.row select{flex:1 1 280px;padding:11px 14px;font-size:14px}
-.row button{padding:11px 16px;font-size:14px}
-details{margin-top:14px}
-summary{cursor:pointer;color:var(--muted);font-size:14px}
-textarea{width:100%;margin-top:8px;min-height:84px;font-size:14px}
-section{padding:36px 0;border-top:1px solid var(--line)}
-h2{font-size:13px;font-family:var(--mono);font-weight:500;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-h2 b{color:var(--ink);font-weight:500}
-.funnel{display:grid;gap:8px}
-.fstep{display:grid;grid-template-columns:minmax(120px,190px) 1fr 76px;gap:14px;align-items:center;transition:opacity .3s}
-.fstep.wait{opacity:.32}
-.fstep.off{opacity:.32}
-.fstep .lbl{font-size:15px;font-weight:500}
-.fstep.dark .lbl{font-weight:700}
-.bar{height:12px;background:var(--soft);border-radius:999px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:var(--grad);border-radius:999px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
-.fstep.dark .bar i{background:linear-gradient(100deg,#0a0a0a,#2346ff)}
-.num{font:600 22px Inter,sans-serif;text-align:right;font-variant-numeric:tabular-nums}
-.status{margin-top:16px;font-size:14px;color:var(--muted);min-height:22px}
-.srcs{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.src{font:400 12px var(--mono);padding:6px 10px;border-radius:8px;background:var(--soft);color:var(--ink2);text-decoration:none;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.src b{font-weight:500;color:var(--blue);margin-right:6px}
-.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:14px}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th{font:500 11px var(--mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);background:#fcfcfd;white-space:nowrap}
-td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
-tr:last-child td{border-bottom:0}
-tbody tr{cursor:pointer}
-tbody tr:hover td{background:#f8f9ff}
-.firm{font-weight:600}
-.firm small{display:block;font-weight:400;color:var(--muted);font-size:12px;word-break:break-all}
-.score{display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums;font-weight:600}
-.score .bar{width:56px;height:6px}
-.tier{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;font-weight:700;font-size:13px;color:#fff}
-.tA{background:var(--a)}.tB{background:var(--b)}.tC{background:var(--c)}.tD{background:var(--d)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:8px}
+.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 24px}
 .muted{color:var(--muted)}
-.flag{font:500 11px var(--mono);color:var(--warn);display:block;margin-top:2px}
-.empty{padding:28px;color:var(--muted);text-align:center}
-.more{margin-top:14px}
-/* Lead-Karte */
-.overlay{position:fixed;inset:0;background:rgba(10,10,10,.35);display:none;z-index:50}
+
+/* Header */
+.top{position:absolute;top:0;left:0;right:0;z-index:5}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;height:72px;max-width:none}
+.brand{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:21px;letter-spacing:-.04em;text-decoration:none}
+.brand svg{width:24px;height:24px}
+.topnav{display:flex;gap:24px}
+.topnav a{font-size:15px;color:var(--muted);text-decoration:none;white-space:nowrap}
+.topnav a:hover{color:var(--ink)}
+
+/* Hero, centered */
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:96px 0 64px}
+.hero .mark{width:88px;height:88px;margin:0 auto 36px;animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+.hero .mark .found{transform-origin:48px 16px;animation:find 1.4s cubic-bezier(.2,.7,.2,1) .3s both}
+@keyframes find{from{transform:translate(-21px,21px) scale(.2);opacity:0}to{transform:none;opacity:1}}
+h1{font-size:clamp(40px,7.4vw,88px);font-weight:650;letter-spacing:-.035em;line-height:1.02}
+.intro{display:flex;flex-direction:column;align-items:center}
+.intro span{display:block}
+.pal{position:relative;width:max-content;animation:palfade .5s ease 1.4s both}
+.pal i{position:absolute;left:-2%;top:54%;height:.085em;width:0;background:var(--blue);border-radius:.05em;animation:strike .55s cubic-bezier(.6,0,.2,1) .8s both}
+.arv{animation:rise .6s cubic-bezier(.2,.7,.2,1) 1.8s both}
+.tag{margin:26px auto 0;max-width:640px;color:var(--muted);font-size:clamp(18px,2.3vw,22px);animation:rise .6s cubic-bezier(.2,.7,.2,1) 2.3s both}
+.tag b{color:var(--ink);font-weight:600}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:36px;animation:rise .6s ease 2.7s both}
+.btn{display:inline-block;font:inherit;font-size:16px;font-weight:600;border:0;border-radius:14px;padding:14px 24px;cursor:pointer;color:#fff;background:var(--ink);text-decoration:none;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:var(--track);color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:default;transform:none}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,200px));gap:12px;justify-content:center;margin-top:56px;animation:rise .6s ease 3s both}
+.fact{padding:16px 10px;border-top:1px solid var(--line)}
+.fact b{display:block;font-size:30px;font-weight:650;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.fact span{font-size:14px;color:var(--muted)}
+@keyframes strike{to{width:104%}}
+@keyframes palfade{to{color:#c4c4c4}}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* Sections */
+section{padding:96px 0;border-top:1px solid var(--line)}
+.kicker{font-size:14px;font-weight:600;color:var(--blue);margin-bottom:12px}
+h2{font-size:clamp(32px,5vw,54px);font-weight:650;letter-spacing:-.035em;line-height:1.05}
+.lead{margin-top:16px;max-width:680px;color:var(--muted);font-size:clamp(17px,2vw,19px)}
+
+/* How it works */
+.aa{margin-top:40px}
+.aa-again{margin-top:10px;font:inherit;font-size:14px;font-weight:500;background:var(--track);color:var(--ink);border:0;border-radius:10px;padding:8px 14px;cursor:pointer}
+.steps{display:none;gap:10px;margin-top:28px;list-style:none}
+.mbench{display:none;margin-top:24px;padding:20px;border-radius:16px;background:var(--soft);font-size:15px}
+.mbench b{color:var(--blue)}
+.mbench .mb{display:grid;grid-template-columns:110px 1fr 48px;gap:10px;align-items:center;margin-top:10px}
+.mbench .mb i{display:block;height:10px;border-radius:5px;background:#c4c4c4}
+.steps li{padding:16px;border-radius:14px;background:var(--soft);font-size:15px;transition:background .3s,color .3s}
+.steps li b{display:block;font-size:16px;margin-bottom:4px}
+.steps li span{color:var(--muted)}
+.steps li.on{background:var(--ink);color:#fff}
+.steps li.on span{color:#cfcfd6}
+
+/* Demo panel */
+.panel{margin-top:40px;border:1px solid var(--line);border-radius:24px;padding:28px;background:#fff;box-shadow:0 20px 60px rgba(10,10,10,.05)}
+form{display:flex;gap:10px;flex-wrap:wrap}
+input[type=text],input[type=password],select{font:inherit;font-size:17px;border:1px solid var(--line);border-radius:14px;padding:14px 18px;background:#fff;color:var(--ink);min-width:0}
+#niche{flex:1 1 320px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip{font:inherit;font-size:14px;font-weight:500;padding:7px 13px;border-radius:999px;background:var(--track);color:var(--ink);border:0;cursor:pointer}
+.chip:hover{background:#e6e6ea}
+.hidden-ctl{display:none}
+.status{margin-top:18px;font-size:15px;color:var(--muted);min-height:22px}
+/* Funnel as five tiles in one row */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:20px;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.ft{padding:18px 16px;position:relative;transition:opacity .3s}
+.ft + .ft{border-left:1px solid var(--line)}
+.ft b{display:block;font-size:clamp(26px,3.4vw,38px);font-weight:650;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1}
+.ft span{font-size:13.5px;color:var(--muted)}
+.ft.wait{opacity:.35}
+.ft.key b{color:var(--blue)}
+.ft .na{font-size:16px;font-weight:500;color:var(--muted)}
+/* Results */
+.res{margin-top:32px}
+.res-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.res-head h3{font-size:24px;font-weight:650;letter-spacing:-.02em}
+.res-head p{font-size:15px;color:var(--muted)}
+.mix{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:18px}
+.mix h4{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px}
+.stack{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--track)}
+.stack i{display:block;height:100%}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:14px}
+.legend em{font-style:normal;display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:0}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:24px}
+table{width:100%;border-collapse:collapse;font-size:16px}
+th{font-size:13px;font-weight:500;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:14px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--soft)}
+.firm{font-weight:600;min-width:180px}
+.firm small{display:block;font-weight:400;color:var(--muted);font-size:13px;word-break:break-all}
+.score{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums;font-weight:600}
+.bar{width:56px;height:6px;background:var(--track);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ink)}
+.tier{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;font-weight:700;font-size:13px}
+.tA{background:var(--ink);color:#fff}.tB{background:var(--blue);color:#fff}.tC{background:var(--track);color:var(--ink)}.tD{background:#fff;color:var(--muted);border:1px solid var(--line)}
+.flag{font-size:12px;color:var(--warn);display:block;margin-top:2px;font-weight:500}
+.empty{padding:28px 12px;color:var(--muted)}
+.more{margin-top:16px}
+.placeholder{margin-top:24px;padding:32px;border-radius:18px;background:var(--soft);color:var(--muted);text-align:center;font-size:15px}
+
+/* Lead card */
+.overlay{position:fixed;inset:0;background:rgba(10,10,10,.25);display:none;z-index:50}
 .overlay.on{display:block}
-.card{position:fixed;top:0;right:0;height:100%;width:min(520px,100%);background:#fff;z-index:60;transform:translateX(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);overflow-y:auto;padding:28px 26px 40px;box-shadow:-20px 0 60px rgba(0,0,0,.08)}
+.card{position:fixed;top:0;right:0;height:100%;width:min(520px,100%);background:#fff;z-index:60;transform:translateX(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);overflow-y:auto;padding:32px 28px 44px;box-shadow:-24px 0 60px rgba(0,0,0,.08)}
 .card.on{transform:none}
-.card h3{font-size:26px;letter-spacing:-.02em;line-height:1.15;padding-right:44px}
-.close{position:absolute;top:20px;right:20px;width:36px;height:36px;padding:0;border-radius:10px;background:var(--soft);color:var(--ink);font-size:20px;line-height:36px}
-.kv{display:grid;grid-template-columns:120px 1fr;gap:10px 14px;margin-top:22px;font-size:14px}
+.card:not(.on){box-shadow:none;visibility:hidden}
+.card h3{font-size:28px;font-weight:650;letter-spacing:-.03em;line-height:1.1;padding-right:44px}
+.close{position:absolute;top:22px;right:22px;width:38px;height:38px;padding:0;border-radius:12px;background:var(--track);color:var(--ink);font-size:20px;line-height:38px;border:0;cursor:pointer}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:10px 14px;margin-top:24px;font-size:15px}
 .kv dt{color:var(--muted)}
 .kv dd{word-break:break-word}
-.reason{margin-top:20px;padding:16px 18px;border-radius:12px;background:var(--soft);font-size:15px}
-.reason a{font:400 12px var(--mono);color:var(--blue);display:block;margin-top:8px;word-break:break-all}
-.sig{padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.reason{margin-top:20px;padding:18px 20px;border-radius:16px;background:var(--track);font-size:16px}
+.reason a{font-size:13px;color:var(--muted);display:block;margin-top:8px;word-break:break-all}
+.sig{padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
 .sig a{color:var(--ink);text-decoration:none}
-.sig a:hover{color:var(--blue)}
-.sig span{font:400 12px var(--mono);color:var(--muted);display:block;margin-top:2px}
-h4{font:500 11px var(--mono);letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin-top:26px}
-/* Benchmark */
-.bench table{font-size:14px}
-.bench p{margin:8px 0;color:var(--ink2);font-size:15px}
-.bench h5{font-size:16px;margin:18px 0 8px}
-footer{padding:30px 0 50px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+.sig a:hover{text-decoration:underline}
+.sig span{font-size:13px;color:var(--muted);display:block;margin-top:2px}
+.card h4{font-size:15px;font-weight:600;margin-top:28px}
+
+/* Comparison */
+.cmp{margin-top:40px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cmp table{min-width:880px;font-size:15px}
+.cmp th{font-size:14px;font-weight:600;color:var(--ink);padding:14px 14px;white-space:normal;vertical-align:bottom}
+.cmp th small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+.cmp td{padding:16px 14px;cursor:default}
+.cmp tbody tr:hover td{background:transparent}
+.cmp td:first-child{font-weight:600;width:150px}
+.cmp .us{background:#f3f5ff}
+.cmp th.us{border-radius:14px 14px 0 0}
+.cmp .hl{color:var(--blue);font-weight:650}
+.note{margin-top:18px;font-size:14px;color:var(--muted);max-width:760px}
+
+.gap{margin-top:40px;padding:28px;border-radius:20px;background:var(--soft)}
+.gap h3{font-size:20px;font-weight:650;letter-spacing:-.02em}
+.gap p{font-size:14.5px;margin-top:6px;max-width:720px}
+.gbars{display:grid;gap:12px;margin-top:20px}
+.g{display:grid;grid-template-columns:220px 1fr 56px 110px;gap:14px;align-items:center;font-size:15px}
+.gt{height:12px;border-radius:6px;background:#e8e8ee;overflow:hidden}
+.gt i{display:block;height:100%;background:var(--blue);border-radius:6px}
+.g b{font-variant-numeric:tabular-nums;text-align:right}
+.g small{color:var(--muted);font-size:13px}
+.g.na b,.g.na span:first-child{color:var(--muted)}
+@media (max-width:700px){
+  .gap{padding:18px}
+  .g{grid-template-columns:1fr 48px;gap:4px 10px}
+  .g .gt{grid-column:1/-1;grid-row:2}
+  .g small{grid-column:1/-1}
+  .cmp table{min-width:0}
+  .cmp thead{display:none}
+  .cmp tr{display:block;padding:16px 0;border-bottom:1px solid var(--line)}
+  .cmp td{display:block;border:0;padding:4px 0}
+  .cmp td:first-child{width:auto;font-size:17px;margin-bottom:4px}
+  .cmp td[data-l]::before{content:attr(data-l);display:block;font-size:12px;font-weight:600;color:var(--muted)}
+  .cmp td.us{background:#f3f5ff;border-radius:10px;padding:8px 10px;margin:4px 0}
+}
+
+/* Paper */
+.paper{display:grid;grid-template-columns:260px 1fr;gap:48px;align-items:center;margin-top:40px}
+.page{position:relative;aspect-ratio:1/1.414;border:1px solid var(--line);border-radius:10px;padding:26px 22px;background:#fff;box-shadow:0 20px 50px rgba(10,10,10,.08);overflow:hidden}
+.page i{display:block;height:7px;border-radius:4px;background:#e4e4ea;margin-bottom:9px}
+.page i.h{height:14px;width:70%;background:#cfcfd8;margin-bottom:18px}
+.page i.s{width:60%}
+.page .fig{height:70px;border-radius:6px;background:#eef0ff;margin:14px 0}
+.page .blur{position:absolute;inset:0;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:grid;place-items:center}
+.lock{width:56px;height:56px;border-radius:16px;background:var(--ink);display:grid;place-items:center}
+.lock svg{width:26px;height:26px}
+.unlock{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.unlock input{flex:1 1 220px}
+.msg{margin-top:12px;font-size:14px;color:var(--muted);min-height:20px}
+.msg.err{color:var(--warn)}
+.paper ul{margin-top:18px;list-style:none;display:grid;gap:8px;font-size:16px}
+.paper li::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--blue);margin-right:10px;vertical-align:3px}
+
+footer{padding:32px 0 56px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+
+@media (max-width:900px){
+  .aa{display:none}
+  .steps,.mbench{display:grid}
+  .paper{grid-template-columns:1fr;gap:28px}
+  .page{max-width:220px}
+}
 @media (max-width:640px){
   .wrap{padding:0 16px}
-  .hero{padding:24px 0 20px}
-  .sub{font-size:16px}
-  .fstep{grid-template-columns:1fr 64px;gap:4px 10px}
-  .fstep .bar{grid-column:1/-1;grid-row:2}
-  .num{font-size:18px}
+  .topnav{gap:14px}
+  .topnav a{font-size:14px}
+  .topnav{gap:12px}
+  .topnav a{font-size:13px}
+}
+@media (max-width:380px){
+  .topnav{gap:10px}
+  .topnav a{font-size:12.5px}
+  .brand{font-size:18px}
+  section{padding:64px 0}
+  .facts{grid-template-columns:1fr;gap:0;margin-top:40px;text-align:left}
+  .fact{display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:center;padding:12px 4px}
+  .fact b{font-size:24px}
+  .fact span{font-size:14px}
+  .panel{padding:18px;border-radius:18px}
+  .flow{grid-template-columns:1fr 1fr}
+  .ft:nth-child(n){border-left:0;border-top:1px solid var(--line)}
+  .ft:first-child{border-top:0}
+  .ft:nth-child(even){border-left:1px solid var(--line)}
+  .ft:nth-child(2){border-top:0}
+  .mix{grid-template-columns:1fr}
   .hide-s{display:none}
-  th,td{padding:10px 10px}
+  th,td{padding:12px 8px}
   .kv{grid-template-columns:96px 1fr}
 }
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.pal i{width:104%}.pal{color:#c4c4c4}}
 </style>
 </head>
 <body>
-<div class="top"><div class="wrap">
-  <header>
-    <div class="brand"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2346ff"/><stop offset="1" stop-color="#8a3ff0"/></linearGradient></defs><circle class="orb" cx="32" cy="27" r="18" fill="none" stroke="currentColor" stroke-width="5"/><path d="M25 36 L29 18 L34 18 L30 36Z M32 36 L36 18 L41 18 L37 36Z" fill="url(#g)"/><path d="M9 49 Q32 63 55 49" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><span class="word">Arvan<span>tir</span></span></div>
-    <nav class="topnav"><a class="on" href="/">Demo</a><a href="/architecture">Architektur</a></nav>
-  </header>
-
-  <div class="hero">
-    <div class="eyebrow">Ein Stein, sie alle zu finden.</div>
-    <h1>Find the <em>dark TAM.</em></h1>
-    <p class="sub">Firmen, die keine Lead-Datenbank kennt. Aus Verzeichnissen, Messelisten und Vergleichsportalen geholt, gegen AI Ark geprüft und nach eurem ICP gerankt, mit Tier, Datenlücken und Quelle je Zeile.</p>
-
-    <form id="f" autocomplete="off">
-      <input type="text" id="niche" maxlength="200" placeholder="Nische oder Beispiel-URL, z. B. Waschanlagen" required>
-      <button id="go" type="submit">Lauf starten</button>
-    </form>
-    <div class="chips" id="chips"></div>
-    <details>
-      <summary>ICP selbst vorgeben (sonst aus Arvanas Kunden je Nische)</summary>
-      <textarea id="icp" maxlength="2000" placeholder="Wer passt? Branche, Größe, Region, Muss-Kriterien"></textarea>
-    </details>
-    <div class="row">
-      <select id="runs" aria-label="Gespeicherte Läufe"><option value="">Gespeicherten Lauf abspielen</option></select>
-      <button class="ghost" id="replay" type="button">Abspielen</button>
-    </div>
-    <p class="meme">Palantir sieht alles. Arvantir sieht jede Waschanlage, die AI Ark übersehen hat.</p>
+<script>
+"use strict";
+// Shared helpers. Everything from foreign pages (names, titles, URLs) goes through esc() or safeUrl().
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeUrl = u => { try { const x = new URL(String(u)); return /^https?:$/.test(x.protocol) ? x.href : ""; } catch { return ""; } };
+const host = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; } };
+const $ = id => document.getElementById(id);
+</script>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="27" cy="37" r="21" fill="#0a0a0a"/><circle cx="48" cy="16" r="9" fill="#2346ff"/></svg>arvantir</a>
+    <nav class="topnav"><a href="#how">How it works</a><a href="#demo">Demo</a><a class="opt" href="#compare">Compare</a><a class="opt" href="#paper">Paper</a></nav>
   </div>
-</div></div>
-<div class="wrap">
+</header>
 
-  <section id="funnelSec">
-    <h2><span>Funnel</span><b id="clock"></b></h2>
-    <div class="funnel" id="funnel"></div>
-    <div class="status" id="status">Noch kein Lauf. Nische eingeben oder gespeicherten Lauf abspielen.</div>
-    <div class="srcs" id="srcs"></div>
-  </section>
-
-  <section id="leadSec">
-    <h2><span>Leads</span><b id="leadCount"></b></h2>
-    <div class="tablewrap">
-      <table>
-        <thead><tr>
-          <th>Firma</th><th class="hide-s">Entscheider</th><th>ICP-Score</th><th>Tier</th>
-          <th class="hide-s">Signal</th><th class="hide-s">Kanal</th><th class="hide-s">Quelle</th>
-        </tr></thead>
-        <tbody id="rows"><tr><td colspan="7" class="empty">Hier erscheint die Tabelle Firma, Entscheider, ICP-Score.</td></tr></tbody>
-      </table>
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <svg class="mark" viewBox="0 0 64 64" aria-label="Arvantir logo"><circle cx="27" cy="37" r="21" fill="#0a0a0a"/><circle class="found" cx="48" cy="16" r="9" fill="#2346ff"/></svg>
+      <h1 class="intro" aria-label="Palantir. Arvantir.">
+        <span class="pal" aria-hidden="true">Palantir<i></i></span>
+        <span class="arv" aria-hidden="true">Arvantir.</span>
+      </h1>
+      <p class="tag">Lead databases barely know local businesses like doctors, pharmacies or bakeries. <b>Arvantir finds them in public directories</b>, ranks them for Arvana and hands them to Clay, Arvana's lead tool.</p>
+      <div class="cta"><a class="btn" href="#demo">Try the demo</a><a class="btn ghost" href="#how">How it works</a></div>
+      <div class="facts">
+        <div class="fact"><b>86 %</b><span>of doctors and pharmacies with a website are not in a 17M company database</span></div>
+        <div class="fact"><b>347</b><span>ranked leads from 6 niches today</span></div>
+        <div class="fact"><b>0 $</b><span>license cost per lead</span></div>
+      </div>
     </div>
-    <div class="more" id="more"></div>
+  </div>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="kicker">How it works</div>
+      <h2>Five steps, from a niche to a ranked list.</h2>
+      <p class="lead">You type a niche. Arvantir finds public lists of it, reads every company on them, checks which ones a big database already has, and ranks the rest by fit.</p>
+      <div class="aa" data-arch-anim="onview"></div>
+      <ol class="steps" id="steps">
+        <li><b>1 Find lists</b><span>Trade directories, member lists, registries for the niche.</span></li>
+        <li><b>2 Read companies</b><span>One clean row per company, duplicates merged.</span></li>
+        <li><b>3 Check database</b><span>Is it in a 17 million company database? If not, lead databases most likely miss it too.</span></li>
+        <li><b>4 Enrich</b><span>Decision maker from the company's legal notice, news and hiring from the last 6 months.</span></li>
+        <li><b>5 Rank</b><span>Fit score, tier A to D and a legal channel. Every company links to where it was found.</span></li>
+      </ol>
+      <div class="mbench">
+        <div>Are the best leads on top? Score from 0 to 1, test on 330 labelled company pairs</div>
+        <div class="mb"><span>Fixed rules</span><span><i style="width:60.8%"></i></span><span>0.608</span></div>
+        <div class="mb"><span><b>Arvantir</b></span><span><i style="width:76.4%;background:var(--blue)"></i></span><span><b>0.764</b></span></div>
+        <div style="margin-top:12px" class="muted">Small test set, most labels by an AI model, 46 checked by a person. Car washes still rank worse than fixed rules.</div>
+      </div>
+    </div>
   </section>
 
-  <section id="benchSec" hidden>
-    <h2><span>Benchmark</span><b>gegen AI Ark, Lusha und Co.</b></h2>
-    <div class="bench" id="bench"></div>
+  <section id="demo">
+    <div class="wrap">
+      <div class="kicker">Demo</div>
+      <h2>Try a niche.</h2>
+      <p class="lead">Pick one of Arvana's niches. You see what was found at each step and the best leads right below.</p>
+      <div class="panel">
+        <form id="f" autocomplete="off">
+          <input type="text" id="niche" maxlength="200" placeholder="A niche, e.g. Car washes" aria-label="Niche" required>
+          <button class="btn" id="go" type="submit">Find companies</button>
+        </form>
+        <div class="chips" id="chips"></div>
+        <div class="hidden-ctl">
+          <select id="runs" aria-label="Saved runs"><option value="">Saved run</option></select>
+          <button id="replay" type="button">Replay</button>
+          <input type="text" id="icp" value="">
+        </div>
+        <div class="status" id="status"></div>
+
+        <div class="flow" id="flow" aria-live="polite"></div>
+
+        <div class="res" id="res" hidden>
+          <div class="res-head">
+            <div><h3 id="resTitle"></h3><p id="resSub"></p></div>
+          </div>
+          <div class="mix">
+            <div><h4>Tier, A means contact first</h4><div class="stack" id="tierBar"></div><div class="legend" id="tierLeg"></div></div>
+            <div><h4>Channel</h4><div class="stack" id="chanBar"></div><div class="legend" id="chanLeg"></div></div>
+          </div>
+          <div class="tablewrap">
+            <table>
+              <thead><tr><th>Company</th><th class="hide-s">Found in</th><th>Fit</th><th>Tier</th><th class="hide-s">Channel</th></tr></thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+          <div class="more" id="more"></div>
+        </div>
+        <div class="placeholder" id="ph">Pick a niche above. Results appear here, best fit on top.</div>
+      </div>
+    </div>
   </section>
 
-  <footer>Arvantir · GTM Hackathon Berlin, 31.10.2026 · Ausgabe im Format von leads_export.csv plus Tier, Datenlücken und Konfidenz nach icp-scorer</footer>
-</div>
+  <section id="compare">
+    <div class="wrap">
+      <div class="kicker">Compare</div>
+      <h2>What changes for Arvana.</h2>
+      <p class="lead">Arvana keeps Clay and its workflow. Arvantir sits in front: it finds the companies databases miss, mostly local businesses, and enriches the ones they already know.</p>
+      <div class="gap">
+        <h3>How many found companies a big database does not have</h3>
+        <p class="muted">Checked against BigPicture 2023, 17 million companies, matched by website. Higher means more leads the usual lead databases most likely miss.</p>
+        <div class="gbars">
+          <div class="g"><span>Doctors and pharmacies</span><span class="gt"><i style="width:86%"></i></span><b>86 %</b><small>38 of 44</small></div>
+          <div class="g"><span>Bakeries and butchers</span><span class="gt"><i style="width:63%"></i></span><b>63 %</b><small>17 of 27</small></div>
+          <div class="g"><span>Real estate asset managers</span><span class="gt"><i style="width:19%"></i></span><b>19 %</b><small>11 of 57</small></div>
+          <div class="g"><span>Family offices</span><span class="gt"><i style="width:18%"></i></span><b>18 %</b><small>8 of 45</small></div>
+          <div class="g"><span>IT service providers</span><span class="gt"><i style="width:14%"></i></span><b>14 %</b><small>8 of 58</small></div>
+          <div class="g na"><span>Car washes</span><span class="gt"></span><b>–</b><small>only 4 have a website</small></div>
+        </div>
+        <p class="muted" style="margin-top:12px">Local businesses are where the hidden market is. In classic B2B niches the value is the enrichment: decision maker, fresh signals, ranking.</p>
+      </div>
+      <div class="cmp">
+        <table>
+          <thead><tr>
+            <th></th>
+            <th>Arvana today</th>
+            <th class="us">Arvantir today<small>measured</small></th>
+            <th>Arvantir potential<small>estimate, not measured</small></th>
+            <th>Together</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>Where companies come from</td><td>Databases, bought lists, trade fairs, LinkedIn exports</td><td class="us">Finds the lists itself: directories, associations, registries</td><td>More sources per niche, association PDFs, fair exhibitor lists</td><td>Database for the known, Arvantir for the rest</td></tr>
+            <tr><td>Local niches like doctors, bakeries</td><td>Barely in databases</td><td class="us"><span class="hl">86 %</span> of doctors, <span class="hl">63 %</span> of bakeries not in a 17M company database (chart above)</td><td>Any niche that is listed publicly somewhere</td><td>No niche falls through</td></tr>
+            <tr><td>Companies per niche</td><td>As many as the database knows</td><td class="us">86 to 240 read, up to 60 ranked per run (our cap for today)</td><td>Thousands, e.g. 9,874 car washes on one directory</td><td>Full list instead of a thin one</td></tr>
+            <tr><td>Decision maker</td><td>From a database, costs credits</td><td class="us"><span class="hl">39 %</span> found in the company's legal notice, free (car washes: almost none)</td><td>60 to 75 % with the trade register plus paid data for top leads</td><td>Legal notice first, paid credits only for top leads</td></tr>
+            <tr><td>Ranking</td><td>Fit score with fixed rules, a lot by hand</td><td class="us">Trained model puts the best leads higher: <span class="hl">0.764</span> vs 0.608 for fixed rules, on a small test set</td><td>Above 0.8 trained on Arvana's own labels</td><td>Model sorts, people check only the unsure cases</td></tr>
+            <tr><td>Freshness</td><td>Database snapshot</td><td class="us">Fetched today, signals under 6 months</td><td>Plus LinkedIn posts from today</td><td>Every lead dated by its source</td></tr>
+            <tr><td>Cost per 1,000</td><td>AI Ark 9.80 $ per 1,000 contacts, Lusha 94 $, Deutsche Post 479 € per 1,000 addresses</td><td class="us"><span class="hl">No license or API cost</span> per lead</td><td>Credits only for top leads</td><td>Databases stay cheap for the known, Arvantir is free for the rest</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Honest about cost: databases are already cheap per contact. The point is that Arvantir finds many companies that are not in them at all. Prices from the public pricing pages on 31 Oct 2026, Deutsche Post from its address package price list. The AI Ark check is built and runs as soon as we have a key.</p>
+    </div>
+  </section>
+
+  <section id="paper">
+    <div class="wrap">
+      <div class="kicker">Paper</div>
+      <h2>The architecture paper.</h2>
+      <div class="paper">
+        <div class="page" aria-hidden="true">
+          <i class="h"></i><i></i><i></i><i class="s"></i><div class="fig"></div><i></i><i></i><i class="s"></i><i></i><i class="s"></i>
+          <div class="blur"><div class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div></div>
+        </div>
+        <div>
+          <p class="lead" style="margin-top:0">Eleven pages on how Arvantir is built, what we measured and how it plugs into Clay. It is locked so the method stays ours. Ask us for the password.</p>
+          <ul><li>Architecture and every step</li><li>Learning loop and benchmark</li><li>Comparison, limits and next steps</li></ul>
+          <form class="unlock" id="unlock" autocomplete="off">
+            <input type="password" id="pw" maxlength="200" placeholder="Password" aria-label="Paper password" required>
+            <button class="btn" type="submit">Unlock</button>
+          </form>
+          <div class="msg" id="pwMsg"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">Arvantir · GTM Hackathon Berlin 2026</div></footer>
 
 <div class="overlay" id="ov"></div>
 <aside class="card" id="card" aria-hidden="true"></aside>
 
 <script>
 "use strict";
-// Alles, was von fremden Seiten kommt (Firmennamen, Titel, URLs), geht durch esc() bzw. safeUrl().
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const safeUrl = u => { try { const x = new URL(String(u)); return /^https?:$/.test(x.protocol) ? x.href : ""; } catch { return ""; } };
-const host = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; } };
-const $ = id => document.getElementById(id);
-
-const STEPS = [
-  ["Quellen gefunden", "Quellen"],
-  ["Firmen ausgelesen", "Firmen"],
-  ["eindeutige Firmen", "eindeutig"],
-  ["mit Website", "mit Website"],
-  ["NICHT in AI Ark", "NICHT in AI Ark"],
-  ["mit Entscheider", "mit Entscheider"],
-  ["mit frischem Signal", "mit frischem Signal"],
-  ["gerankt", "gerankt"],
+// Pipeline step names come in German from the engine; the page shows five of them.
+const TILES = [
+  ["Quellen gefunden", "lists found"],
+  ["Firmen ausgelesen", "companies read"],
+  ["mit Entscheider", "with decision maker"],
+  ["gerankt", "ranked leads", "key"],
 ];
-const NICHES = ["Waschanlagen", "Bäckereien und Metzgereien", "IT-Dienstleister", "Ärzte und Apotheken", "Family Offices und LPs", "Immobilien Asset Manager"];
+const NICHES = [["Car washes", "Waschanlagen"], ["Bakeries and butchers", "Bäckereien und Metzgereien"], ["IT service providers", "IT-Dienstleister"], ["Doctors and pharmacies", "Ärzte und Apotheken"], ["Family offices", "Family Offices und LPs"], ["Real estate asset managers", "Immobilien Asset Manager"]];
+const EN = {
+  channel: { Brief: "Letter", Telefon: "Phone", Mail: "Email", "E-Mail": "Email", LinkedIn: "LinkedIn", Fax: "Fax", offen: "open" },
+  source: { Verband: "Association", Branchenbuch: "Directory", Register: "Registry", Partnerverzeichnis: "Partner directory", Messe: "Trade fair", Portal: "Portal", Verzeichnis: "Directory", Liste: "List" },
+  gap: { plz: "postcode", entscheider: "decision maker", email: "email", telefon: "phone", website: "website", ort: "city" },
+  conf: { hoch: "high", mittel: "medium", niedrig: "low", belegt: "sourced" },
+};
+const tr = (map, v) => map[v] || v;
+const TIER_COL = { A: "#0a0a0a", B: "#2346ff", C: "#c9c9d2", D: "#ececf0" };
+const CHAN_COL = ["#0a0a0a", "#2346ff", "#9aa6ff", "#c9c9d2", "#ececf0"];
+const VIDEO_RUN = "run_145130.json";
+// Measured offline per niche (bench/RUNS.md, knowncheck): share of leads not found in BigPicture 2023
+const EN_NAME = [["asset", "Real estate asset managers"], ["family", "Family offices"], ["ärzt", "Doctors and pharmacies"], ["bäck", "Bakeries and butchers"], ["metzg", "Bakeries and butchers"], ["wasch", "Car washes"], ["it-dienst", "IT service providers"]];
+const enName = seed => (EN_NAME.find(([k]) => String(seed).toLowerCase().includes(k)) || [, seed])[1];
 
-let leads = [], shown = 0, timer = null, busy = false;
+let leads = [], shown = 0, busy = false, seed = "";
 
-function buildFunnel() {
-  $("funnel").innerHTML = STEPS.map(([k, l]) =>
-    `<div class="fstep wait${k === "NICHT in AI Ark" ? " dark" : ""}" data-k="${esc(k)}">
-       <div class="lbl">${esc(l)}</div><div class="bar"><i></i></div><div class="num">0</div></div>`).join("");
-  $("srcs").innerHTML = "";
+// Funnel as five tiles
+function buildFlow() {
+  $("flow").innerHTML = TILES.map(([k, l, c]) => `<div class="ft wait${c ? " " + c : ""}" data-k="${esc(k)}"><b>0</b><span>${esc(l)}</span></div>`).join("");
 }
-function stepEl(k) { return [...document.querySelectorAll(".fstep")].find(e => e.dataset.k === k); }
-let maxN = 1;
 function setStep(k, n) {
-  const el = stepEl(k); if (!el) return;
-  el.classList.remove("wait", "off");
-  maxN = Math.max(maxN, n);
-  const num = el.querySelector(".num"), from = +num.dataset.v || 0, t0 = performance.now();
-  num.dataset.v = n;
-  const tick = t => { const p = Math.max(0, Math.min(1, (t - t0) / 700)); num.textContent = Math.round(from + (n - from) * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); };
+  const el = [...document.querySelectorAll(".ft")].find(e => e.dataset.k === k); if (!el) return;
+  el.classList.remove("wait");
+  const b = el.querySelector("b");
+  const from = +b.dataset.v || 0, t0 = performance.now(); b.dataset.v = n;
+  const tick = t => { const p = Math.max(0, Math.min(1, (t - t0) / 700)); b.textContent = Math.round(from + (n - from) * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); };
   requestAnimationFrame(tick);
-  document.querySelectorAll(".fstep:not(.wait)").forEach(e => {
-    e.querySelector(".bar i").style.width = Math.max(2, 100 * (+e.querySelector(".num").dataset.v || 0) / maxN) + "%";
-  });
 }
-function finishFunnel() { document.querySelectorAll(".fstep.wait").forEach(e => { e.classList.replace("wait", "off"); e.querySelector(".num").textContent = "n. a."; }); }
-function showSources(list) {
-  $("srcs").innerHTML = (list || []).slice(0, 8).map(s => {
-    const u = safeUrl(s.url || s); if (!u) return "";
-    return `<a class="src" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${s.type ? `<b>${esc(s.type)}</b>` : ""}${esc(host(u))}</a>`;
-  }).join("");
-}
-function clock(start) {
-  clearInterval(timer);
-  timer = setInterval(() => { $("clock").textContent = ((Date.now() - start) / 1000).toFixed(0) + " s"; }, 250);
+function finishFlow() {
+  document.querySelectorAll(".ft.wait").forEach(e => { e.classList.remove("wait"); e.querySelector("b").textContent = "–"; });
 }
 
-// Felder defensiv lesen: ältere Läufe haben noch kein Tier, Entscheider kommt aus enrich (Malek)
+// Lead fields, read defensively
 const tierOf = l => l.tier || (l.score >= 80 ? "A" : l.score >= 60 ? "B" : l.score >= 40 ? "C" : "D");
 function dm(l) {
   const d = l.decision_maker; if (!d) return null;
   if (typeof d === "string") return { name: d };
-  return { name: d.name || [d.first_name, d.last_name].filter(Boolean).join(" "), role: d.role || d.position || d.title, email: d.email, linkedin: d.linkedin || d.linkedin_url, source: d.source || d.source_url };
+  return { name: d.name || [d.first_name, d.last_name].filter(Boolean).join(" "), role: d.role || d.position || d.title, email: d.email, linkedin: d.linkedin || d.linkedin_url };
 }
-function kanal(l) {
-  if (l.kanal || l.channel) return l.kanal || l.channel;
+function chan(l) {
+  const c = l.kanal || l.channel; if (c) return tr(EN.channel, c);
   const d = dm(l);
-  if (d && d.email) return "Mail";
+  if (d && d.email) return "Email";
   if (d && d.linkedin) return "LinkedIn";
-  if (l.city || l.postcode) return "Brief";
-  return "offen";
+  if (l.city || l.postcode) return "Letter";
+  return "open";
 }
 const sigs = l => Array.isArray(l.signals) ? l.signals : [];
-function ago(days) { if (days == null) return ""; return days === 0 ? "heute" : days === 1 ? "vor 1 Tag" : `vor ${days} Tagen`; }
+const short = (s, n) => { s = String(s || ""); return s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s; };
 
+function stack(barId, legId, counts, colors) {
+  const total = counts.reduce((a, [, n]) => a + n, 0) || 1;
+  $(barId).innerHTML = counts.map(([, n], i) => `<i style="width:${(100 * n / total).toFixed(2)}%;background:${colors[i]}"></i>`).join("");
+  $(legId).innerHTML = counts.map(([k, n], i) => `<span><em style="background:${colors[i]}"></em>${esc(k)} <b>${esc(n)}</b></span>`).join("");
+}
+function renderSummary() {
+  $("res").hidden = !leads.length && !seed; $("ph").hidden = true;
+  $("resTitle").textContent = leads.length ? `${leads.length} ranked leads: ${enName(seed)}` : `No companies for “${enName(seed)}”`;
+  const tiers = ["A", "B", "C", "D"].map(t => [t, leads.filter(l => tierOf(l) === t).length]);
+  $("resSub").textContent = leads.length ? `Best fit on top. Click a row for details and sources.` : "";
+  stack("tierBar", "tierLeg", tiers, ["A", "B", "C", "D"].map(t => TIER_COL[t]));
+  const ch = {}; leads.forEach(l => { const c = chan(l); ch[c] = (ch[c] || 0) + 1; });
+  stack("chanBar", "chanLeg", Object.entries(ch).sort((a, b) => b[1] - a[1]), CHAN_COL);
+}
 function renderRows(reset) {
   if (reset) shown = 0;
-  const next = leads.slice(0, shown + 50); shown = next.length;
-  $("leadCount").textContent = leads.length ? `${leads.length} Firmen` : "";
-  if (!leads.length) { $("rows").innerHTML = `<tr><td colspan="7" class="empty">Keine Firmen in diesem Lauf.</td></tr>`; $("more").innerHTML = ""; return; }
+  const next = leads.slice(0, shown ? leads.length : 8); shown = next.length;
+  if (!leads.length) { $("rows").innerHTML = `<tr><td colspan="5" class="empty">No companies in this run.</td></tr>`; $("more").innerHTML = ""; return; }
   $("rows").innerHTML = next.map((l, i) => {
-    const d = dm(l), s = sigs(l)[0], t = tierOf(l), site = safeUrl(l.website), src = safeUrl(l.source_url);
+    const t = tierOf(l), site = safeUrl(l.website);
     return `<tr data-i="${i}">
-      <td class="firm">${esc(l.name)}<small>${esc(host(site) || [l.postcode, l.city].filter(Boolean).join(" "))}</small>${l.needs_human ? `<span class="flag">bitte prüfen</span>` : ""}</td>
-      <td class="hide-s">${d ? esc(d.name) + (d.role ? `<small class="muted" style="display:block">${esc(d.role)}</small>` : "") : `<span class="muted">Datenlücke</span>`}</td>
+      <td class="firm">${esc(l.name)}<small>${esc(host(site) || [l.postcode, l.city].filter(Boolean).join(" "))}</small>${String(l.needs_human).toLowerCase() === "true" ? `<span class="flag">check by hand</span>` : ""}</td>
+      <td class="hide-s muted">${esc(tr(EN.source, l.source_type || ""))}<small style="display:block;font-size:13px">${esc(host(safeUrl(l.source_url)))}</small></td>
       <td><div class="score">${esc(l.score ?? "")}<div class="bar"><i style="width:${Math.max(0, Math.min(100, +l.score || 0))}%"></i></div></div></td>
       <td><span class="tier t${esc(t)}">${esc(t)}</span></td>
-      <td class="hide-s">${s ? esc(String(s.title || s.type).slice(0, 60)) + `<small class="muted" style="display:block">${esc(ago(s.age_days))}</small>` : `<span class="muted">kein Signal</span>`}</td>
-      <td class="hide-s">${esc(kanal(l))}</td>
-      <td class="hide-s">${src ? `<span class="muted">${esc(l.source_type || "")}</span><small class="muted" style="display:block">${esc(host(src))}</small>` : ""}</td></tr>`;
+      <td class="hide-s">${esc(chan(l))}</td></tr>`;
   }).join("");
-  $("more").innerHTML = shown < leads.length ? `<button class="ghost" id="moreBtn" type="button">${leads.length - shown} weitere zeigen</button>` : "";
+  $("more").innerHTML = shown < leads.length ? `<button class="btn ghost" id="moreBtn" type="button">Show all ${leads.length}</button>` : "";
   if ($("moreBtn")) $("moreBtn").onclick = () => renderRows(false);
 }
 
-$("rows").addEventListener("click", e => {
-  const tr = e.target.closest("tr[data-i]"); if (tr) openCard(leads[+tr.dataset.i]);
-});
-function link(u, label) { const s = safeUrl(u); return s ? `<a href="${esc(s)}" target="_blank" rel="noopener noreferrer">${esc(label || s)}</a>` : `<span class="muted">nicht vorhanden</span>`; }
+$("rows").addEventListener("click", e => { const r = e.target.closest("tr[data-i]"); if (r) openCard(leads[+r.dataset.i]); });
+function link(u, label) { const s = safeUrl(u); return s ? `<a href="${esc(s)}" target="_blank" rel="noopener noreferrer">${esc(label || s)}</a>` : `<span class="muted">·</span>`; }
 function openCard(l) {
   if (!l) return;
   const d = dm(l), t = tierOf(l);
-  const gaps = Array.isArray(l.datenluecken) ? l.datenluecken.join(", ") : l.datenluecken;
+  const gapsRaw = Array.isArray(l.datenluecken) ? l.datenluecken : String(l.datenluecken || "").split(",").map(s => s.trim()).filter(Boolean);
+  const gaps = gapsRaw.map(g => tr(EN.gap, g)).join(", ");
+  const conf = tr(EN.conf, l.confidence || l.konfidenz || "");
   $("card").innerHTML = `
-    <button class="close" id="x" type="button" aria-label="Schließen">&times;</button>
+    <button class="close" id="x" type="button" aria-label="Close">&times;</button>
     <h3>${esc(l.name)}</h3>
-    <div class="reason">${l.reason ? esc(l.reason) : `<span class="muted">Kein Begründungssatz.</span>`}${safeUrl(l.reason_source) ? `<a href="${esc(safeUrl(l.reason_source))}" target="_blank" rel="noopener noreferrer">${esc(l.reason_source)}</a>` : ""}</div>
+    <h4 style="margin-top:20px">Quoted from ${esc(host(safeUrl(l.reason_source)) || "the source")}</h4><div class="reason" style="margin-top:8px">${l.reason ? esc(l.reason) : `<span class="muted">Nothing quoted.</span>`}${safeUrl(l.reason_source) ? `<a href="${esc(safeUrl(l.reason_source))}" target="_blank" rel="noopener noreferrer">${esc(host(safeUrl(l.reason_source)))}</a>` : ""}</div>
     <dl class="kv">
-      <dt>ICP-Score</dt><dd><b>${esc(l.score ?? "")}</b> / 100 · Tier <span class="tier t${esc(t)}">${esc(t)}</span></dd>
-      <dt>Konfidenz</dt><dd>${esc(l.konfidenz || l.confidence || "unbekannt")}</dd>
-      <dt>Datenlücken</dt><dd>${gaps ? esc(gaps) : `<span class="muted">keine</span>`}</dd>
+      <dt>Fit score</dt><dd><b>${esc(l.score ?? "")}</b> / 100 · Tier <span class="tier t${esc(t)}">${esc(t)}</span></dd>
       <dt>Website</dt><dd>${link(l.website, host(safeUrl(l.website)))}</dd>
-      <dt>Ort</dt><dd>${esc([l.postcode, l.city].filter(Boolean).join(" ")) || `<span class="muted">Datenlücke</span>`}</dd>
-      <dt>Entscheider</dt><dd>${d ? esc(d.name) + (d.role ? `, ${esc(d.role)}` : "") + (d.email ? `<br>${esc(d.email)}` : "") + (d.linkedin ? `<br>${link(d.linkedin, "LinkedIn")}` : "") : `<span class="muted">Datenlücke</span>`}</dd>
-      <dt>In AI Ark</dt><dd>${l.in_ai_ark === false ? "nein, dark TAM" : l.in_ai_ark === true ? "ja" : `<span class="muted">nicht geprüft</span>`}</dd>
-      <dt>Kanal</dt><dd>${esc(kanal(l))}</dd>
-      <dt>Gefunden in</dt><dd>${esc(l.source_type || "")}<br>${link(l.source_url)}</dd>
+      <dt>Location</dt><dd>${esc([l.postcode, l.city].filter(Boolean).join(" ")) || `<span class="muted">·</span>`}</dd>
+      <dt>Decision maker</dt><dd>${d ? esc(d.name) + (d.role ? `, ${esc(d.role)}` : "") + (d.email ? `<br>${esc(d.email)}` : "") + (d.linkedin ? `<br>${link(d.linkedin, "LinkedIn")}` : "") : `<span class="muted">not found</span>`}</dd>
+      <dt>Channel</dt><dd>${esc(chan(l))}</dd>
+      <dt>Found in</dt><dd>${esc(tr(EN.source, l.source_type || ""))}${safeUrl(l.source_url) ? `, ${link(l.source_url, host(safeUrl(l.source_url)))}` : ""}</dd>
+      ${conf ? `<dt>Confidence</dt><dd>${esc(conf)}</dd>` : ""}
+      ${gaps ? `<dt>Missing</dt><dd>${esc(gaps)}</dd>` : ""}
     </dl>
-    <h4>Signale${l.signal_score ? ` · Score ${esc(l.signal_score)}` : ""}</h4>
-    ${sigs(l).length ? sigs(l).map(s => `<div class="sig">${safeUrl(s.url) ? `<a href="${esc(safeUrl(s.url))}" target="_blank" rel="noopener noreferrer">${esc(s.title || s.type)}</a>` : esc(s.title || s.type)}<span>${esc(s.type)} · ${esc(s.date || "")} · ${esc(ago(s.age_days))}</span></div>`).join("") : `<p class="muted" style="margin-top:10px;font-size:14px">Kein frisches Signal gefunden (jünger als 6 Monate).</p>`}
-    ${l.needs_human ? `<p class="flag" style="margin-top:18px;font-size:12px">Unsicher gerankt, bitte von Hand prüfen.</p>` : ""}`;
+    ${sigs(l).length ? `<h4>Fresh signals</h4>` + sigs(l).map(s => `<div class="sig">${safeUrl(s.url) ? `<a href="${esc(safeUrl(s.url))}" target="_blank" rel="noopener noreferrer">${esc(s.title || s.type)}</a>` : esc(s.title || s.type)}<span>${esc(s.date || "")}</span></div>`).join("") : ""}`;
   $("card").classList.add("on"); $("ov").classList.add("on"); $("card").setAttribute("aria-hidden", "false");
   $("x").onclick = closeCard; $("x").focus();
 }
@@ -322,114 +520,122 @@ function closeCard() { $("card").classList.remove("on"); $("ov").classList.remov
 $("ov").onclick = closeCard;
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeCard(); });
 
-function setBusy(b) { busy = b; document.body.classList.toggle("running", b); $("go").disabled = b; $("replay").disabled = b; }
+function setBusy(b) { busy = b; $("go").disabled = b; $("replay").disabled = b; }
+function reset(niche) { buildFlow(); leads = []; seed = niche; $("res").hidden = true; $("ph").hidden = false; }
 function showResult(r, label) {
   leads = (r.leads || []).slice().sort((a, b) => (b.score || 0) - (a.score || 0));
-  renderRows(true);
-  if (r.sources && r.sources.length) showSources(r.sources);
+  seed = r.seed || seed;
+  renderSummary(); renderRows(true);
   $("status").textContent = label;
 }
 
-// Live-Lauf
+// Live run
 $("f").addEventListener("submit", async e => {
   e.preventDefault(); if (busy) return;
-  const niche = $("niche").value.trim(); if (niche.length < 2) return;
-  setBusy(true); buildFunnel(); maxN = 1; leads = []; renderRows(true);
-  $("status").textContent = `Suche Quellen für „${niche}“ …`;
-  const start = Date.now(); clock(start);
+  const typed = $("niche").value.trim(); if (typed.length < 2) return;
+  if (window.ARVANTIR_STATIC) { await replayFor(typed); return; }
+  const niche = (NICHES.find(([en]) => en.toLowerCase() === typed.toLowerCase()) || [])[1] || typed;
+  setBusy(true); reset(niche);
+  $("status").textContent = `Looking for lists of ${typed} …`;
   try {
     const res = await fetch("/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ niche, icp: $("icp").value.trim() }) });
     const j = await res.json(); if (!res.ok) throw new Error(j.detail || res.status);
     const es = new EventSource(`/events/${encodeURIComponent(j.id)}`);
+    const t0 = Date.now();
     es.onmessage = async m => {
       const ev = JSON.parse(m.data);
       if (ev.type === "step") {
         setStep(ev.step, ev.n);
-        if (ev.extra && ev.extra.sources) showSources(ev.extra.sources);
-        if (ev.extra && ev.extra.sources_used) showSources(ev.extra.sources_used);
-        $("status").textContent = `${ev.step}: ${ev.n}`;
+        $("status").textContent = `Working … ${Math.round((Date.now() - t0) / 1000)} s`;
       } else if (ev.type === "done") {
-        es.close(); clearInterval(timer); finishFunnel();
+        es.close(); finishFlow();
         const r = await (await fetch(`/result/${encodeURIComponent(j.id)}`)).json();
-        showResult(r, `Fertig in ${r.seconds} s · gespeichert als ${ev.file}`);
+        showResult(r, `Done in ${Math.round(r.seconds)} s.`);
         loadRuns(); setBusy(false);
       } else if (ev.type === "error") {
-        es.close(); clearInterval(timer); $("status").textContent = "Lauf abgebrochen: " + ev.message; setBusy(false);
+        es.close(); $("status").textContent = "Run stopped: " + ev.message; setBusy(false);
       }
     };
-    es.onerror = () => { if (busy && es.readyState === 2) { clearInterval(timer); $("status").textContent = "Verbindung verloren."; setBusy(false); } };
-  } catch (err) { clearInterval(timer); $("status").textContent = "Start fehlgeschlagen: " + err.message; setBusy(false); }
+    es.onerror = () => { if (busy && es.readyState === 2) { $("status").textContent = "Connection lost."; setBusy(false); } };
+  } catch (err) { $("status").textContent = "Could not start: " + err.message; setBusy(false); }
 });
 
-// Wiederholung eines gespeicherten Laufs, Zeiten auf ca. 8 s gestaucht
+// Replay a saved run, squeezed to about 2 seconds
 $("replay").addEventListener("click", async () => {
   const f = $("runs").value; if (!f || busy) return;
-  setBusy(true); buildFunnel(); maxN = 1; leads = []; renderRows(true);
+  const note = window._fallback || ""; window._fallback = "";
+  setBusy(true);
   const r = await (await fetch(`/runs/${encodeURIComponent(f)}`)).json();
-  $("niche").value = r.seed || "";
-  const steps = r.funnel || [], total = Math.max(1, ...steps.map(s => s.t || 0)), scale = 8000 / total;
-  const start = Date.now(); clock(start);
-  $("status").textContent = `Suche Quellen für „${r.seed}“ …`;
+  reset(r.seed || ""); $("niche").value = enName(r.seed || "");
+  $("status").textContent = `Looking for lists of ${enName(r.seed)} …`;
+  const steps = r.funnel || [], total = Math.max(1, ...steps.map(s => s.t || 0)), scale = 1800 / total, start = Date.now();
   for (const s of steps) {
-    await new Promise(ok => setTimeout(ok, Math.max(350, (s.t || 0) * scale - (Date.now() - start))));
-    setStep(s.step, s.n); $("status").textContent = `${s.step}: ${s.n}`;
-    if (s.step === "Firmen ausgelesen") showSources(r.sources);
+    await new Promise(ok => setTimeout(ok, Math.max(120, (s.t || 0) * scale - (Date.now() - start))));
+    setStep(s.step, s.n);
   }
-  clearInterval(timer); $("clock").textContent = `${r.seconds} s`; finishFunnel();
-  showResult(r, `Gespeicherter Lauf ${f} · Original-Laufzeit ${r.seconds} s`);
+  finishFlow();
+  showResult(r, (note ? note + " " : "") + `Recorded run from today, it took ${Math.round(r.seconds)} s live.`);
   setBusy(false);
   if (new URLSearchParams(location.search).get("lead")) openCard(leads[0]);
 });
 
+// Online there are no live runs: pick the saved run that matches the niche
+async function replayFor(niche) {
+  const list = (await (await fetch("/runs.json")).json()).filter(x => x.leads > 0);
+  const de = (NICHES.find(([en]) => en.toLowerCase() === niche.toLowerCase()) || [])[1] || niche;
+  const words = de.toLowerCase().split(/[^a-zäöüß]+/).filter(w => w.length > 3).map(w => w.slice(0, 5));
+  let hit = list.find(x => words.some(w => String(x.seed).toLowerCase().includes(w)));
+  if (!hit) { hit = list.find(x => x.file === VIDEO_RUN) || list[0]; window._fallback = `No recorded run for “${niche}” on this page, here is ${enName(hit && hit.seed)} instead. The live version runs any niche.`; }
+  if (!hit) return;
+  $("runs").value = hit.file; $("replay").click();
+}
 async function loadRuns() {
   try {
-    const list = await (await fetch("/runs")).json();
-    $("runs").innerHTML = `<option value="">Gespeicherten Lauf abspielen</option>` +
-      list.filter(x => x.leads > 0).map(x => `<option value="${esc(x.file)}">${esc(x.seed)} · ${esc(x.leads)} Firmen · ${esc(x.file.slice(4, 6))}:${esc(x.file.slice(6, 8))} Uhr</option>`).join("");
-  } catch { /* Server ohne Läufe */ }
+    const list = await (await fetch("/runs.json")).json();
+    $("runs").innerHTML = `<option value="">Saved run</option>` + list.filter(x => x.leads > 0).map(x => `<option value="${esc(x.file)}"${x.file === VIDEO_RUN ? " selected" : ""}>${esc(x.seed)} · ${esc(x.leads)}</option>`).join("");
+  } catch { /* server without runs */ }
 }
 
-function mdToHtml(md) {
-  const lines = md.split("\n"); let out = "", tbl = [];
-  const flush = () => {
-    if (!tbl.length) return;
-    const rows = tbl.filter(r => !/^\|\s*:?-{2,}/.test(r)).map(r => r.replace(/^\||\|$/g, "").split("|").map(c => c.trim()));
-    out += `<div class="tablewrap"><table><thead><tr>${rows[0].map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${rows.slice(1).map(r => `<tr>${r.map(c => `<td>${esc(c.replace(/\*\*/g, ""))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
-    tbl = [];
-  };
-  for (const ln of lines) {
-    if (ln.trim().startsWith("|")) { tbl.push(ln.trim()); continue; }
-    flush();
-    if (/^#{1,6}\s/.test(ln)) out += `<h5>${esc(ln.replace(/^#+\s*/, ""))}</h5>`;
-    else if (ln.trim()) out += `<p>${esc(ln.replace(/\*\*/g, "").replace(/^[-*]\s+/, ""))}</p>`;
-  }
-  flush(); return out;
+// Chips: English label, German query for the engine
+$("chips").innerHTML = NICHES.map(([en]) => `<button type="button" class="chip">${esc(en)}</button>`).join("");
+$("chips").addEventListener("click", e => {
+  const c = e.target.closest(".chip"); if (!c || busy) return;
+  $("niche").value = c.textContent;
+  $("f").requestSubmit();
+});
+
+// Phones: the SVG is hidden, the step cards light up one after another instead
+if (matchMedia("(max-width:900px)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  let k = 0;
+  setInterval(() => { document.querySelectorAll("#steps li").forEach((li, i) => li.classList.toggle("on", i === k)); k = (k + 1) % 5; }, 1800);
 }
-function jsonToHtml(d) {
-  const rows = Array.isArray(d) ? d : Array.isArray(d.rows) ? d.rows : Array.isArray(d.results) ? d.results : null;
-  if (rows && rows.length && typeof rows[0] === "object") {
-    const cols = Object.keys(rows[0]);
-    return `<div class="tablewrap"><table><thead><tr>${cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${cols.map(c => `<td>${esc(typeof r[c] === "object" ? JSON.stringify(r[c]) : r[c])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
-  }
-  return `<dl class="kv">${Object.entries(d).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(typeof v === "object" ? JSON.stringify(v) : v)}</dd>`).join("")}</dl>`;
-}
-async function loadBench() {
+
+// Paper lock: the password is checked on the server, the static site has no paper at all
+$("unlock").addEventListener("submit", async e => {
+  e.preventDefault();
+  const msg = $("pwMsg"); msg.className = "msg";
+  if (window.ARVANTIR_STATIC) { msg.textContent = "The paper is shared on request after the pitch."; return; }
   try {
-    const b = await (await fetch("/bench")).json();
-    if (b.kind === "none") return;
-    $("bench").innerHTML = b.kind === "json" ? jsonToHtml(b.data) : mdToHtml(b.data);
-    $("benchSec").hidden = false;
-  } catch { /* kein Benchmark */ }
-}
+    const r = await fetch("/paper/unlock", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: $("pw").value }) });
+    if (r.ok) { msg.innerHTML = `Unlocked. <a href="/paper" target="_blank" rel="noopener">Open the paper</a>`; $("pw").value = ""; }
+    else { const j = await r.json().catch(() => ({})); msg.className = "msg err"; msg.textContent = j.detail || "Wrong password."; }
+  } catch { msg.className = "msg err"; msg.textContent = "Server not reachable."; }
+});
+if (!window.ARVANTIR_STATIC) fetch("/paper/status").then(r => r.json()).then(s => { if (s.unlocked) $("pwMsg").innerHTML = `Unlocked. <a href="/paper" target="_blank" rel="noopener">Open the paper</a>`; }).catch(() => {});
 
-$("chips").innerHTML = NICHES.map(n => `<button type="button" class="chip">${esc(n)}</button>`).join("");
-$("chips").addEventListener("click", e => { const c = e.target.closest(".chip"); if (c) { $("niche").value = c.textContent; $("niche").focus(); } });
-buildFunnel(); loadBench();
-// ?replay=run_HHMMSS.json spielt einen Lauf direkt ab (Video-Fallback), ?lead=1 öffnet danach die erste Karte
+// Compare table: column names on every cell, used by the phone layout
+(() => {
+  const heads = [...document.querySelectorAll(".cmp thead th")].map(th => [...th.childNodes].map(n => n.textContent.trim()).filter(Boolean).join(", "));
+  document.querySelectorAll(".cmp tbody tr").forEach(tr => [...tr.children].forEach((td, i) => { if (i && heads[i]) td.dataset.l = heads[i]; }));
+})();
+
+buildFlow();
+// ?replay=run_HHMMSS.json plays a run right away (video fallback), &lead=1 opens the first card
 loadRuns().then(() => {
   const q = new URLSearchParams(location.search), f = q.get("replay");
-  if (f && /^run_\d{6}\.json$/.test(f)) { $("runs").value = f; $("replay").click(); }
+  if (f && /^run_\d{6}\.json$/.test(f)) { $("runs").value = f; $("demo").scrollIntoView(); $("replay").click(); }
 });
 </script>
+<script src="/arch-anim.js"></script>
 </body>
 </html>
