@@ -1,0 +1,10 @@
+searchify[rerank] @ git+https://github.com/sami-mag07/searchify-l
+openai>=1.40
+beautifulsoup4
+lxml
+python-dotenv
+httpx
+fastapi>=0.110
+uvicorn>=0.29
+pytest>=8
+websockets>=12

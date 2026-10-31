@@ -1,0 +1,130 @@
+[
+ {
+  "niche": "Bäckereien & Metzgereien",
+  "likely_client": "Hypothese, Sicherheit niedrig: fiskaly (Cloud-TSE für Kassensysteme, Logo auf arvana.io/success-stories); Bäcker und Metzger brauchen TSE-pflichtige Kassen. Alternative: Craftnote (Handwerker-App, ebenfalls Arvana-Logo).",
+  "icp_text": "Inhabergeführte Bäckereien und Metzgereien in Deutschland mit eigener Produktion und mindestens drei Filialen oder Verkaufsstellen. Typisch sind 10 bis 150 Mitarbeitende, ein Meister als Inhaber oder Geschäftsführer und eine Website mit Filialliste. Ausgeschlossen sind Backshops und Ketten ohne eigene Backstube, Großbäckereien in Konzernhand sowie Einzelbetriebe ohne Filialen.",
+  "hard_filters": [
+   "Land = Deutschland",
+   "eigene Produktion (Backstube / Wurstküche)",
+   "mindestens 3 Filialen oder Verkaufsstellen"
+  ],
+  "signals": [
+   "Filialliste auf der Website wächst oder neue Filiale eröffnet",
+   "Stellenanzeigen für Verkauf oder Filialleitung",
+   "Generationswechsel / neuer Geschäftsführer im Handelsregister",
+   "Online-Vorbestellung oder Lieferdienst neu auf der Website",
+   "Innungsmitglied oder Preis (z.B. Landesprämierung)"
+  ],
+  "sources": [
+   "research/SOURCES.md (sfiv.de/betriebe, Innungen)",
+   "Arvana-Kundenlogos: recherche/kunden/https___www_arvana_io_success-stories.txt (67 Logos)"
+  ]
+ },
+ {
+  "niche": "Waschanlagen",
+  "likely_client": "Hypothese, Sicherheit niedrig: Tunap (Kfz-Pflege-Chemie) oder Lödige (Anlagenbau), beide Arvana-Logos; sonst Anbieter von Bezahl- und Abo-Systemen für Waschanlagen.",
+  "icp_text": "Betreiber von Autowaschanlagen in Deutschland, vor allem unabhängige Betreiber mit zwei oder mehr Standorten (Waschstraßen, SB-Waschparks, Portalanlagen). Entscheider ist meist der Inhaber oder Geschäftsführer einer kleinen GmbH oder eines Familienbetriebs. Ausgeschlossen sind Tankstellen-Waschanlagen großer Mineralölketten und reine Herstellerstandorte.",
+  "hard_filters": [
+   "Land = Deutschland",
+   "Betreiber, nicht Hersteller",
+   "nicht Teil einer Mineralöl-Tankstellenkette"
+  ],
+  "signals": [
+   "mehrere Standorte unter einer Marke",
+   "Waschabo / Flatrate / App bereits beworben oder fehlt noch",
+   "Neueröffnung oder Umbau (Presse, Bauantrag)",
+   "Stellenanzeigen für Waschpersonal oder Standortleitung",
+   "schlechte Google-Bewertungen zu Bezahlung oder Wartezeit"
+  ],
+  "sources": [
+   "research/SOURCES.md (waschanlagen-deutschland.de)",
+   "Arvana-Kundenlogos: recherche/kunden/https___www_arvana_io_success-stories.txt (67 Logos)"
+  ]
+ },
+ {
+  "niche": "IT-Dienstleister",
+  "likely_client": "Sicherheit mittel: Trovarit (IT-Matchmaker vermittelt IT-Dienstleister und ERP-Anbieter; eigene Success Story bei Arvana). Weitere Arvana-Kunden mit Partnerkanal: smapOne, TechDivision, b.telligent.",
+  "icp_text": "Kleine und mittlere IT-Dienstleister und Systemhäuser in DACH mit 5 bis 200 Mitarbeitenden, die für Mittelstandskunden implementieren, beraten oder betreuen. Passend sind Spezialisten mit klarem Fokus (ERP, Microsoft, Shopware, Low-Code, IT-Security), die als Implementierungspartner für eine weitere Software in Frage kommen. Ausgeschlossen sind Konzern-Beratungen, reine Freelancer ohne Team und Personaldienstleister.",
+  "hard_filters": [
+   "Sitz in DE, AT oder CH",
+   "5 bis 200 Mitarbeitende",
+   "bietet Implementierung oder Betreuung an, nicht nur Personalüberlassung"
+  ],
+  "signals": [
+   "Eintrag in Partnerverzeichnissen anderer Software (Shopware, Odoo, Microsoft, DATEV)",
+   "Stellenanzeigen für Consultants oder Entwickler",
+   "neue Zertifizierung (ISO 27001, BSI, Partner-Status)",
+   "Case Studies mit Mittelstandskunden",
+   "Aussteller auf Fachmessen (it-sa, DMEA, LogiMAT)"
+  ],
+  "sources": [
+   "context/ARVANA.md (Kundenliste)",
+   "research/SOURCES.md",
+   "Arvana-Kundenlogos: recherche/kunden/https___www_arvana_io_success-stories.txt (67 Logos)"
+  ]
+ },
+ {
+  "niche": "Ärzte & Apotheken",
+  "likely_client": "Hypothese, Sicherheit niedrig: Placetel oder Talkdesk (Cloud-Telefonie, beide Arvana-Logos) bzw. telli (KI-Telefonie); Praxen und Apotheken haben hohes Telefonaufkommen.",
+  "icp_text": "Niedergelassene Arztpraxen, MVZ und inhabergeführte Apotheken in Deutschland, bevorzugt Gemeinschaftspraxen, MVZ oder Apotheker mit Filialverbund (bis zu vier Apotheken). Typisch ist hohes Telefon- und Terminaufkommen bei Personalmangel. Ausgeschlossen sind Kliniken, Krankenhäuser und Apothekenketten in Fremdbesitz.",
+  "hard_filters": [
+   "Land = Deutschland",
+   "Praxis / MVZ / Apotheke (nicht Klinik)",
+   "mindestens 2 Ärzte oder Filialverbund"
+  ],
+  "signals": [
+   "Stellenanzeigen für MFA oder PTA",
+   "Online-Terminbuchung fehlt oder wird neu eingeführt",
+   "Praxisübernahme oder Neugründung",
+   "schlechte Bewertungen zur telefonischen Erreichbarkeit",
+   "Erweiterung um Standort oder Fachrichtung"
+  ],
+  "sources": [
+   "research/SOURCES.md (arztsuche.116117.de, aponet.de)",
+   "Arvana-Kundenlogos: recherche/kunden/https___www_arvana_io_success-stories.txt (67 Logos)"
+  ]
+ },
+ {
+  "niche": "Family Offices & LPs",
+  "likely_client": "Hypothese, Sicherheit niedrig: kein passendes Logo; wahrscheinlich ein Fonds-, Fundraising- oder Reporting-Anbieter. Nächste FinTech-Kunden bei Arvana: IVY, Banxware.",
+  "icp_text": "Single- und Multi-Family-Offices sowie vermögende Unternehmerfamilien in DACH, die direkt oder über Fonds in Private Equity, Venture Capital oder Immobilien investieren. Passend sind Vehikel mit erkennbarer Investmenttätigkeit (Beteiligungen, Holdinggesellschaften, Stiftungen mit Vermögensanlage). Ausgeschlossen sind Banken, Vermögensverwalter im Retailgeschäft und Versicherungen.",
+  "hard_filters": [
+   "Sitz in DE, AT oder CH",
+   "investiert eigenes Familien- oder Stiftungsvermögen",
+   "nicht Bank, Versicherung oder Retail-Vermögensverwaltung"
+  ],
+  "signals": [
+   "Handelsregister: neue Beteiligungs- oder Holding-GmbH der Familie",
+   "als Investor in Funding-Meldungen genannt",
+   "Exit / Unternehmensverkauf der Familie (Liquidität)",
+   "Mitglied in Business-Angel-Netzwerk oder Stiftungsverband",
+   "Teilnahme an Family-Office-Kongressen"
+  ],
+  "sources": [
+   "research/SOURCES.md (OffeneRegister, Stiftungssuche, BAND)",
+   "Arvana-Kundenlogos: recherche/kunden/https___www_arvana_io_success-stories.txt (67 Logos)"
+  ]
+ },
+ {
+  "niche": "Asset Manager",
+  "likely_client": "Hypothese, Sicherheit niedrig: kein passendes Logo; wahrscheinlich PropTech (Portfoliomanagement, Datenraum, ESG-Reporting).",
+  "icp_text": "Immobilien-Asset-Manager, Bestandshalter und Kapitalverwaltungsgesellschaften in Deutschland mit einem Portfolio ab etwa 20 Objekten oder 100 Mio. Euro Assets under Management. Passend sind mittelgroße, oft nicht börsennotierte Häuser mit eigenem Asset- und Property-Management. Ausgeschlossen sind reine Makler, Projektentwickler ohne Bestand und die größten börsennotierten Konzerne.",
+  "hard_filters": [
+   "Land = Deutschland",
+   "hält oder verwaltet Bestand (nicht nur Makler/Entwickler)",
+   "Portfolio ab ca. 20 Objekten oder 100 Mio. Euro AuM"
+  ],
+  "signals": [
+   "Portfolio-Zahlen auf der Website (Objekte, m², AuM) wachsen",
+   "neuer Fonds oder BaFin-Registrierung als KVG",
+   "Ankauf-/Transaktionsmeldungen in der Fachpresse",
+   "ESG-/CSRD-Berichtspflicht oder Nachhaltigkeitsbericht",
+   "Stellenanzeigen für Asset- oder Portfoliomanager"
+  ],
+  "sources": [
+   "research/SOURCES.md (BaFin-Datenbank, BVI, GdW)",
+   "Portfolio-Beispiele: habona.com, deutsche-konsum.de",
+   "Arvana-Kundenlogos: recherche/kunden/https___www_arvana_io_success-stories.txt (67 Logos)"
+  ]
+ }
+]

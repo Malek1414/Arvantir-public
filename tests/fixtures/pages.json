@@ -1,0 +1,26 @@
+{
+ "shopware_partner": {
+  "url": "https://www.shopware.com/de/partner/agenturen/",
+  "final": "https://www.shopware.com/de/partner/agenturen/"
+ },
+ "eco_mitglieder": {
+  "url": "https://www.eco.de/mitglieder/",
+  "final": "https://www.eco.de/ueber-eco/mitglieder/"
+ },
+ "waschanlagen_hub": {
+  "url": "https://waschanlagen-deutschland.de/waschstrasse/",
+  "final": "https://waschanlagen-deutschland.de/waschstrasse/"
+ },
+ "bafin": {
+  "url": "https://portal.mvp.bafin.de/database/InstInfo/sucheForm.do?sucheButtonInstitut=Suche&institutName=A",
+  "final": "https://portal.mvp.bafin.de/database/InstInfo/sucheForm.do?sucheButtonInstitut=Suche&institutName=A"
+ },
+ "waschanlagen_berlin": {
+  "url": "https://waschanlagen-deutschland.de/waschstrasse/berlin/",
+  "final": "https://waschanlagen-deutschland.de/waschstrasse/berlin/"
+ },
+ "waschanlagen_nrw": {
+  "url": "https://waschanlagen-deutschland.de/waschstrasse/nordrhein-westfalen/",
+  "final": "https://waschanlagen-deutschland.de/waschstrasse/nordrhein-westfalen/"
+ }
+}

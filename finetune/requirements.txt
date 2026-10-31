@@ -1,0 +1,8 @@
+# zusätzlich zu ../requirements.txt, für train.py / bench.py (Mac und DGX Spark)
+sentence-transformers>=4
+datasets
+accelerate>=0.26
+matplotlib
+scipy
+openai>=1.40
+python-dotenv

@@ -1,0 +1,81 @@
+{
+ "_note": "ICP: research/icps.json (d2) per arvantir.pipeline.icp_for, eigener Satz hier nur als Fallback. test=true = Zusatz-Nischen.",
+ "niches": [
+  {
+   "key": "baeckereien_metzgereien",
+   "seed": "Bäckereien & Metzgereien",
+   "icp": "Inhabergeführte Bäckerei oder Metzgerei (Handwerksbetrieb, Innungsmitglied) in Deutschland mit eigener Backstube oder Schlachtung, 1 bis 5 Filialen, 5 bis 80 Mitarbeiter. Keine Großbäckerei-Kette, kein Supermarkt, kein Verband oder Verzeichnis.",
+   "variants": [
+    "Bäckerinnung Mitgliedsbetriebe",
+    "Fleischerinnung Mitgliedsbetriebe",
+    "Konditoreien Handwerk"
+   ]
+  },
+  {
+   "key": "waschanlagen",
+   "seed": "Waschanlagen",
+   "icp": "Betreiber einer oder weniger Autowaschanlagen, Waschstraßen oder SB-Waschplätze in Deutschland, mittelständisch oder inhabergeführt. Kein Hersteller von Waschtechnik, keine Tankstellenkette, kein Branchenportal.",
+   "variants": [
+    "Waschstraße Betreiber",
+    "SB-Waschanlagen Betreiber"
+   ]
+  },
+  {
+   "key": "it_dienstleister",
+   "seed": "IT-Dienstleister",
+   "icp": "Mittelständischer deutscher IT-Dienstleister oder Systemhaus mit 10 bis 250 Mitarbeitern: Managed Services, IT-Betreuung und Netzwerk für KMU in der Region. Kein Konzern, kein Freelancer, keine Software-Plattform, kein Verzeichnis.",
+   "variants": [
+    "Systemhäuser",
+    "Managed Service Provider"
+   ]
+  },
+  {
+   "key": "aerzte_apotheken",
+   "seed": "Ärzte & Apotheken",
+   "icp": "Niedergelassene Arztpraxis, Medizinisches Versorgungszentrum oder inhabergeführte Apotheke in Deutschland mit eigenem Standort und Team. Kein Krankenhauskonzern, keine Versandapotheke, kein Arztverzeichnis oder Bewertungsportal.",
+   "variants": [
+    "Apotheken",
+    "Medizinische Versorgungszentren",
+    "Zahnarztpraxen"
+   ]
+  },
+  {
+   "key": "family_offices",
+   "seed": "Family Offices & LPs",
+   "icp": "Single oder Multi Family Office in Deutschland oder DACH, das Vermögen einer Unternehmerfamilie verwaltet und als Limited Partner in Private-Equity- oder Venture-Fonds investiert. Keine Bank-Filiale, kein Finanzvertrieb, kein Nachrichtenportal.",
+   "variants": [
+    "Single Family Offices",
+    "Multi Family Offices"
+   ]
+  },
+  {
+   "key": "immobilien_asset_manager",
+   "seed": "Immobilien Asset Manager",
+   "icp": "Immobilien-Asset-Manager oder Investment-Manager in Deutschland, der Gewerbe- oder Wohnportfolios für institutionelle Investoren verwaltet (KVG, Asset Management, Fondsmanagement). Kein Makler für Privatkunden, keine Hausverwaltung, kein Immobilienportal.",
+   "variants": [
+    "Kapitalverwaltungsgesellschaften Immobilien",
+    "Immobilien Investment Manager"
+   ]
+  },
+  {
+   "key": "steuerberater",
+   "seed": "Steuerberater",
+   "test": true,
+   "icp": "Steuerberatungskanzlei in Deutschland mit 5 bis 50 Mitarbeitern, die Buchhaltung, Lohn und Jahresabschluss für mittelständische Unternehmen macht. Keine Big-Four-Gesellschaft, kein Kammerverzeichnis, kein Software-Anbieter.",
+   "variants": [
+    "Steuerberatungskanzleien",
+    "Wirtschaftsprüfer Kanzleien"
+   ]
+  },
+  {
+   "key": "maschinenbau",
+   "seed": "Maschinenbau Zulieferer",
+   "test": true,
+   "icp": "Mittelständischer deutscher Maschinenbauer oder Zulieferer (Sondermaschinen, Zerspanung, Automatisierung) mit 20 bis 500 Mitarbeitern und eigener Fertigung. Kein Konzern, kein Händler, keine Messe- oder Verbandsseite.",
+   "variants": [
+    "Sondermaschinenbau",
+    "CNC Zerspanung Lohnfertigung"
+   ]
+  }
+ ]
+}

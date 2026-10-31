@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arvantir</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Ccircle cx=%2732%27 cy=%2727%27 r=%2718%27 fill=%27none%27 stroke=%27%230a0a0a%27 stroke-width=%275%27/%3E%3Cpath d=%27M25 36 L29 18 L34 18 L30 36Z M32 36 L36 18 L41 18 L37 36Z%27 fill=%27%235b3df5%27/%3E%3Cpath d=%27M9 49 Q32 63 55 49%27 fill=%27none%27 stroke=%27%230a0a0a%27 stroke-width=%275%27 stroke-linecap=%27round%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#ffffff; --soft:#f6f7fb; --ink:#0a0a0a; --ink2:#2a2a2a; --muted:#6b6b6b; --line:#ececec;
+  --blue:#2346ff; --violet:#7a3cf0; --grad:linear-gradient(100deg,#2346ff 0%,#5b3df5 55%,#8a3ff0 100%);
+  --a:#16a34a; --b:#2346ff; --c:#b7791f; --d:#9a9a9a; --warn:#b45309;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:hidden}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+.brand{font-weight:800;letter-spacing:-.4px;font-size:20px;display:flex;align-items:center;gap:10px}
+.logo{width:34px;height:34px;color:#fff}
+.logo .orb{transform-origin:32px 27px}
+body.running .logo .orb{animation:seer 1.4s ease-in-out infinite}
+@keyframes seer{0%,100%{stroke:#fff}50%{stroke:#7c6bff;filter:drop-shadow(0 0 6px #5b3df5)}}
+.top{background:#0a0a0a;color:#fff;position:relative;overflow:hidden}
+.top::after{content:"";position:absolute;width:720px;height:720px;right:-260px;top:-300px;border-radius:50%;background:radial-gradient(circle,rgba(91,61,245,.35),rgba(35,70,255,0) 65%);pointer-events:none}
+.top .wrap{position:relative;z-index:1}
+.top .meta{color:#8a8a8a}
+.topnav{display:flex;gap:6px}
+.topnav a{font:500 14px Inter,sans-serif;text-decoration:none;padding:8px 14px;border-radius:10px;color:#cfcfcf}
+.topnav a.on{background:#fff;color:#0a0a0a}
+.topnav a:hover{color:#fff}
+.topnav a.on:hover{color:#0a0a0a}
+.top .sub{color:#cfcfcf}
+.eyebrow{font:500 12px var(--mono);letter-spacing:2px;text-transform:uppercase;color:#9d8cff;margin-bottom:18px}
+.meme{margin-top:26px;padding-bottom:40px;font-size:14px;color:#8a8a8a}
+.top input[type=text],.top textarea,.top select{background:#151515;border-color:#2a2a2a;color:#fff}
+.top input::placeholder,.top textarea::placeholder{color:#777}
+.top .chip{background:#151515;border-color:#2a2a2a;color:#cfcfcf}
+.top .chip:hover{border-color:#7c6bff;color:#fff}
+.top button.ghost{background:#1d1d1d;color:#fff}
+.top summary{color:#9a9a9a}
+#funnelSec{border-top:0}
+.brand .word span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.meta{font:500 11px var(--mono);letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}
+.hero{padding:44px 0 28px}
+h1{font-size:clamp(40px,7vw,84px);line-height:1;letter-spacing:-.04em;font-weight:800}
+h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin-top:18px;max-width:640px;color:var(--ink2);font-size:18px}
+form{margin-top:32px;display:flex;gap:10px;flex-wrap:wrap}
+input[type=text],textarea,select{font:inherit;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff;color:var(--ink);min-width:0}
+input[type=text]{flex:1 1 320px}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--blue);outline-offset:1px;border-color:transparent}
+button{font:600 15px Inter,sans-serif;border:0;border-radius:12px;padding:14px 22px;cursor:pointer;color:#fff;background:var(--grad)}
+button:disabled{opacity:.5;cursor:default}
+button.ghost{background:var(--soft);color:var(--ink);font-weight:500}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip{font:500 13px Inter,sans-serif;padding:7px 12px;border-radius:999px;background:var(--soft);color:var(--ink2);border:1px solid var(--line);cursor:pointer}
+.chip:hover{border-color:var(--blue);color:var(--blue)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.row select{flex:1 1 280px;padding:11px 14px;font-size:14px}
+.row button{padding:11px 16px;font-size:14px}
+details{margin-top:14px}
+summary{cursor:pointer;color:var(--muted);font-size:14px}
+textarea{width:100%;margin-top:8px;min-height:84px;font-size:14px}
+section{padding:36px 0;border-top:1px solid var(--line)}
+h2{font-size:13px;font-family:var(--mono);font-weight:500;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h2 b{color:var(--ink);font-weight:500}
+.funnel{display:grid;gap:8px}
+.fstep{display:grid;grid-template-columns:minmax(120px,190px) 1fr 76px;gap:14px;align-items:center;transition:opacity .3s}
+.fstep.wait{opacity:.32}
+.fstep.off{opacity:.32}
+.fstep .lbl{font-size:15px;font-weight:500}
+.fstep.dark .lbl{font-weight:700}
+.bar{height:12px;background:var(--soft);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--grad);border-radius:999px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.fstep.dark .bar i{background:linear-gradient(100deg,#0a0a0a,#2346ff)}
+.num{font:600 22px Inter,sans-serif;text-align:right;font-variant-numeric:tabular-nums}
+.status{margin-top:16px;font-size:14px;color:var(--muted);min-height:22px}
+.srcs{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.src{font:400 12px var(--mono);padding:6px 10px;border-radius:8px;background:var(--soft);color:var(--ink2);text-decoration:none;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.src b{font-weight:500;color:var(--blue);margin-right:6px}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font:500 11px var(--mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);background:#fcfcfd;white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:#f8f9ff}
+.firm{font-weight:600}
+.firm small{display:block;font-weight:400;color:var(--muted);font-size:12px;word-break:break-all}
+.score{display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums;font-weight:600}
+.score .bar{width:56px;height:6px}
+.tier{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;font-weight:700;font-size:13px;color:#fff}
+.tA{background:var(--a)}.tB{background:var(--b)}.tC{background:var(--c)}.tD{background:var(--d)}
+.muted{color:var(--muted)}
+.flag{font:500 11px var(--mono);color:var(--warn);display:block;margin-top:2px}
+.empty{padding:28px;color:var(--muted);text-align:center}
+.more{margin-top:14px}
+/* Lead-Karte */
+.overlay{position:fixed;inset:0;background:rgba(10,10,10,.35);display:none;z-index:50}
+.overlay.on{display:block}
+.card{position:fixed;top:0;right:0;height:100%;width:min(520px,100%);background:#fff;z-index:60;transform:translateX(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);overflow-y:auto;padding:28px 26px 40px;box-shadow:-20px 0 60px rgba(0,0,0,.08)}
+.card.on{transform:none}
+.card h3{font-size:26px;letter-spacing:-.02em;line-height:1.15;padding-right:44px}
+.close{position:absolute;top:20px;right:20px;width:36px;height:36px;padding:0;border-radius:10px;background:var(--soft);color:var(--ink);font-size:20px;line-height:36px}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:10px 14px;margin-top:22px;font-size:14px}
+.kv dt{color:var(--muted)}
+.kv dd{word-break:break-word}
+.reason{margin-top:20px;padding:16px 18px;border-radius:12px;background:var(--soft);font-size:15px}
+.reason a{font:400 12px var(--mono);color:var(--blue);display:block;margin-top:8px;word-break:break-all}
+.sig{padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.sig a{color:var(--ink);text-decoration:none}
+.sig a:hover{color:var(--blue)}
+.sig span{font:400 12px var(--mono);color:var(--muted);display:block;margin-top:2px}
+h4{font:500 11px var(--mono);letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin-top:26px}
+/* Benchmark */
+.bench table{font-size:14px}
+.bench p{margin:8px 0;color:var(--ink2);font-size:15px}
+.bench h5{font-size:16px;margin:18px 0 8px}
+footer{padding:30px 0 50px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .hero{padding:24px 0 20px}
+  .sub{font-size:16px}
+  .fstep{grid-template-columns:1fr 64px;gap:4px 10px}
+  .fstep .bar{grid-column:1/-1;grid-row:2}
+  .num{font-size:18px}
+  .hide-s{display:none}
+  th,td{padding:10px 10px}
+  .kv{grid-template-columns:96px 1fr}
+}
+</style>
+</head>
+<body>
+<div class="top"><div class="wrap">
+  <header>
+    <div class="brand"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2346ff"/><stop offset="1" stop-color="#8a3ff0"/></linearGradient></defs><circle class="orb" cx="32" cy="27" r="18" fill="none" stroke="currentColor" stroke-width="5"/><path d="M25 36 L29 18 L34 18 L30 36Z M32 36 L36 18 L41 18 L37 36Z" fill="url(#g)"/><path d="M9 49 Q32 63 55 49" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg><span class="word">Arvan<span>tir</span></span></div>
+    <nav class="topnav"><a class="on" href="/">Demo</a><a href="/architecture">Architektur</a></nav>
+  </header>
+
+  <div class="hero">
+    <div class="eyebrow">Ein Stein, sie alle zu finden.</div>
+    <h1>Find the <em>dark TAM.</em></h1>
+    <p class="sub">Firmen, die keine Lead-Datenbank kennt. Aus Verzeichnissen, Messelisten und Vergleichsportalen geholt, gegen AI Ark geprüft und nach eurem ICP gerankt, mit Tier, Datenlücken und Quelle je Zeile.</p>
+
+    <form id="f" autocomplete="off">
+      <input type="text" id="niche" maxlength="200" placeholder="Nische oder Beispiel-URL, z. B. Waschanlagen" required>
+      <button id="go" type="submit">Lauf starten</button>
+    </form>
+    <div class="chips" id="chips"></div>
+    <details>
+      <summary>ICP selbst vorgeben (sonst aus Arvanas Kunden je Nische)</summary>
+      <textarea id="icp" maxlength="2000" placeholder="Wer passt? Branche, Größe, Region, Muss-Kriterien"></textarea>
+    </details>
+    <div class="row">
+      <select id="runs" aria-label="Gespeicherte Läufe"><option value="">Gespeicherten Lauf abspielen</option></select>
+      <button class="ghost" id="replay" type="button">Abspielen</button>
+    </div>
+    <p class="meme">Palantir sieht alles. Arvantir sieht jede Waschanlage, die AI Ark übersehen hat.</p>
+  </div>
+</div></div>
+<div class="wrap">
+
+  <section id="funnelSec">
+    <h2><span>Funnel</span><b id="clock"></b></h2>
+    <div class="funnel" id="funnel"></div>
+    <div class="status" id="status">Noch kein Lauf. Nische eingeben oder gespeicherten Lauf abspielen.</div>
+    <div class="srcs" id="srcs"></div>
+  </section>
+
+  <section id="leadSec">
+    <h2><span>Leads</span><b id="leadCount"></b></h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>Firma</th><th class="hide-s">Entscheider</th><th>ICP-Score</th><th>Tier</th>
+          <th class="hide-s">Signal</th><th class="hide-s">Kanal</th><th class="hide-s">Quelle</th>
+        </tr></thead>
+        <tbody id="rows"><tr><td colspan="7" class="empty">Hier erscheint die Tabelle Firma, Entscheider, ICP-Score.</td></tr></tbody>
+      </table>
+    </div>
+    <div class="more" id="more"></div>
+  </section>
+
+  <section id="benchSec" hidden>
+    <h2><span>Benchmark</span><b>gegen AI Ark, Lusha und Co.</b></h2>
+    <div class="bench" id="bench"></div>
+  </section>
+
+  <footer>Arvantir · GTM Hackathon Berlin, 31.10.2026 · Ausgabe im Format von leads_export.csv plus Tier, Datenlücken und Konfidenz nach icp-scorer</footer>
+</div>
+
+<div class="overlay" id="ov"></div>
+<aside class="card" id="card" aria-hidden="true"></aside>
+
+<script>
+"use strict";
+// Alles, was von fremden Seiten kommt (Firmennamen, Titel, URLs), geht durch esc() bzw. safeUrl().
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeUrl = u => { try { const x = new URL(String(u)); return /^https?:$/.test(x.protocol) ? x.href : ""; } catch { return ""; } };
+const host = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; } };
+const $ = id => document.getElementById(id);
+
+const STEPS = [
+  ["Quellen gefunden", "Quellen"],
+  ["Firmen ausgelesen", "Firmen"],
+  ["eindeutige Firmen", "eindeutig"],
+  ["mit Website", "mit Website"],
+  ["NICHT in AI Ark", "NICHT in AI Ark"],
+  ["mit Entscheider", "mit Entscheider"],
+  ["mit frischem Signal", "mit frischem Signal"],
+  ["gerankt", "gerankt"],
+];
+const NICHES = ["Waschanlagen", "Bäckereien und Metzgereien", "IT-Dienstleister", "Ärzte und Apotheken", "Family Offices und LPs", "Immobilien Asset Manager"];
+
+let leads = [], shown = 0, timer = null, busy = false;
+
+function buildFunnel() {
+  $("funnel").innerHTML = STEPS.map(([k, l]) =>
+    `<div class="fstep wait${k === "NICHT in AI Ark" ? " dark" : ""}" data-k="${esc(k)}">
+       <div class="lbl">${esc(l)}</div><div class="bar"><i></i></div><div class="num">0</div></div>`).join("");
+  $("srcs").innerHTML = "";
+}
+function stepEl(k) { return [...document.querySelectorAll(".fstep")].find(e => e.dataset.k === k); }
+let maxN = 1;
+function setStep(k, n) {
+  const el = stepEl(k); if (!el) return;
+  el.classList.remove("wait", "off");
+  maxN = Math.max(maxN, n);
+  const num = el.querySelector(".num"), from = +num.dataset.v || 0, t0 = performance.now();
+  num.dataset.v = n;
+  const tick = t => { const p = Math.max(0, Math.min(1, (t - t0) / 700)); num.textContent = Math.round(from + (n - from) * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+  document.querySelectorAll(".fstep:not(.wait)").forEach(e => {
+    e.querySelector(".bar i").style.width = Math.max(2, 100 * (+e.querySelector(".num").dataset.v || 0) / maxN) + "%";
+  });
+}
+function finishFunnel() { document.querySelectorAll(".fstep.wait").forEach(e => { e.classList.replace("wait", "off"); e.querySelector(".num").textContent = "n. a."; }); }
+function showSources(list) {
+  $("srcs").innerHTML = (list || []).slice(0, 8).map(s => {
+    const u = safeUrl(s.url || s); if (!u) return "";
+    return `<a class="src" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${s.type ? `<b>${esc(s.type)}</b>` : ""}${esc(host(u))}</a>`;
+  }).join("");
+}
+function clock(start) {
+  clearInterval(timer);
+  timer = setInterval(() => { $("clock").textContent = ((Date.now() - start) / 1000).toFixed(0) + " s"; }, 250);
+}
+
+// Felder defensiv lesen: ältere Läufe haben noch kein Tier, Entscheider kommt aus enrich (Malek)
+const tierOf = l => l.tier || (l.score >= 80 ? "A" : l.score >= 60 ? "B" : l.score >= 40 ? "C" : "D");
+function dm(l) {
+  const d = l.decision_maker; if (!d) return null;
+  if (typeof d === "string") return { name: d };
+  return { name: d.name || [d.first_name, d.last_name].filter(Boolean).join(" "), role: d.role || d.position || d.title, email: d.email, linkedin: d.linkedin || d.linkedin_url, source: d.source || d.source_url };
+}
+function kanal(l) {
+  if (l.kanal || l.channel) return l.kanal || l.channel;
+  const d = dm(l);
+  if (d && d.email) return "Mail";
+  if (d && d.linkedin) return "LinkedIn";
+  if (l.city || l.postcode) return "Brief";
+  return "offen";
+}
+const sigs = l => Array.isArray(l.signals) ? l.signals : [];
+function ago(days) { if (days == null) return ""; return days === 0 ? "heute" : days === 1 ? "vor 1 Tag" : `vor ${days} Tagen`; }
+
+function renderRows(reset) {
+  if (reset) shown = 0;
+  const next = leads.slice(0, shown + 50); shown = next.length;
+  $("leadCount").textContent = leads.length ? `${leads.length} Firmen` : "";
+  if (!leads.length) { $("rows").innerHTML = `<tr><td colspan="7" class="empty">Keine Firmen in diesem Lauf.</td></tr>`; $("more").innerHTML = ""; return; }
+  $("rows").innerHTML = next.map((l, i) => {
+    const d = dm(l), s = sigs(l)[0], t = tierOf(l), site = safeUrl(l.website), src = safeUrl(l.source_url);
+    return `<tr data-i="${i}">
+      <td class="firm">${esc(l.name)}<small>${esc(host(site) || [l.postcode, l.city].filter(Boolean).join(" "))}</small>${l.needs_human ? `<span class="flag">bitte prüfen</span>` : ""}</td>
+      <td class="hide-s">${d ? esc(d.name) + (d.role ? `<small class="muted" style="display:block">${esc(d.role)}</small>` : "") : `<span class="muted">Datenlücke</span>`}</td>
+      <td><div class="score">${esc(l.score ?? "")}<div class="bar"><i style="width:${Math.max(0, Math.min(100, +l.score || 0))}%"></i></div></div></td>
+      <td><span class="tier t${esc(t)}">${esc(t)}</span></td>
+      <td class="hide-s">${s ? esc(String(s.title || s.type).slice(0, 60)) + `<small class="muted" style="display:block">${esc(ago(s.age_days))}</small>` : `<span class="muted">kein Signal</span>`}</td>
+      <td class="hide-s">${esc(kanal(l))}</td>
+      <td class="hide-s">${src ? `<span class="muted">${esc(l.source_type || "")}</span><small class="muted" style="display:block">${esc(host(src))}</small>` : ""}</td></tr>`;
+  }).join("");
+  $("more").innerHTML = shown < leads.length ? `<button class="ghost" id="moreBtn" type="button">${leads.length - shown} weitere zeigen</button>` : "";
+  if ($("moreBtn")) $("moreBtn").onclick = () => renderRows(false);
+}
+
+$("rows").addEventListener("click", e => {
+  const tr = e.target.closest("tr[data-i]"); if (tr) openCard(leads[+tr.dataset.i]);
+});
+function link(u, label) { const s = safeUrl(u); return s ? `<a href="${esc(s)}" target="_blank" rel="noopener noreferrer">${esc(label || s)}</a>` : `<span class="muted">nicht vorhanden</span>`; }
+function openCard(l) {
+  if (!l) return;
+  const d = dm(l), t = tierOf(l);
+  const gaps = Array.isArray(l.datenluecken) ? l.datenluecken.join(", ") : l.datenluecken;
+  $("card").innerHTML = `
+    <button class="close" id="x" type="button" aria-label="Schließen">&times;</button>
+    <h3>${esc(l.name)}</h3>
+    <div class="reason">${l.reason ? esc(l.reason) : `<span class="muted">Kein Begründungssatz.</span>`}${safeUrl(l.reason_source) ? `<a href="${esc(safeUrl(l.reason_source))}" target="_blank" rel="noopener noreferrer">${esc(l.reason_source)}</a>` : ""}</div>
+    <dl class="kv">
+      <dt>ICP-Score</dt><dd><b>${esc(l.score ?? "")}</b> / 100 · Tier <span class="tier t${esc(t)}">${esc(t)}</span></dd>
+      <dt>Konfidenz</dt><dd>${esc(l.konfidenz || l.confidence || "unbekannt")}</dd>
+      <dt>Datenlücken</dt><dd>${gaps ? esc(gaps) : `<span class="muted">keine</span>`}</dd>
+      <dt>Website</dt><dd>${link(l.website, host(safeUrl(l.website)))}</dd>
+      <dt>Ort</dt><dd>${esc([l.postcode, l.city].filter(Boolean).join(" ")) || `<span class="muted">Datenlücke</span>`}</dd>
+      <dt>Entscheider</dt><dd>${d ? esc(d.name) + (d.role ? `, ${esc(d.role)}` : "") + (d.email ? `<br>${esc(d.email)}` : "") + (d.linkedin ? `<br>${link(d.linkedin, "LinkedIn")}` : "") : `<span class="muted">Datenlücke</span>`}</dd>
+      <dt>In AI Ark</dt><dd>${l.in_ai_ark === false ? "nein, dark TAM" : l.in_ai_ark === true ? "ja" : `<span class="muted">nicht geprüft</span>`}</dd>
+      <dt>Kanal</dt><dd>${esc(kanal(l))}</dd>
+      <dt>Gefunden in</dt><dd>${esc(l.source_type || "")}<br>${link(l.source_url)}</dd>
+    </dl>
+    <h4>Signale${l.signal_score ? ` · Score ${esc(l.signal_score)}` : ""}</h4>
+    ${sigs(l).length ? sigs(l).map(s => `<div class="sig">${safeUrl(s.url) ? `<a href="${esc(safeUrl(s.url))}" target="_blank" rel="noopener noreferrer">${esc(s.title || s.type)}</a>` : esc(s.title || s.type)}<span>${esc(s.type)} · ${esc(s.date || "")} · ${esc(ago(s.age_days))}</span></div>`).join("") : `<p class="muted" style="margin-top:10px;font-size:14px">Kein frisches Signal gefunden (jünger als 6 Monate).</p>`}
+    ${l.needs_human ? `<p class="flag" style="margin-top:18px;font-size:12px">Unsicher gerankt, bitte von Hand prüfen.</p>` : ""}`;
+  $("card").classList.add("on"); $("ov").classList.add("on"); $("card").setAttribute("aria-hidden", "false");
+  $("x").onclick = closeCard; $("x").focus();
+}
+function closeCard() { $("card").classList.remove("on"); $("ov").classList.remove("on"); $("card").setAttribute("aria-hidden", "true"); }
+$("ov").onclick = closeCard;
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeCard(); });
+
+function setBusy(b) { busy = b; document.body.classList.toggle("running", b); $("go").disabled = b; $("replay").disabled = b; }
+function showResult(r, label) {
+  leads = (r.leads || []).slice().sort((a, b) => (b.score || 0) - (a.score || 0));
+  renderRows(true);
+  if (r.sources && r.sources.length) showSources(r.sources);
+  $("status").textContent = label;
+}
+
+// Live-Lauf
+$("f").addEventListener("submit", async e => {
+  e.preventDefault(); if (busy) return;
+  const niche = $("niche").value.trim(); if (niche.length < 2) return;
+  setBusy(true); buildFunnel(); maxN = 1; leads = []; renderRows(true);
+  $("status").textContent = `Suche Quellen für „${niche}“ …`;
+  const start = Date.now(); clock(start);
+  try {
+    const res = await fetch("/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ niche, icp: $("icp").value.trim() }) });
+    const j = await res.json(); if (!res.ok) throw new Error(j.detail || res.status);
+    const es = new EventSource(`/events/${encodeURIComponent(j.id)}`);
+    es.onmessage = async m => {
+      const ev = JSON.parse(m.data);
+      if (ev.type === "step") {
+        setStep(ev.step, ev.n);
+        if (ev.extra && ev.extra.sources) showSources(ev.extra.sources);
+        if (ev.extra && ev.extra.sources_used) showSources(ev.extra.sources_used);
+        $("status").textContent = `${ev.step}: ${ev.n}`;
+      } else if (ev.type === "done") {
+        es.close(); clearInterval(timer); finishFunnel();
+        const r = await (await fetch(`/result/${encodeURIComponent(j.id)}`)).json();
+        showResult(r, `Fertig in ${r.seconds} s · gespeichert als ${ev.file}`);
+        loadRuns(); setBusy(false);
+      } else if (ev.type === "error") {
+        es.close(); clearInterval(timer); $("status").textContent = "Lauf abgebrochen: " + ev.message; setBusy(false);
+      }
+    };
+    es.onerror = () => { if (busy && es.readyState === 2) { clearInterval(timer); $("status").textContent = "Verbindung verloren."; setBusy(false); } };
+  } catch (err) { clearInterval(timer); $("status").textContent = "Start fehlgeschlagen: " + err.message; setBusy(false); }
+});
+
+// Wiederholung eines gespeicherten Laufs, Zeiten auf ca. 8 s gestaucht
+$("replay").addEventListener("click", async () => {
+  const f = $("runs").value; if (!f || busy) return;
+  setBusy(true); buildFunnel(); maxN = 1; leads = []; renderRows(true);
+  const r = await (await fetch(`/runs/${encodeURIComponent(f)}`)).json();
+  $("niche").value = r.seed || "";
+  const steps = r.funnel || [], total = Math.max(1, ...steps.map(s => s.t || 0)), scale = 8000 / total;
+  const start = Date.now(); clock(start);
+  $("status").textContent = `Suche Quellen für „${r.seed}“ …`;
+  for (const s of steps) {
+    await new Promise(ok => setTimeout(ok, Math.max(350, (s.t || 0) * scale - (Date.now() - start))));
+    setStep(s.step, s.n); $("status").textContent = `${s.step}: ${s.n}`;
+    if (s.step === "Firmen ausgelesen") showSources(r.sources);
+  }
+  clearInterval(timer); $("clock").textContent = `${r.seconds} s`; finishFunnel();
+  showResult(r, `Gespeicherter Lauf ${f} · Original-Laufzeit ${r.seconds} s`);
+  setBusy(false);
+  if (new URLSearchParams(location.search).get("lead")) openCard(leads[0]);
+});
+
+async function loadRuns() {
+  try {
+    const list = await (await fetch("/runs")).json();
+    $("runs").innerHTML = `<option value="">Gespeicherten Lauf abspielen</option>` +
+      list.filter(x => x.leads > 0).map(x => `<option value="${esc(x.file)}">${esc(x.seed)} · ${esc(x.leads)} Firmen · ${esc(x.file.slice(4, 6))}:${esc(x.file.slice(6, 8))} Uhr</option>`).join("");
+  } catch { /* Server ohne Läufe */ }
+}
+
+function mdToHtml(md) {
+  const lines = md.split("\n"); let out = "", tbl = [];
+  const flush = () => {
+    if (!tbl.length) return;
+    const rows = tbl.filter(r => !/^\|\s*:?-{2,}/.test(r)).map(r => r.replace(/^\||\|$/g, "").split("|").map(c => c.trim()));
+    out += `<div class="tablewrap"><table><thead><tr>${rows[0].map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${rows.slice(1).map(r => `<tr>${r.map(c => `<td>${esc(c.replace(/\*\*/g, ""))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    tbl = [];
+  };
+  for (const ln of lines) {
+    if (ln.trim().startsWith("|")) { tbl.push(ln.trim()); continue; }
+    flush();
+    if (/^#{1,6}\s/.test(ln)) out += `<h5>${esc(ln.replace(/^#+\s*/, ""))}</h5>`;
+    else if (ln.trim()) out += `<p>${esc(ln.replace(/\*\*/g, "").replace(/^[-*]\s+/, ""))}</p>`;
+  }
+  flush(); return out;
+}
+function jsonToHtml(d) {
+  const rows = Array.isArray(d) ? d : Array.isArray(d.rows) ? d.rows : Array.isArray(d.results) ? d.results : null;
+  if (rows && rows.length && typeof rows[0] === "object") {
+    const cols = Object.keys(rows[0]);
+    return `<div class="tablewrap"><table><thead><tr>${cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${cols.map(c => `<td>${esc(typeof r[c] === "object" ? JSON.stringify(r[c]) : r[c])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  }
+  return `<dl class="kv">${Object.entries(d).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(typeof v === "object" ? JSON.stringify(v) : v)}</dd>`).join("")}</dl>`;
+}
+async function loadBench() {
+  try {
+    const b = await (await fetch("/bench")).json();
+    if (b.kind === "none") return;
+    $("bench").innerHTML = b.kind === "json" ? jsonToHtml(b.data) : mdToHtml(b.data);
+    $("benchSec").hidden = false;
+  } catch { /* kein Benchmark */ }
+}
+
+$("chips").innerHTML = NICHES.map(n => `<button type="button" class="chip">${esc(n)}</button>`).join("");
+$("chips").addEventListener("click", e => { const c = e.target.closest(".chip"); if (c) { $("niche").value = c.textContent; $("niche").focus(); } });
+buildFunnel(); loadBench();
+// ?replay=run_HHMMSS.json spielt einen Lauf direkt ab (Video-Fallback), ?lead=1 öffnet danach die erste Karte
+loadRuns().then(() => {
+  const q = new URLSearchParams(location.search), f = q.get("replay");
+  if (f && /^run_\d{6}\.json$/.test(f)) { $("runs").value = f; $("replay").click(); }
+});
+</script>
+</body>
+</html>
