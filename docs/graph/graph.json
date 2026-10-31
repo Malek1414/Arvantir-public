@@ -1,0 +1,2508 @@
+{
+ "repo": {
+  "name": "Arvantir-public",
+  "commit": "cdfd859",
+  "remote": "https://github.com/Malek1414/Arvantir-public.git",
+  "generated_at": "2026-10-31 18:39"
+ },
+ "layers": [
+  {
+   "id": "arvantir",
+   "label": "arvantir",
+   "modules": 15,
+   "loc": 2198,
+   "doc": "Arvantir: Dark-TAM-Engine für Arvana, gebaut auf Searchify."
+  },
+  {
+   "id": "finetune",
+   "label": "finetune",
+   "modules": 10,
+   "loc": 1251,
+   "doc": ""
+  },
+  {
+   "id": "tests",
+   "label": "tests",
+   "modules": 10,
+   "loc": 949,
+   "doc": ""
+  },
+  {
+   "id": "adapters",
+   "label": "adapters",
+   "modules": 3,
+   "loc": 592,
+   "doc": ""
+  },
+  {
+   "id": "web",
+   "label": "web",
+   "modules": 2,
+   "loc": 416,
+   "doc": ""
+  }
+ ],
+ "nodes": [
+  {
+   "id": "adapters",
+   "label": "adapters",
+   "layer": "adapters",
+   "path": "adapters/__init__.py",
+   "loc": 1,
+   "doc": "",
+   "entry": false,
+   "functions": [],
+   "classes": []
+  },
+  {
+   "id": "adapters.clay",
+   "label": "clay",
+   "layer": "adapters",
+   "path": "adapters/clay.py",
+   "loc": 386,
+   "doc": "Arvantir-Lauf -> Clay-Table (CSV, JSON oder Webhook).",
+   "entry": true,
+   "functions": [
+    {
+     "name": "norm_domain",
+     "line": 74,
+     "doc": "Wie Arvanas Sperrliste gemeint ist: Groß/klein, www., Leerzeichen, URL egal."
+    },
+    {
+     "name": "load_domains",
+     "line": 80,
+     "doc": "Sperrliste (eine Domain pro Zeile, # = Kommentar) oder CSV mit Spalte domain."
+    },
+    {
+     "name": "_quelle",
+     "line": 90,
+     "doc": "Konkrete Fundstelle statt 'listenkauf': z. B. verband:eco.de."
+    },
+    {
+     "name": "tier",
+     "line": 113,
+     "doc": ""
+    },
+    {
+     "name": "domain",
+     "line": 119,
+     "doc": "Registrierbare Domain ohne www (einfach, ohne tldextract; .co.uk-Fälle egal für DACH)."
+    },
+    {
+     "name": "split_legal",
+     "line": 129,
+     "doc": ""
+    },
+    {
+     "name": "fold",
+     "line": 137,
+     "doc": ""
+    },
+    {
+     "name": "entity_key",
+     "line": 143,
+     "doc": "Stabiler Schlüssel: Gericht+HRB > Domain > (gefalteter Name, PLZ). Wie in supabase.sql."
+    },
+    {
+     "name": "_person",
+     "line": 156,
+     "doc": ""
+    },
+    {
+     "name": "gaps",
+     "line": 172,
+     "doc": ""
+    },
+    {
+     "name": "_yes",
+     "line": 183,
+     "doc": ""
+    },
+    {
+     "name": "to_row",
+     "line": 191,
+     "doc": ""
+    },
+    {
+     "name": "to_arvana",
+     "line": 240,
+     "doc": "Clay-Zeile + Lead -> Arvanas Spalten. Datum nur als Tag, wie in ihrem Export."
+    },
+    {
+     "name": "safe",
+     "line": 268,
+     "doc": "Formel-Injection in Clay/Sheets/Excel verhindern (wie pipeline._cell)."
+    },
+    {
+     "name": "run_id",
+     "line": 276,
+     "doc": "Pipeline-Stempel hat nur die Uhrzeit, Datum aus der Datei davor: 20261031_run_130450."
+    },
+    {
+     "name": "tier_ok",
+     "line": 281,
+     "doc": ""
+    },
+    {
+     "name": "write_csv",
+     "line": 285,
+     "doc": ""
+    },
+    {
+     "name": "post_webhook",
+     "line": 292,
+     "doc": "Clay-Webhook-Quelle: eine Zeile pro POST. Token nur aus der Umgebung."
+    },
+    {
+     "name": "latest_run",
+     "line": 311,
+     "doc": ""
+    },
+    {
+     "name": "tier_summary",
+     "line": 319,
+     "doc": ""
+    },
+    {
+     "name": "main",
+     "line": 333,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "adapters.supabase",
+   "label": "supabase",
+   "layer": "adapters",
+   "path": "adapters/supabase.py",
+   "loc": 205,
+   "doc": "Arvantir-Lauf -> Supabase (Schema: adapters/supabase.sql).",
+   "entry": true,
+   "functions": [
+    {
+     "name": "_conf",
+     "line": 37,
+     "doc": ""
+    },
+    {
+     "name": "_prov",
+     "line": 43,
+     "doc": "Provenienz eines Felds: aus c['provenance'][field] (enrich), sonst Herkunft des Leads."
+    },
+    {
+     "name": "build",
+     "line": 54,
+     "doc": ""
+    },
+    {
+     "name": "__init__",
+     "line": 126,
+     "doc": ""
+    },
+    {
+     "name": "_post",
+     "line": 131,
+     "doc": ""
+    },
+    {
+     "name": "upsert",
+     "line": 144,
+     "doc": ""
+    },
+    {
+     "name": "rpc",
+     "line": 151,
+     "doc": ""
+    },
+    {
+     "name": "push",
+     "line": 155,
+     "doc": ""
+    },
+    {
+     "name": "main",
+     "line": 178,
+     "doc": ""
+    }
+   ],
+   "classes": [
+    "Rest"
+   ]
+  },
+  {
+   "id": "arvantir",
+   "label": "arvantir",
+   "layer": "arvantir",
+   "path": "arvantir/__init__.py",
+   "loc": 5,
+   "doc": "Arvantir: Dark-TAM-Engine für Arvana, gebaut auf Searchify.",
+   "entry": false,
+   "functions": [],
+   "classes": []
+  },
+  {
+   "id": "arvantir.__main__",
+   "label": "__main__",
+   "layer": "arvantir",
+   "path": "arvantir/__main__.py",
+   "loc": 44,
+   "doc": "python -m arvantir discover \"IT-Dienstleister\"  (weitere Schritte folgen)",
+   "entry": true,
+   "functions": [
+    {
+     "name": "main",
+     "line": 11,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "arvantir.channel",
+   "label": "channel",
+   "layer": "arvantir",
+   "path": "arvantir/channel.py",
+   "loc": 27,
+   "doc": "channel: bester Weg zum Entscheider, rechtlich sauber (§ 7 UWG).",
+   "entry": false,
+   "functions": [
+    {
+     "name": "channel",
+     "line": 13,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "arvantir.common",
+   "label": "common",
+   "layer": "arvantir",
+   "path": "arvantir/common.py",
+   "loc": 65,
+   "doc": "Gemeinsame Helfer: Score-Skala, Paar-Log fürs Fine-Tuning, optionales LLM.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "to_100",
+     "line": 22,
+     "doc": "Cross-Encoder-Logit auf 0 bis 100, kalibriert (mMiniLM-Logits liegen grob bei -8 bis +1)."
+    },
+    {
+     "name": "tier",
+     "line": 30,
+     "doc": "Arvanas Tier-Grenzen aus dem icp-scorer: A 80-100, B 60-79, C 40-59, D < 40."
+    },
+    {
+     "name": "log_pairs",
+     "line": 35,
+     "doc": "Jedes bewertete Paar für FINETUNE_PLAN.md mitschreiben."
+    },
+    {
+     "name": "llm_json",
+     "line": 47,
+     "doc": "JSON vom LLM, oder None wenn kein Key gesetzt ist oder der Aufruf scheitert."
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "arvantir.darkcheck",
+   "label": "darkcheck",
+   "layer": "arvantir",
+   "path": "arvantir/darkcheck.py",
+   "loc": 89,
+   "doc": "darkcheck: kennt AI Ark die Firma? Nur Firmen mit in_ai_ark = False zählen (Folie 01).",
+   "entry": false,
+   "functions": [
+    {
+     "name": "_load",
+     "line": 27,
+     "doc": ""
+    },
+    {
+     "name": "_lookup",
+     "line": 34,
+     "doc": ""
+    },
+    {
+     "name": "darkcheck",
+     "line": 51,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "arvantir.discover",
+   "label": "discover",
+   "layer": "arvantir",
+   "path": "arvantir/discover.py",
+   "loc": 194,
+   "doc": "discover: Branche oder Beispiel-Lead -> sortierte Liste von Quellen (Verzeichnisse, Listen, PDFs).",
+   "entry": false,
+   "functions": [
+    {
+     "name": "_allowed",
+     "line": 47,
+     "doc": ""
+    },
+    {
+     "name": "_guess_type",
+     "line": 64,
+     "doc": ""
+    },
+    {
+     "name": "understand",
+     "line": 71,
+     "doc": "Beispiel-URL oder Freitext -> {niche, queries, list_query}."
+    },
+    {
+     "name": "_singular",
+     "line": 105,
+     "doc": ""
+    },
+    {
+     "name": "branchenbuch",
+     "line": 116,
+     "doc": "Rückfall für lokale Betriebe: Gelbe Seiten je Nischen-Teil und Stadt (statisches HTML, Name + PLZ)."
+    },
+    {
+     "name": "curated",
+     "line": 132,
+     "doc": "Quellen aus der Recherche des Searchify-Terminals, passend zur Nische."
+    },
+    {
+     "name": "discover",
+     "line": 151,
+     "doc": ""
+    },
+    {
+     "name": "_safe_search",
+     "line": 188,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "arvantir.enrich",
+   "label": "enrich",
+   "layer": "arvantir",
+   "path": "arvantir/enrich/__init__.py",
+   "loc": 82,
+   "doc": "enrich: Entscheider und Kontakt ohne Lead-Datenbank, jedes Feld mit Quelle und Konfidenz.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "_pick_email",
+     "line": 21,
+     "doc": ""
+    },
+    {
+     "name": "enrich_one",
+     "line": 34,
+     "doc": ""
+    },
+    {
+     "name": "enrich",
+     "line": 62,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "arvantir.enrich.impressum",
+   "label": "impressum",
+   "layer": "arvantir",
+   "path": "arvantir/enrich/impressum.py",
+   "loc": 167,
+   "doc": "Impressum lesen: Entscheider, Kontakt, Register. Regeln zuerst, LLM nur als Rückfall.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "find_impressum",
+     "line": 43,
+     "doc": ""
+    },
+    {
+     "name": "page_text",
+     "line": 56,
+     "doc": ""
+    },
+    {
+     "name": "_deobfuscate",
+     "line": 68,
+     "doc": ""
+    },
+    {
+     "name": "_names_after_role",
+     "line": 76,
+     "doc": "Namen hinter einem Rollen-Label: in derselben Zeile (Komma/und) oder eine pro Zeile darunter."
+    },
+    {
+     "name": "parse",
+     "line": 97,
+     "doc": ""
+    },
+    {
+     "name": "_llm",
+     "line": 129,
+     "doc": "Rückfall, nur wenn OPENAI_API_KEY gesetzt ist (OPENAI_BASE_URL für andere Anbieter)."
+    },
+    {
+     "name": "get",
+     "line": 143,
+     "doc": "(Felder, impressum_url, Weg). Weg = http | realbrowser | llm."
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "arvantir.harvest",
+   "label": "harvest",
+   "layer": "arvantir",
+   "path": "arvantir/harvest.py",
+   "loc": 343,
+   "doc": "harvest: Quelle (Listenseite) -> rohe Firmen-Kandidaten.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "is_public_url",
+     "line": 40,
+     "doc": "Nur http(s) auf öffentliche Hosts: keine privaten, Loopback- oder Link-Local-Adressen (SSRF)."
+    },
+    {
+     "name": "fetch",
+     "line": 56,
+     "doc": "(html, final_url). Fällt bei JS-Seiten auf r.jina.ai (HTML-Modus) zurück."
+    },
+    {
+     "name": "_sig",
+     "line": 90,
+     "doc": ""
+    },
+    {
+     "name": "_text",
+     "line": 94,
+     "doc": ""
+    },
+    {
+     "name": "candidate_groups",
+     "line": 98,
+     "doc": "Gruppen gleichartiger Elemente, bewertet danach, wie sehr sie nach Einträgen aussehen."
+    },
+    {
+     "name": "pick_group",
+     "line": 130,
+     "doc": ""
+    },
+    {
+     "name": "parse_entry",
+     "line": 146,
+     "doc": ""
+    },
+    {
+     "name": "next_page",
+     "line": 188,
+     "doc": ""
+    },
+    {
+     "name": "company_like",
+     "line": 207,
+     "doc": "Sieht der Eintrag nach einer Firma aus (Rechtsform, PLZ oder eigene Website, kein Navigationstext)?"
+    },
+    {
+     "name": "_is_hub",
+     "line": 214,
+     "doc": "Hub = Seite, deren Einträge auf Unterlisten UNTER ihrem eigenen Pfad zeigen (Städte, Kategorien)."
+    },
+    {
+     "name": "harvest",
+     "line": 224,
+     "doc": "Alle Einträge einer Listenquelle. Hub-Seiten (Städte, Kategorien) werden eine Ebene tief verfolgt."
+    },
+    {
+     "name": "_harvest_list",
+     "line": 247,
+     "doc": ""
+    },
+    {
+     "name": "_reg",
+     "line": 289,
+     "doc": "Registrierbare Domain grob: letzte zwei Labels (reicht für .de/.com)."
+    },
+    {
+     "name": "resolve_websites",
+     "line": 295,
+     "doc": "Fehlende Firmen-Website über die Detailseite im Verzeichnis nachholen."
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "arvantir.knowncheck",
+   "label": "knowncheck",
+   "layer": "arvantir",
+   "path": "arvantir/knowncheck.py",
+   "loc": 183,
+   "doc": "knowncheck: steht die Firma schon in einer großen öffentlichen Firmen-Datenbank?",
+   "entry": true,
+   "functions": [
+    {
+     "name": "_city",
+     "line": 43,
+     "doc": "Ort ohne Umlaut-Varianten: München, Muenchen, Munchen und Munich ergeben denselben Schlüssel."
+    },
+    {
+     "name": "_pick",
+     "line": 51,
+     "doc": ""
+    },
+    {
+     "name": "_rows",
+     "line": 56,
+     "doc": ""
+    },
+    {
+     "name": "build",
+     "line": 70,
+     "doc": ""
+    },
+    {
+     "name": "_open",
+     "line": 109,
+     "doc": ""
+    },
+    {
+     "name": "meta",
+     "line": 115,
+     "doc": ""
+    },
+    {
+     "name": "lookup",
+     "line": 123,
+     "doc": "Domain zuerst; ohne Domain Name+Ort (Name allein ist zu unscharf und zählt als unbekannt)."
+    },
+    {
+     "name": "knowncheck",
+     "line": 136,
+     "doc": ""
+    },
+    {
+     "name": "bench",
+     "line": 149,
+     "doc": "Bestehende Läufe gegen den Index: je Nische Anteil dunkel, getrennt nach Methode."
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "arvantir.normalize",
+   "label": "normalize",
+   "layer": "arvantir",
+   "path": "arvantir/normalize.py",
+   "loc": 126,
+   "doc": "normalize: rohe Kandidaten -> eine Firma = eine Zeile, jede Quelle bleibt sichtbar.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "split_legal",
+     "line": 26,
+     "doc": ""
+    },
+    {
+     "name": "name_key",
+     "line": 34,
+     "doc": ""
+    },
+    {
+     "name": "domain_of",
+     "line": 41,
+     "doc": ""
+    },
+    {
+     "name": "entity_key",
+     "line": 55,
+     "doc": ""
+    },
+    {
+     "name": "clean",
+     "line": 64,
+     "doc": ""
+    },
+    {
+     "name": "merge",
+     "line": 79,
+     "doc": "b in a mischen: leere Felder füllen, Quellen und Namensvarianten sammeln."
+    },
+    {
+     "name": "normalize",
+     "line": 92,
+     "doc": "Saubere, deduplizierte Kandidaten; Reihenfolge = erstes Auftreten."
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "arvantir.pipeline",
+   "label": "pipeline",
+   "layer": "arvantir",
+   "path": "arvantir/pipeline.py",
+   "loc": 192,
+   "doc": "Ganzer Lauf: discover -> harvest -> (normalize, darkcheck, enrich von Malek) -> rank -> Datei.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "_optional",
+     "line": 22,
+     "doc": ""
+    },
+    {
+     "name": "icp_for",
+     "line": 29,
+     "doc": "ICP-Text aus research/icps.json (Terminal d2), passend zur Nische."
+    },
+    {
+     "name": "foreign_seat",
+     "line": 49,
+     "doc": "Sitz vermutlich im Ausland: ausländische Rechtsform oder Länder-Domain, ohne deutsche Niederlassung im Namen."
+    },
+    {
+     "name": "collapse_chains",
+     "line": 57,
+     "doc": "Eine Firma, eine Zeile: Filialen derselben Domain zusammenfassen und als Kette markieren."
+    },
+    {
+     "name": "run",
+     "line": 81,
+     "doc": ""
+    },
+    {
+     "name": "_csv",
+     "line": 176,
+     "doc": ""
+    },
+    {
+     "name": "_cell",
+     "line": 187,
+     "doc": "Formel-Injection in Excel/Sheets/Clay verhindern."
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "arvantir.rank",
+   "label": "rank",
+   "layer": "arvantir",
+   "path": "arvantir/rank.py",
+   "loc": 108,
+   "doc": "rank: Kandidaten gegen ICP / Beispiel-Lead re-ranken (Cross-Encoder, mMiniLM).",
+   "entry": false,
+   "functions": [
+    {
+     "name": "profile_text",
+     "line": 24,
+     "doc": "Firmenprofil aus allem, was harvest und enrich geliefert haben."
+    },
+    {
+     "name": "_sentences",
+     "line": 38,
+     "doc": ""
+    },
+    {
+     "name": "rank",
+     "line": 47,
+     "doc": ""
+    },
+    {
+     "name": "fetch_profiles",
+     "line": 83,
+     "doc": "Kurzprofil von der Startseite, falls enrich noch keins geliefert hat."
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "arvantir.realbrowser",
+   "label": "realbrowser",
+   "layer": "arvantir",
+   "path": "arvantir/realbrowser.py",
+   "loc": 143,
+   "doc": "Echter Chrome als letzte Stufe: Seiten über den laufenden Chrome des Nutzers holen (CDP).",
+   "entry": false,
+   "functions": [
+    {
+     "name": "_endpoint",
+     "line": 31,
+     "doc": ""
+    },
+    {
+     "name": "__init__",
+     "line": 42,
+     "doc": ""
+    },
+    {
+     "name": "_connect",
+     "line": 53,
+     "doc": ""
+    },
+    {
+     "name": "_reader",
+     "line": 62,
+     "doc": ""
+    },
+    {
+     "name": "call",
+     "line": 72,
+     "doc": ""
+    },
+    {
+     "name": "fetch",
+     "line": 82,
+     "doc": ""
+    },
+    {
+     "name": "available",
+     "line": 114,
+     "doc": ""
+    },
+    {
+     "name": "fetch_real",
+     "line": 119,
+     "doc": "(html, final_url) aus dem echten Chrome, oder (\"\", url) wenn aus, abgelehnt oder Limit erreicht."
+    }
+   ],
+   "classes": [
+    "_Chrome"
+   ]
+  },
+  {
+   "id": "arvantir.signals",
+   "label": "signals",
+   "layer": "arvantir",
+   "path": "arvantir/signals.py",
+   "loc": 430,
+   "doc": "Frische Kaufsignale je Lead: LinkedIn-Posts (über den Suchindex), News, Hiring, Funding.",
+   "entry": true,
+   "functions": [
+    {
+     "name": "_today",
+     "line": 53,
+     "doc": ""
+    },
+    {
+     "name": "_fold",
+     "line": 57,
+     "doc": ""
+    },
+    {
+     "name": "_core_name",
+     "line": 63,
+     "doc": ""
+    },
+    {
+     "name": "_mentions",
+     "line": 69,
+     "doc": "Firma im Text? Einwortige Namen (\"elio\", \"hmmh\") sind mehrdeutig: dann muss das Wort in der"
+    },
+    {
+     "name": "_domain_stem",
+     "line": 80,
+     "doc": ""
+    },
+    {
+     "name": "_parse_date",
+     "line": 98,
+     "doc": "'vor 3 Tagen', '2 days ago', '31.10.2026', 'Oct 29, 2026', ISO, RFC 2822."
+    },
+    {
+     "name": "_sig",
+     "line": 133,
+     "doc": ""
+    },
+    {
+     "name": "_serper",
+     "line": 147,
+     "doc": ""
+    },
+    {
+     "name": "_li_date",
+     "line": 162,
+     "doc": "LinkedIn-Post-IDs tragen den Zeitstempel: die oberen 41 Bit sind Millisekunden seit 1970."
+    },
+    {
+     "name": "_local_search",
+     "line": 173,
+     "doc": "Eigener Such-Dienst (tavily-clone, OWN_SEARCH_URL), kostenlos, als Fallback ohne Serper-Credits."
+    },
+    {
+     "name": "_exa_linkedin",
+     "line": 183,
+     "doc": "Exa-Suche auf linkedin.com, letzte 180 Tage, mit publishedDate (EXA_API_KEY aus der Umgebung)."
+    },
+    {
+     "name": "_linkedin",
+     "line": 197,
+     "doc": ""
+    },
+    {
+     "name": "_google_news",
+     "line": 225,
+     "doc": "Google-News-RSS, keyless, mit echtem pubDate."
+    },
+    {
+     "name": "_news",
+     "line": 235,
+     "doc": ""
+    },
+    {
+     "name": "_ats",
+     "line": 254,
+     "doc": "Öffentliche Job-Boards ohne Key: Greenhouse, Lever, Ashby, Personio."
+    },
+    {
+     "name": "_karriere",
+     "line": 301,
+     "doc": "Karriereseite mit offenen Stellen. Abruf über harvest.fetch (prüft jede Weiterleitung, nur"
+    },
+    {
+     "name": "_load_feeds",
+     "line": 318,
+     "doc": ""
+    },
+    {
+     "name": "_funding",
+     "line": 338,
+     "doc": ""
+    },
+    {
+     "name": "_cache_path",
+     "line": 352,
+     "doc": ""
+    },
+    {
+     "name": "_score",
+     "line": 357,
+     "doc": "Höchstens zwei Signale je Typ zählen, damit zehn Artikel derselben Meldung nicht inflationieren."
+    },
+    {
+     "name": "_one",
+     "line": 368,
+     "doc": ""
+    },
+    {
+     "name": "signals",
+     "line": 401,
+     "doc": "Hängt frische Signale an die ersten `top` Kandidaten. Fehler je Firma werden geschluckt."
+    },
+    {
+     "name": "_safe",
+     "line": 413,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "finetune",
+   "label": "finetune",
+   "layer": "finetune",
+   "path": "finetune/__init__.py",
+   "loc": 1,
+   "doc": "",
+   "entry": false,
+   "functions": [],
+   "classes": []
+  },
+  {
+   "id": "finetune.bench",
+   "label": "bench",
+   "layer": "finetune",
+   "path": "finetune/bench.py",
+   "loc": 277,
+   "doc": "Benchmark: feste Gewichte vs LLM pointwise vs mMiniLM Basis vs mMiniLM fine-tuned.",
+   "entry": true,
+   "functions": [
+    {
+     "name": "ndcg",
+     "line": 36,
+     "doc": ""
+    },
+    {
+     "name": "mrr",
+     "line": 44,
+     "doc": ""
+    },
+    {
+     "name": "human_share",
+     "line": 49,
+     "doc": "Anteil, der zum Menschen muss: oben automatisch 'passt' und unten automatisch 'nein',"
+    },
+    {
+     "name": "mean",
+     "line": 69,
+     "doc": ""
+    },
+    {
+     "name": "ce_scorer",
+     "line": 75,
+     "doc": ""
+    },
+    {
+     "name": "llm_scorer",
+     "line": 85,
+     "doc": ""
+    },
+    {
+     "name": "evaluate",
+     "line": 101,
+     "doc": ""
+    },
+    {
+     "name": "test_set",
+     "line": 122,
+     "doc": ""
+    },
+    {
+     "name": "main",
+     "line": 142,
+     "doc": ""
+    },
+    {
+     "name": "write",
+     "line": 205,
+     "doc": ""
+    },
+    {
+     "name": "chart",
+     "line": 236,
+     "doc": "Drei kleine Panels, je eine Achse: NDCG@10, Übereinstimmung, ms pro Lead (log)."
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "finetune.clean",
+   "label": "clean",
+   "layer": "finetune",
+   "path": "finetune/clean.py",
+   "loc": 143,
+   "doc": "Datenqualität: Müll-Paare in den Silber-Labels auf 0 setzen, nachvollziehbar und gegen Gold geprüft.",
+   "entry": true,
+   "functions": [
+    {
+     "name": "host",
+     "line": 55,
+     "doc": ""
+    },
+    {
+     "name": "_hit",
+     "line": 60,
+     "doc": ""
+    },
+    {
+     "name": "rule_for",
+     "line": 64,
+     "doc": "Name der ersten greifenden Regel, sonst ''."
+    },
+    {
+     "name": "agreement",
+     "line": 94,
+     "doc": "Silber vs Gold auf denselben Paaren: passt (>=2) gegen nicht passt, und mittlerer Abstand auf 0..3."
+    },
+    {
+     "name": "main",
+     "line": 104,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "finetune.collect",
+   "label": "collect",
+   "layer": "finetune",
+   "path": "finetune/collect.py",
+   "loc": 63,
+   "doc": "Daten sammeln: pipeline.run für alle Nischen, jeder Lauf nach data/runs/<key>.json.",
+   "entry": true,
+   "functions": [
+    {
+     "name": "load_niches",
+     "line": 23,
+     "doc": "niches.json; ICP-Text von d2 (research/icps.json) über pipeline.icp_for, sonst der eigene."
+    },
+    {
+     "name": "one",
+     "line": 34,
+     "doc": ""
+    },
+    {
+     "name": "main",
+     "line": 49,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "finetune.data",
+   "label": "data",
+   "layer": "finetune",
+   "path": "finetune/data.py",
+   "loc": 197,
+   "doc": "Paare fürs Fine-Tuning bauen und laden (eine Wahrheit für teacher, gold, train, bench).",
+   "entry": true,
+   "functions": [
+    {
+     "name": "niches",
+     "line": 35,
+     "doc": ""
+    },
+    {
+     "name": "read_jsonl",
+     "line": 40,
+     "doc": ""
+    },
+    {
+     "name": "write_jsonl",
+     "line": 52,
+     "doc": ""
+    },
+    {
+     "name": "_host",
+     "line": 64,
+     "doc": ""
+    },
+    {
+     "name": "company_id",
+     "line": 68,
+     "doc": "Domain ohne www, sonst normalisierter Name. Gleiche Firma = gleiche ID über Nischen."
+    },
+    {
+     "name": "pid",
+     "line": 77,
+     "doc": ""
+    },
+    {
+     "name": "latest_runs",
+     "line": 81,
+     "doc": "Alle Läufe pro Nischen-Key zusammengeführt (Haupt-Seed + Varianten), ICP vom Hauptlauf."
+    },
+    {
+     "name": "build",
+     "line": 101,
+     "doc": ""
+    },
+    {
+     "name": "labels",
+     "line": 166,
+     "doc": "pair_id -> letzte Label-Zeile (0..3)."
+    },
+    {
+     "name": "gold_labels",
+     "line": 171,
+     "doc": "Gold auf derselben 0..3-Skala: passt=3, vielleicht=1, nein=0."
+    },
+    {
+     "name": "main",
+     "line": 183,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "finetune.heuristics",
+   "label": "heuristics",
+   "layer": "finetune",
+   "path": "finetune/heuristics.py",
+   "loc": 90,
+   "doc": "Regeln ohne Modell: schwache Labels (Fallback ohne LLM) und der Fixed-Weights-Baseline-Scorer.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "_hits",
+     "line": 34,
+     "doc": ""
+    },
+    {
+     "name": "weak_label",
+     "line": 39,
+     "doc": "0..3 plus kurzer Grund. Nur Fallback, wenn kein LLM-Lehrer da ist."
+    },
+    {
+     "name": "fixed_weights",
+     "line": 70,
+     "doc": "Baseline wie ein öffentlicher ICP-Scorer: feste Gewichte, Summe 0..100, Tier A-D."
+    },
+    {
+     "name": "tier",
+     "line": 88,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "finetune.label_gold",
+   "label": "label_gold",
+   "layer": "finetune",
+   "path": "finetune/label_gold.py",
+   "loc": 133,
+   "doc": "Gold-Labels von Hand: 50 Paare je Nische, passt / vielleicht / nein. Nur Test, nie Training.",
+   "entry": true,
+   "functions": [
+    {
+     "name": "make_sample",
+     "line": 25,
+     "doc": ""
+    },
+    {
+     "name": "main",
+     "line": 71,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "finetune.label_teacher",
+   "label": "label_teacher",
+   "layer": "finetune",
+   "path": "finetune/label_teacher.py",
+   "loc": 147,
+   "doc": "Silber-Labels: LLM-Lehrer bewertet jedes Paar 0..3 mit kurzem Grund.",
+   "entry": true,
+   "functions": [
+    {
+     "name": "_client",
+     "line": 53,
+     "doc": ""
+    },
+    {
+     "name": "model_name",
+     "line": 60,
+     "doc": ""
+    },
+    {
+     "name": "grade",
+     "line": 64,
+     "doc": "Ein Aufruf, mehrere Dokumente zur selben Anfrage. None bei Fehler."
+    },
+    {
+     "name": "usage",
+     "line": 90,
+     "doc": ""
+    },
+    {
+     "name": "main",
+     "line": 94,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "finetune.train",
+   "label": "train",
+   "layer": "finetune",
+   "path": "finetune/train.py",
+   "loc": 124,
+   "doc": "Re-Ranker fine-tunen: mMiniLM Cross-Encoder auf Silber-Labels, Task A (Leads) + B (Quellen) gemischt.",
+   "entry": true,
+   "functions": [
+    {
+     "name": "arg",
+     "line": 27,
+     "doc": ""
+    },
+    {
+     "name": "dataset",
+     "line": 34,
+     "doc": ""
+    },
+    {
+     "name": "train_one",
+     "line": 65,
+     "doc": ""
+    },
+    {
+     "name": "main",
+     "line": 113,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "finetune.train_final",
+   "label": "train_final",
+   "layer": "finetune",
+   "path": "finetune/train_final.py",
+   "loc": 76,
+   "doc": "Finales Produkt-Modell: Silber wie train.py PLUS Hand-Gold mit gedeckeltem Einfluss.",
+   "entry": true,
+   "functions": [
+    {
+     "name": "dataset_with_gold",
+     "line": 25,
+     "doc": "ALLE Paare aus data/pairs.jsonl (Samis Daten, auch die der Gold-Firmen) mit Silber-Label,"
+    },
+    {
+     "name": "main",
+     "line": 65,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "tests.conftest",
+   "label": "conftest",
+   "layer": "tests",
+   "path": "tests/conftest.py",
+   "loc": 100,
+   "doc": "Gemeinsame Fixtures: alles offline, kein LLM, kein Netz, keine Schreibzugriffe auf data/.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "page",
+     "line": 16,
+     "doc": "Gespeicherte echte Listenseite (einmal mit arvantir.harvest.fetch geholt, 31.10.2026)."
+    },
+    {
+     "name": "offline",
+     "line": 22,
+     "doc": "Kein LLM-Key, kein Paar-Log in data/, kein Netz (außer bei -m live)."
+    },
+    {
+     "name": "serve",
+     "line": 46,
+     "doc": "harvest.fetch durch gespeicherte Seiten ersetzen: serve({url: html}) oder serve() für alle Fixtures."
+    },
+    {
+     "name": "fake_rr",
+     "line": 67,
+     "doc": "Re-Ranker ersetzen: Ziel-Score 0-100 je Firmenname (Anfang des Profils), geliefert als Logit."
+    },
+    {
+     "name": "L",
+     "line": 86,
+     "doc": "Logit, den common.to_100 genau auf `score` (0-100) abbildet. Fakes liefern Logits wie das echte Modell."
+    },
+    {
+     "name": "model_cached",
+     "line": 94,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "tests.live.test_live",
+   "label": "test_live",
+   "layer": "tests",
+   "path": "tests/live/test_live.py",
+   "loc": 30,
+   "doc": "Echter Lauf mit Netz: python -m pytest -m live  (dauert 1 bis 2 Minuten).",
+   "entry": false,
+   "functions": [
+    {
+     "name": "test_waschanlagen_end_to_end",
+     "line": 11,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "tests.test_adapters",
+   "label": "test_adapters",
+   "layer": "tests",
+   "path": "tests/test_adapters.py",
+   "loc": 120,
+   "doc": "adapters: Clay-Spalten exakt wie Arvanas leads_export.csv, Sperrliste, Schlüssel, Supabase-Payload.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "_run",
+     "line": 14,
+     "doc": ""
+    },
+    {
+     "name": "test_first_columns_match_leads_export",
+     "line": 34,
+     "doc": ""
+    },
+    {
+     "name": "test_export_arvana_format",
+     "line": 39,
+     "doc": ""
+    },
+    {
+     "name": "test_min_tier_filter",
+     "line": 57,
+     "doc": ""
+    },
+    {
+     "name": "test_webhook_never_sends_blocked",
+     "line": 64,
+     "doc": ""
+    },
+    {
+     "name": "test_known_list_marks_existing",
+     "line": 75,
+     "doc": ""
+    },
+    {
+     "name": "test_entity_key",
+     "line": 92,
+     "doc": ""
+    },
+    {
+     "name": "test_latest_run_ignores_exports",
+     "line": 96,
+     "doc": ""
+    },
+    {
+     "name": "test_supabase_build_dedupes_and_keeps_sources",
+     "line": 103,
+     "doc": ""
+    },
+    {
+     "name": "test_supabase_schema_has_immutable_raw_pages",
+     "line": 116,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "tests.test_discover",
+   "label": "test_discover",
+   "layer": "tests",
+   "path": "tests/test_discover.py",
+   "loc": 94,
+   "doc": "discover: DACH- und Erwachsenen-Filter, Nischen mit & zerlegen, Re-Ranking der Quellen (search gemockt).",
+   "entry": false,
+   "functions": [
+    {
+     "name": "test_allowed",
+     "line": 24,
+     "doc": ""
+    },
+    {
+     "name": "test_understand_splits_niche_without_llm",
+     "line": 33,
+     "doc": ""
+    },
+    {
+     "name": "test_discover_filters_and_ranks",
+     "line": 41,
+     "doc": ""
+    },
+    {
+     "name": "test_discover_dedupes_urls_and_survives_failing_search",
+     "line": 69,
+     "doc": ""
+    },
+    {
+     "name": "test_curated_sources_get_bonus",
+     "line": 87,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "tests.test_harvest",
+   "label": "test_harvest",
+   "layer": "tests",
+   "path": "tests/test_harvest.py",
+   "loc": 236,
+   "doc": "harvest: Listenblöcke ohne Vorwissen, Hubs, Paginierung, Navigationsmüll, SSRF.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "_list",
+     "line": 10,
+     "doc": ""
+    },
+    {
+     "name": "test_eco_mitglieder_block_and_legal_names",
+     "line": 16,
+     "doc": ""
+    },
+    {
+     "name": "test_shopware_partner_entries",
+     "line": 28,
+     "doc": ""
+    },
+    {
+     "name": "test_waschanlagen_city_page_has_postcodes",
+     "line": 37,
+     "doc": ""
+    },
+    {
+     "name": "test_city_without_trailing_label",
+     "line": 46,
+     "doc": ""
+    },
+    {
+     "name": "test_bafin_table_rows",
+     "line": 52,
+     "doc": ""
+    },
+    {
+     "name": "test_bafin_header_row_is_not_a_company",
+     "line": 59,
+     "doc": ""
+    },
+    {
+     "name": "test_hub_detected_and_followed",
+     "line": 66,
+     "doc": ""
+    },
+    {
+     "name": "test_company_list_is_not_a_hub",
+     "line": 81,
+     "doc": ""
+    },
+    {
+     "name": "_page",
+     "line": 89,
+     "doc": ""
+    },
+    {
+     "name": "test_pagination_follows_weiter",
+     "line": 96,
+     "doc": ""
+    },
+    {
+     "name": "test_pagination_stops_at_max_pages",
+     "line": 106,
+     "doc": ""
+    },
+    {
+     "name": "test_next_page_on_bafin",
+     "line": 113,
+     "doc": ""
+    },
+    {
+     "name": "test_next_page_never_leaves_domain",
+     "line": 121,
+     "doc": ""
+    },
+    {
+     "name": "test_navigation_noise_is_dropped",
+     "line": 141,
+     "doc": ""
+    },
+    {
+     "name": "test_company_like",
+     "line": 162,
+     "doc": ""
+    },
+    {
+     "name": "test_is_public_url_rejects_internal",
+     "line": 173,
+     "doc": ""
+    },
+    {
+     "name": "test_is_public_url_accepts_public_ip",
+     "line": 177,
+     "doc": ""
+    },
+    {
+     "name": "test_fetch_never_connects_to_metadata",
+     "line": 181,
+     "doc": ""
+    },
+    {
+     "name": "test_fetch_blocks_redirect_to_internal",
+     "line": 191,
+     "doc": "Öffentliche URL, die per 302 auf die Metadaten-IP umleitet: Ergebnis leer."
+    },
+    {
+     "name": "test_resolve_website_matches_company_name",
+     "line": 223,
+     "doc": ""
+    },
+    {
+     "name": "test_resolve_website_ignores_footer_portals",
+     "line": 231,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "tests.test_impressum",
+   "label": "test_impressum",
+   "layer": "tests",
+   "path": "tests/test_impressum.py",
+   "loc": 26,
+   "doc": "Impressum-Parser: Entscheider-Namen, auch die Fehlerfälle aus den Läufen.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "test_decision_makers",
+     "line": 19,
+     "doc": ""
+    },
+    {
+     "name": "test_register_and_court",
+     "line": 23,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "tests.test_knowncheck",
+   "label": "test_knowncheck",
+   "layer": "tests",
+   "path": "tests/test_knowncheck.py",
+   "loc": 61,
+   "doc": "knowncheck: Index bauen aus CSV und Parquet, Abgleich per Domain und Name+Ort, ohne Index unbekannt.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "index",
+     "line": 13,
+     "doc": ""
+    },
+    {
+     "name": "test_build_and_lookup",
+     "line": 26,
+     "doc": ""
+    },
+    {
+     "name": "test_city_variants",
+     "line": 39,
+     "doc": ""
+    },
+    {
+     "name": "test_without_index_stays_unknown",
+     "line": 45,
+     "doc": ""
+    },
+    {
+     "name": "test_parquet_source",
+     "line": 51,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "tests.test_pipeline",
+   "label": "test_pipeline",
+   "layer": "tests",
+   "path": "tests/test_pipeline.py",
+   "loc": 99,
+   "doc": "pipeline: Smoke-Test von Anfang bis Datei, mit gemockten discover/harvest/Netz.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "_companies",
+     "line": 12,
+     "doc": ""
+    },
+    {
+     "name": "mocked",
+     "line": 26,
+     "doc": ""
+    },
+    {
+     "name": "test_run_funnel_and_files",
+     "line": 47,
+     "doc": ""
+    },
+    {
+     "name": "test_run_csv_escapes_formulas",
+     "line": 62,
+     "doc": ""
+    },
+    {
+     "name": "test_cell",
+     "line": 73,
+     "doc": ""
+    },
+    {
+     "name": "test_icp_for_picks_matching_niche",
+     "line": 77,
+     "doc": ""
+    },
+    {
+     "name": "test_foreign_seat_caps_tier",
+     "line": 82,
+     "doc": ""
+    },
+    {
+     "name": "test_chain_without_website_collapses_by_name",
+     "line": 92,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "tests.test_rank",
+   "label": "test_rank",
+   "layer": "tests",
+   "path": "tests/test_rank.py",
+   "loc": 113,
+   "doc": "rank: Tiers wie Arvanas icp-scorer, needs_human-Band, Konfidenz, Datenlücken, plus ein echter Modelltest.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "test_tier_bounds",
+     "line": 13,
+     "doc": ""
+    },
+    {
+     "name": "test_to_100_is_monotonic_and_centered",
+     "line": 17,
+     "doc": ""
+    },
+    {
+     "name": "_lead",
+     "line": 26,
+     "doc": ""
+    },
+    {
+     "name": "absolute",
+     "line": 31,
+     "doc": ""
+    },
+    {
+     "name": "test_scores_tiers_and_order",
+     "line": 35,
+     "doc": ""
+    },
+    {
+     "name": "test_needs_human_band_and_confidence",
+     "line": 46,
+     "doc": ""
+    },
+    {
+     "name": "test_konfidenz_levels",
+     "line": 53,
+     "doc": ""
+    },
+    {
+     "name": "test_datenluecken",
+     "line": 64,
+     "doc": ""
+    },
+    {
+     "name": "test_reason_is_best_sentence_with_source",
+     "line": 74,
+     "doc": ""
+    },
+    {
+     "name": "test_rank_mix_spreads_tiers",
+     "line": 85,
+     "doc": "Standard RR_MIX=0.5: auch wenn das Basismodell alles niedrig bewertet, streuen die Tiers."
+    },
+    {
+     "name": "test_empty_input",
+     "line": 93,
+     "doc": ""
+    },
+    {
+     "name": "test_real_model_it_beats_bakery",
+     "line": 99,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "tests.test_web",
+   "label": "test_web",
+   "layer": "tests",
+   "path": "tests/test_web.py",
+   "loc": 70,
+   "doc": "web: Startseite, Laufliste, Host-Prüfung gegen DNS-Rebinding, kein Pfad-Traversal.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "client",
+     "line": 13,
+     "doc": ""
+    },
+    {
+     "name": "test_index",
+     "line": 23,
+     "doc": ""
+    },
+    {
+     "name": "test_runs_lists_only_pipeline_runs",
+     "line": 29,
+     "doc": ""
+    },
+    {
+     "name": "test_run_file_is_slim",
+     "line": 36,
+     "doc": ""
+    },
+    {
+     "name": "test_run_file_rejects_other_names",
+     "line": 43,
+     "doc": ""
+    },
+    {
+     "name": "test_foreign_host_rejected",
+     "line": 48,
+     "doc": ""
+    },
+    {
+     "name": "test_localhost_allowed",
+     "line": 53,
+     "doc": ""
+    },
+    {
+     "name": "test_unknown_run_id",
+     "line": 57,
+     "doc": ""
+    },
+    {
+     "name": "test_run_input_validated",
+     "line": 62,
+     "doc": ""
+    },
+    {
+     "name": "test_no_cors_headers",
+     "line": 67,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "web.export_static",
+   "label": "export_static",
+   "layer": "web",
+   "path": "web/export_static.py",
+   "loc": 113,
+   "doc": "Statische, öffentliche Fassung der Website bauen (nur Replay, keine Live-Läufe).",
+   "entry": true,
+   "functions": [
+    {
+     "name": "_mask",
+     "line": 26,
+     "doc": "'Dennis Jeske (Geschäftsführung)' -> 'D. J. (Geschäftsführung)'."
+    },
+    {
+     "name": "_names",
+     "line": 43,
+     "doc": "Vollständige Namen der Entscheider, damit sie auch aus Freitext verschwinden."
+    },
+    {
+     "name": "_scrub",
+     "line": 56,
+     "doc": ""
+    },
+    {
+     "name": "_signals",
+     "line": 67,
+     "doc": ""
+    },
+    {
+     "name": "_lead",
+     "line": 72,
+     "doc": ""
+    },
+    {
+     "name": "build",
+     "line": 83,
+     "doc": ""
+    }
+   ],
+   "classes": []
+  },
+  {
+   "id": "web.server",
+   "label": "server",
+   "layer": "web",
+   "path": "web/server.py",
+   "loc": 303,
+   "doc": "Arvantir Live-Demo: startet einen Pipeline-Lauf und streamt den Funnel per SSE.",
+   "entry": false,
+   "functions": [
+    {
+     "name": "_slim",
+     "line": 50,
+     "doc": ""
+    },
+    {
+     "name": "_worker",
+     "line": 59,
+     "doc": ""
+    },
+    {
+     "name": "index",
+     "line": 86,
+     "doc": ""
+    },
+    {
+     "name": "start",
+     "line": 91,
+     "doc": ""
+    },
+    {
+     "name": "events",
+     "line": 105,
+     "doc": ""
+    },
+    {
+     "name": "result",
+     "line": 130,
+     "doc": ""
+    },
+    {
+     "name": "runs",
+     "line": 141,
+     "doc": ""
+    },
+    {
+     "name": "run_file",
+     "line": 156,
+     "doc": ""
+    },
+    {
+     "name": "_lines",
+     "line": 170,
+     "doc": ""
+    },
+    {
+     "name": "architecture",
+     "line": 179,
+     "doc": ""
+    },
+    {
+     "name": "arch_anim",
+     "line": 184,
+     "doc": ""
+    },
+    {
+     "name": "logo",
+     "line": 189,
+     "doc": ""
+    },
+    {
+     "name": "status",
+     "line": 195,
+     "doc": "Welche Module und Schritte der Lernschleife existieren schon (für die Architektur-Seite)."
+    },
+    {
+     "name": "bench",
+     "line": 224,
+     "doc": ""
+    },
+    {
+     "name": "_paper_secret",
+     "line": 242,
+     "doc": ""
+    },
+    {
+     "name": "_paper_sig",
+     "line": 255,
+     "doc": ""
+    },
+    {
+     "name": "_paper_token",
+     "line": 259,
+     "doc": ""
+    },
+    {
+     "name": "_paper_ok",
+     "line": 264,
+     "doc": ""
+    },
+    {
+     "name": "paper_unlock",
+     "line": 277,
+     "doc": ""
+    },
+    {
+     "name": "paper",
+     "line": 294,
+     "doc": ""
+    },
+    {
+     "name": "paper_status",
+     "line": 301,
+     "doc": ""
+    }
+   ],
+   "classes": [
+    "RunIn",
+    "UnlockIn"
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "source": "adapters.supabase",
+   "target": "adapters.clay",
+   "kind": "import",
+   "names": [
+    "domain",
+    "entity_key",
+    "latest_run",
+    "run_id",
+    "split_legal"
+   ]
+  },
+  {
+   "source": "arvantir.__main__",
+   "target": "arvantir.discover",
+   "kind": "import",
+   "names": [
+    "discover"
+   ]
+  },
+  {
+   "source": "arvantir.__main__",
+   "target": "arvantir.harvest",
+   "kind": "import",
+   "names": [
+    "harvest",
+    "resolve_websites"
+   ]
+  },
+  {
+   "source": "arvantir.__main__",
+   "target": "arvantir.pipeline",
+   "kind": "import",
+   "names": [
+    "run"
+   ]
+  },
+  {
+   "source": "arvantir.darkcheck",
+   "target": "arvantir.common",
+   "kind": "import",
+   "names": [
+    "DATA"
+   ]
+  },
+  {
+   "source": "arvantir.darkcheck",
+   "target": "arvantir.normalize",
+   "kind": "import",
+   "names": [
+    "domain_of"
+   ]
+  },
+  {
+   "source": "arvantir.discover",
+   "target": "arvantir.common",
+   "kind": "import",
+   "names": [
+    "llm_json",
+    "log_pairs",
+    "to_100"
+   ]
+  },
+  {
+   "source": "arvantir.enrich",
+   "target": "arvantir.channel",
+   "kind": "import",
+   "names": [
+    "channel"
+   ]
+  },
+  {
+   "source": "arvantir.enrich",
+   "target": "arvantir.enrich.impressum",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "arvantir.enrich",
+   "target": "arvantir.normalize",
+   "kind": "import",
+   "names": [
+    "entity_key",
+    "merge",
+    "name_key"
+   ]
+  },
+  {
+   "source": "arvantir.enrich.impressum",
+   "target": "arvantir.common",
+   "kind": "import",
+   "names": [
+    "llm_json"
+   ]
+  },
+  {
+   "source": "arvantir.enrich.impressum",
+   "target": "arvantir.harvest",
+   "kind": "import",
+   "names": [
+    "PLZ_ORT",
+    "fetch"
+   ]
+  },
+  {
+   "source": "arvantir.enrich.impressum",
+   "target": "arvantir.realbrowser",
+   "kind": "import",
+   "names": [
+    "fetch_real"
+   ]
+  },
+  {
+   "source": "arvantir.harvest",
+   "target": "arvantir.common",
+   "kind": "import",
+   "names": [
+    "llm_json"
+   ]
+  },
+  {
+   "source": "arvantir.knowncheck",
+   "target": "arvantir.common",
+   "kind": "import",
+   "names": [
+    "DATA"
+   ]
+  },
+  {
+   "source": "arvantir.knowncheck",
+   "target": "arvantir.normalize",
+   "kind": "import",
+   "names": [
+    "domain_of",
+    "name_key"
+   ]
+  },
+  {
+   "source": "arvantir.pipeline",
+   "target": "arvantir.common",
+   "kind": "import",
+   "names": [
+    "DATA"
+   ]
+  },
+  {
+   "source": "arvantir.pipeline",
+   "target": "arvantir.discover",
+   "kind": "import",
+   "names": [
+    "discover"
+   ]
+  },
+  {
+   "source": "arvantir.pipeline",
+   "target": "arvantir.harvest",
+   "kind": "import",
+   "names": [
+    "LEGAL",
+    "_reg",
+    "company_like",
+    "harvest",
+    "resolve_websites"
+   ]
+  },
+  {
+   "source": "arvantir.pipeline",
+   "target": "arvantir.rank",
+   "kind": "import",
+   "names": [
+    "fetch_profiles",
+    "rank"
+   ]
+  },
+  {
+   "source": "arvantir.pipeline",
+   "target": "arvantir.channel",
+   "kind": "dynamic",
+   "names": []
+  },
+  {
+   "source": "arvantir.pipeline",
+   "target": "arvantir.darkcheck",
+   "kind": "dynamic",
+   "names": []
+  },
+  {
+   "source": "arvantir.pipeline",
+   "target": "arvantir.enrich",
+   "kind": "dynamic",
+   "names": []
+  },
+  {
+   "source": "arvantir.pipeline",
+   "target": "arvantir.knowncheck",
+   "kind": "dynamic",
+   "names": []
+  },
+  {
+   "source": "arvantir.pipeline",
+   "target": "arvantir.normalize",
+   "kind": "dynamic",
+   "names": []
+  },
+  {
+   "source": "arvantir.pipeline",
+   "target": "arvantir.signals",
+   "kind": "dynamic",
+   "names": []
+  },
+  {
+   "source": "arvantir.rank",
+   "target": "arvantir.common",
+   "kind": "import",
+   "names": [
+    "log_pairs",
+    "tier",
+    "to_100"
+   ]
+  },
+  {
+   "source": "arvantir.rank",
+   "target": "arvantir.harvest",
+   "kind": "import",
+   "names": [
+    "fetch"
+   ]
+  },
+  {
+   "source": "arvantir.realbrowser",
+   "target": "arvantir.common",
+   "kind": "import",
+   "names": [
+    "DATA"
+   ]
+  },
+  {
+   "source": "arvantir.realbrowser",
+   "target": "arvantir.harvest",
+   "kind": "import",
+   "names": [
+    "is_public_url"
+   ]
+  },
+  {
+   "source": "arvantir.signals",
+   "target": "arvantir.harvest",
+   "kind": "import",
+   "names": [
+    "fetch"
+   ]
+  },
+  {
+   "source": "finetune.bench",
+   "target": "finetune.data",
+   "kind": "import",
+   "names": [
+    "MAIN_NICHES",
+    "PAIRS",
+    "ROOT",
+    "gold_labels",
+    "labels",
+    "read_jsonl"
+   ]
+  },
+  {
+   "source": "finetune.bench",
+   "target": "finetune.heuristics",
+   "kind": "import",
+   "names": [
+    "fixed_weights"
+   ]
+  },
+  {
+   "source": "finetune.bench",
+   "target": "finetune.label_teacher",
+   "kind": "import",
+   "names": [
+    "_client",
+    "grade",
+    "model_name",
+    "usage"
+   ]
+  },
+  {
+   "source": "finetune.bench",
+   "target": "finetune.train",
+   "kind": "import",
+   "names": [
+    "BASE",
+    "arg"
+   ]
+  },
+  {
+   "source": "finetune.clean",
+   "target": "finetune.data",
+   "kind": "import",
+   "names": [
+    "DATA",
+    "PAIRS",
+    "gold_labels",
+    "read_jsonl"
+   ]
+  },
+  {
+   "source": "finetune.collect",
+   "target": "arvantir.pipeline",
+   "kind": "import",
+   "names": [
+    "icp_for",
+    "run"
+   ]
+  },
+  {
+   "source": "finetune.data",
+   "target": "finetune.collect",
+   "kind": "import",
+   "names": [
+    "load_niches"
+   ]
+  },
+  {
+   "source": "finetune.label_gold",
+   "target": "finetune.data",
+   "kind": "import",
+   "names": [
+    "GOLD",
+    "GOLD_SAMPLE",
+    "PAIRS",
+    "read_jsonl",
+    "write_jsonl"
+   ]
+  },
+  {
+   "source": "finetune.label_teacher",
+   "target": "finetune.data",
+   "kind": "import",
+   "names": [
+    "GOLD_SAMPLE",
+    "PAIRS",
+    "ROOT",
+    "SILVER",
+    "read_jsonl"
+   ]
+  },
+  {
+   "source": "finetune.label_teacher",
+   "target": "finetune.heuristics",
+   "kind": "import",
+   "names": [
+    "weak_label"
+   ]
+  },
+  {
+   "source": "finetune.train",
+   "target": "finetune.data",
+   "kind": "import",
+   "names": [
+    "GOLD_SAMPLE",
+    "MAIN_NICHES",
+    "PAIRS",
+    "ROOT",
+    "labels",
+    "read_jsonl"
+   ]
+  },
+  {
+   "source": "finetune.train_final",
+   "target": "finetune.data",
+   "kind": "import",
+   "names": [
+    "PAIRS",
+    "gold_labels",
+    "read_jsonl"
+   ]
+  },
+  {
+   "source": "finetune.train_final",
+   "target": "finetune.train",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "tests.conftest",
+   "target": "arvantir.common",
+   "kind": "import",
+   "names": [
+    "CAL_CENTER",
+    "CAL_SCALE"
+   ]
+  },
+  {
+   "source": "tests.conftest",
+   "target": "arvantir.discover",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "tests.conftest",
+   "target": "arvantir.harvest",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "tests.conftest",
+   "target": "arvantir.rank",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "tests.live.test_live",
+   "target": "arvantir.pipeline",
+   "kind": "import",
+   "names": [
+    "run"
+   ]
+  },
+  {
+   "source": "tests.test_adapters",
+   "target": "adapters.clay",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "tests.test_adapters",
+   "target": "adapters.supabase",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "tests.test_discover",
+   "target": "arvantir.discover",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "tests.test_harvest",
+   "target": "arvantir.harvest",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "tests.test_impressum",
+   "target": "arvantir.enrich.impressum",
+   "kind": "import",
+   "names": [
+    "parse"
+   ]
+  },
+  {
+   "source": "tests.test_knowncheck",
+   "target": "arvantir.knowncheck",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "tests.test_pipeline",
+   "target": "arvantir.pipeline",
+   "kind": "import",
+   "names": [
+    "collapse_chains",
+    "foreign_seat"
+   ]
+  },
+  {
+   "source": "tests.test_rank",
+   "target": "arvantir.common",
+   "kind": "import",
+   "names": [
+    "CAL_CENTER",
+    "tier",
+    "to_100"
+   ]
+  },
+  {
+   "source": "tests.test_rank",
+   "target": "arvantir.rank",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "tests.test_web",
+   "target": "web.server",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "web.export_static",
+   "target": "web.server",
+   "kind": "import",
+   "names": []
+  },
+  {
+   "source": "web.server",
+   "target": "arvantir.pipeline",
+   "kind": "import",
+   "names": [
+    "run"
+   ]
+  }
+ ],
+ "flows": [
+  {
+   "id": "arvantir.pipeline.run",
+   "label": "arvantir.pipeline.run",
+   "doc": "",
+   "owner": "arvantir.pipeline",
+   "steps": [
+    {
+     "node": "arvantir.discover",
+     "call": "discover",
+     "line": 91
+    },
+    {
+     "node": "arvantir.harvest",
+     "call": "harvest",
+     "line": 98
+    },
+    {
+     "node": "arvantir.normalize",
+     "call": "normalize",
+     "line": 112
+    },
+    {
+     "node": "arvantir.darkcheck",
+     "call": "darkcheck",
+     "line": 123
+    },
+    {
+     "node": "arvantir.knowncheck",
+     "call": "knowncheck",
+     "line": 128
+    },
+    {
+     "node": "arvantir.enrich",
+     "call": "enrich",
+     "line": 133
+    },
+    {
+     "node": "arvantir.signals",
+     "call": "signals",
+     "line": 138
+    },
+    {
+     "node": "arvantir.rank",
+     "call": "fetch_profiles",
+     "line": 143
+    },
+    {
+     "node": "arvantir.channel",
+     "call": "channel",
+     "line": 157
+    }
+   ]
+  }
+ ]
+}

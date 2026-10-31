@@ -8,6 +8,23 @@ Arvantir (a Palantir for Arvana) is a **Dark TAM engine** built on Sami's Search
 
 > Arvana's rule for the jury: *"Don't show us the leads. Show the engine that produces it."*
 
+## Repo graph
+
+How this repo is built and how a real run moves through it, as an interactive page: **https://malek1414.github.io/Arvantir-public/graph/**
+
+- **How it's built:** layers, modules, imports and the 9-step product flow, from static analysis (Python AST, no LLM, nothing guessed).
+- **How it runs:** replay of a recorded `python -m arvantir run "Waschanlagen"` from OpenTelemetry spans: items in and out, time and web requests per stage.
+
+Rebuild it (`repograph/` works on any Python repo; output goes to `docs/graph/`):
+
+```
+.venv/bin/python -m repograph scan  . --exclude video,pitch,site
+ARVANTIR_REAL_BROWSER=0 .venv/bin/python -m repograph trace . -- -m arvantir run "Waschanlagen"
+.venv/bin/python -m repograph build . --theme dark --accent "#e3a43b" --back "../"
+```
+
+Design and limits: [docs/superpowers/specs/2026-10-31-repograph-design.md](docs/superpowers/specs/2026-10-31-repograph-design.md)
+
 ## Deadlines
 
 - **12:30**: team + track locked via https://tally.so/r/perokb

@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__ · repo graph</title>
+<style>
+:root{
+  --bg:#ffffff; --soft:#f6f6f8; --card:#ffffff; --ink:#111216; --ink2:#3b3d45; --muted:#6c6f78; --line:#e3e4ea;
+  --accent:#2346ff; --accent-soft:rgba(35,70,255,.12); --ok:#1f8a4c; --warn:#b07d10; --err:#c0362c;
+  --node:#ffffff; --node-line:#c9cbd4; --layer:#f3f4f8; --edge:#b4b7c2; --edge-dyn:#8a8ea0;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1014; --soft:#16181e; --card:#191b22; --ink:#ecedf1; --ink2:#c7c9d1; --muted:#8d909b; --line:#2a2d36;
+  --accent:#6f86ff; --accent-soft:rgba(111,134,255,.18); --ok:#4cc27e; --warn:#e2b04a; --err:#ff6b5e;
+  --node:#1d2028; --node-line:#3a3e4a; --layer:#14161c; --edge:#4a4f5d; --edge-dyn:#6d7284;
+}}
+:root[data-theme="dark"]{
+  --bg:#0f1014; --soft:#16181e; --card:#191b22; --ink:#ecedf1; --ink2:#c7c9d1; --muted:#8d909b; --line:#2a2d36;
+  --accent:#6f86ff; --accent-soft:rgba(111,134,255,.18); --ok:#4cc27e; --warn:#e2b04a; --err:#ff6b5e;
+  --node:#1d2028; --node-line:#3a3e4a; --layer:#14161c; --edge:#4a4f5d; --edge-dyn:#6d7284;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink)}
+body{font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.brand{font-weight:700;font-size:17px;letter-spacing:-.01em}
+.brand small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+.tabs{display:flex;gap:4px;background:var(--soft);padding:4px;border-radius:10px}
+.tabs button{border:0;background:transparent;color:var(--ink2);font:inherit;font-size:14px;padding:6px 12px;border-radius:7px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.spacer{flex:1}
+.chip{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 9px;white-space:nowrap}
+main{display:grid;grid-template-columns:minmax(0,1fr) 360px;height:calc(100vh - 66px);min-height:520px}
+#stage{position:relative;min-width:0;border-right:1px solid var(--line)}
+#cy{position:absolute;inset:0}
+.overlay{position:absolute;left:12px;right:12px;bottom:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  background:color-mix(in srgb,var(--card) 92%,transparent);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.overlay[hidden]{display:none}
+.overlay button{border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:13px;padding:5px 12px;border-radius:8px;cursor:pointer}
+.overlay button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.overlay input[type=range]{flex:1;min-width:120px;accent-color:var(--accent)}
+.overlay select{font:inherit;font-size:13px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:4px 6px}
+.tlabel{font-family:var(--mono);font-size:12px;color:var(--ink2);min-width:92px;text-align:right}
+.legend{position:absolute;top:10px;left:12px;display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--muted);
+  background:color-mix(in srgb,var(--card) 88%,transparent);border:1px solid var(--line);border-radius:10px;padding:6px 10px;max-width:calc(100% - 24px)}
+.legend i{display:inline-block;width:18px;height:0;border-top:2px solid var(--edge);vertical-align:middle;margin-right:5px}
+.legend i.dyn{border-top:2px dashed var(--edge-dyn)}
+.legend i.flow{border-top:3px solid var(--accent)}
+.legend label{display:flex;align-items:center;gap:5px;cursor:pointer}
+.legend[hidden]{display:none}
+aside{overflow:auto;padding:16px;background:var(--bg)}
+aside h2{font-size:16px;letter-spacing:-.01em;margin-bottom:2px}
+aside h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:16px 0 6px}
+aside p{color:var(--ink2);font-size:14px}
+.path{font-family:var(--mono);font-size:12px;color:var(--muted);word-break:break-all}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+.stat{background:var(--soft);border-radius:10px;padding:8px 10px}
+.stat b{display:block;font-size:18px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+ul.list{list-style:none}
+ul.list li{padding:6px 0;border-bottom:1px solid var(--line);font-size:13px}
+ul.list li code{font-family:var(--mono);font-size:12.5px;color:var(--ink)}
+ul.list li small{display:block;color:var(--muted)}
+.bar{height:6px;background:var(--soft);border-radius:4px;overflow:hidden;margin-top:4px}
+.bar>div{height:100%;background:var(--accent)}
+.err{color:var(--err)} .ok{color:var(--ok)}
+.empty{color:var(--muted);font-size:13px}
+@media (max-width:860px){
+  main{grid-template-columns:1fr;height:auto}
+  #stage{height:62vh;border-right:0;border-bottom:1px solid var(--line)}
+  aside{max-height:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">__TITLE__<small id="meta"></small></div>
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tab-built" aria-selected="true">How it's built</button>
+    <button role="tab" id="tab-run" aria-selected="false">How it runs</button>
+  </div>
+  <div class="spacer"></div>
+  <span class="chip" id="chip-mods"></span>
+  <span class="chip" id="chip-run"></span>
+</header>
+<main>
+  <section id="stage">
+    <div id="cy" aria-label="Repository graph"></div>
+    <div class="legend" id="legend-built">
+      <span><i></i>import</span><span><i class="dyn"></i>loaded at runtime</span><span><i class="flow"></i>product flow</span>
+      <label><input type="checkbox" id="show-tests"> tests</label>
+    </div>
+    <div class="legend" id="legend-run" hidden>
+      <span>&#9675; waiting</span><span style="color:var(--accent)">&#9679; running</span><span style="color:var(--ok)">&#9679; done</span><span style="color:var(--err)">&#9679; error</span><span>dashed = web requests</span>
+    </div>
+    <div class="overlay" id="player" hidden>
+      <button class="primary" id="play">Play</button>
+      <button id="restart">Restart</button>
+      <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Timeline">
+      <span class="tlabel" id="tlabel">0.0 s</span>
+      <select id="speed" aria-label="Replay length">
+        <option value="12">12 s replay</option><option value="25" selected>25 s replay</option>
+        <option value="60">60 s replay</option><option value="0">real time</option>
+      </select>
+    </div>
+  </section>
+  <aside id="panel"></aside>
+</main>
+<script id="graph-data" type="application/json">__GRAPH__</script>
+<script id="trace-data" type="application/json">__TRACE__</script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.34.4/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/elkjs@0.12.1/lib/elk.bundled.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-elk@2.3.0/dist/cytoscape-elk.js"></script>
+<script>
+(function(){
+"use strict";
+const G = JSON.parse(document.getElementById("graph-data").textContent);
+const T = JSON.parse(document.getElementById("trace-data").textContent);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtMs = ms => ms >= 1000 ? (ms/1000).toFixed(1) + " s" : Math.round(ms) + " ms";
+const flow = (G.flows || [])[0] || null;
+const flowIdx = {}; if (flow) flow.steps.forEach((s, i) => { if (!(s.node in flowIdx)) flowIdx[s.node] = i; });
+const nodeById = {}; G.nodes.forEach(n => nodeById[n.id] = n);
+const short = id => id.includes(".") ? id.split(".").slice(1).join(".") : id;
+
+try { if (window.cytoscapeElk) cytoscape.use(window.cytoscapeElk); } catch (e) {}
+
+function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+function styles(){
+  return [
+    {selector:"node", style:{"background-color":css("--node"),"border-width":1,"border-color":css("--node-line"),"shape":"round-rectangle",
+      "label":"data(label)","color":css("--ink"),"font-size":12,"text-valign":"center","text-halign":"center","text-wrap":"wrap",
+      "text-max-width":"data(tw)","width":"data(w)","height":"data(h)","padding":"6px"}},
+    {selector:"node:parent", style:{"background-color":css("--layer"),"border-color":css("--line"),"border-width":1,"label":"data(label)",
+      "text-valign":"top","text-halign":"center","font-size":12,"font-weight":600,"color":css("--muted"),"padding":"14px","shape":"round-rectangle"}},
+    {selector:"node[?entry]", style:{"border-width":2,"border-style":"double"}},
+    {selector:"node[?inflow]", style:{"border-color":css("--accent"),"border-width":2.5,"color":css("--ink"),"font-weight":600}},
+    {selector:"edge", style:{"width":1.2,"line-color":css("--edge"),"target-arrow-color":css("--edge"),"target-arrow-shape":"triangle",
+      "arrow-scale":.7,"curve-style":"bezier","opacity":.75}},
+    {selector:"edge[kind='dynamic']", style:{"line-style":"dashed","line-color":css("--edge-dyn"),"target-arrow-color":css("--edge-dyn")}},
+    {selector:"edge[kind='flow']", style:{"width":3,"line-color":css("--accent"),"target-arrow-color":css("--accent"),"opacity":1,"curve-style":"straight"}},
+    {selector:"edge[kind='web']", style:{"line-style":"dashed","line-color":css("--edge-dyn"),"target-arrow-color":css("--edge-dyn"),"width":1.5,
+      "label":"data(label)","font-size":10,"color":css("--muted"),"text-background-color":css("--bg"),"text-background-opacity":1,"text-background-padding":2}},
+    {selector:".faded", style:{"opacity":.15}},
+    {selector:".hl", style:{"border-color":css("--accent"),"border-width":3,"line-color":css("--accent"),"target-arrow-color":css("--accent"),"opacity":1}},
+    {selector:"node.pending", style:{"opacity":.55}},
+    {selector:"node.active", style:{"border-color":css("--accent"),"border-width":5,"opacity":1,"font-weight":700}},
+    {selector:"node.done", style:{"border-color":css("--ok"),"border-width":3,"opacity":1}},
+    {selector:"node.error", style:{"border-color":css("--err"),"border-width":3}},
+    {selector:"edge.live", style:{"line-color":css("--accent"),"target-arrow-color":css("--accent"),"line-style":"dashed","line-dash-pattern":[8,6],"width":3.5}},
+    {selector:"node.web-pulse", style:{"border-color":css("--accent"),"border-width":4}},
+    {selector:":selected", style:{"overlay-color":css("--accent"),"overlay-opacity":.12}},
+  ];
+}
+
+// ---------- "How it's built" ----------
+function builtElements(showTests){
+  const els = [], keep = new Set();
+  G.layers.forEach(L => { if (showTests || L.id !== "tests") els.push({data:{id:"L:" + L.id, label:L.id + "  (" + L.modules + ")"}}); });
+  G.nodes.forEach(n => {
+    if (!showTests && n.layer === "tests") return;
+    keep.add(n.id);
+    const w = Math.max(70, Math.min(150, 40 + Math.sqrt(n.loc) * 4));
+    const i = flowIdx[n.id];
+    els.push({data:{id:n.id, parent:"L:" + n.layer, label:(i !== undefined ? (i + 1) + " · " : "") + short(n.id) || n.id,
+      w, h:34, tw:w - 8, entry:n.entry ? 1 : 0, inflow:i !== undefined ? 1 : 0}});
+  });
+  G.edges.forEach((e, k) => { if (keep.has(e.source) && keep.has(e.target)) els.push({data:{id:"e" + k, source:e.source, target:e.target, kind:e.kind}}); });
+  return els;
+}
+
+// ---------- "How it runs" ----------
+const steps = flow ? flow.steps.filter((s, i, a) => a.findIndex(x => x.node === s.node) === i) : [];
+function runElements(){
+  // snake layout (every second row runs backwards) so every arrow stays short; 2 rows on wide screens, 3 per row on phones
+  const narrow = $("cy").clientWidth < 700;
+  const els = [], gx = 220, gy = 190, per = narrow ? Math.min(3, steps.length) : Math.max(1, Math.ceil(steps.length / (steps.length > 5 ? 2 : 1)));
+  const pos = i => { const r = Math.floor(i / per), c = i % per; return {x:(r % 2 ? per - 1 - c : c) * gx, y:r * gy}; };
+  steps.forEach((s, i) => els.push({data:{id:"S:" + s.node, node:s.node, label:(i + 1) + " · " + s.node.split(".").pop(), w:170, h:66, tw:160},
+    position:pos(i)}));
+  for (let i = 1; i < steps.length; i++) els.push({data:{id:"F" + i, source:"S:" + steps[i-1].node, target:"S:" + steps[i].node, kind:"flow"}});
+  const by = (T && T.http && T.http.by_node) || {};
+  const users = steps.filter(s => by[s.node]);
+  if (T && T.http && T.http.requests) {
+    const rows = Math.ceil(steps.length / per);
+    els.push({data:{id:"WEB", label:"External web\n0 requests", w:190, h:66, tw:180},
+      position:{x:(per - 1) * gx / 2, y:rows * gy + 40}});
+    users.forEach(s => els.push({data:{id:"W:" + s.node, source:"S:" + s.node, target:"WEB", kind:"web", label:String(by[s.node])}}));
+  }
+  return els;
+}
+
+let cy = null, view = "built";
+function mount(){
+  if (cy) cy.destroy();
+  const els = view === "built" ? builtElements($("show-tests").checked) : runElements();
+  cy = cytoscape({container:$("cy"), elements:els, style:styles(), layout:{name:"preset"}, wheelSensitivity:.25, minZoom:.15, maxZoom:3});
+  if (view === "built") {
+    const elk = {name:"elk", nodeDimensionsIncludeLabels:true, fit:true, padding:30, animate:false,
+      elk:{algorithm:"layered","elk.direction":"RIGHT","elk.hierarchyHandling":"INCLUDE_CHILDREN",
+        "elk.layered.spacing.nodeNodeBetweenLayers":46,"elk.spacing.nodeNode":16,"elk.padding":"[top=30,left=14,bottom=14,right=14]"}};
+    try { cy.layout(elk).run(); } catch (e) { cy.layout({name:"cose", animate:false, fit:true, padding:30}).run(); }
+  } else {
+    cy.layout({name:"preset", fit:true, padding:50}).run();
+    resetReplay();
+  }
+  cy.on("tap", "node", ev => { const n = ev.target; if (!n.isParent()) select(n); });
+  cy.on("tap", ev => { if (ev.target === cy) { clearHl(); overview(); } });
+}
+function clearHl(){ cy.elements().removeClass("faded hl"); }
+function select(n){
+  clearHl();
+  if (view === "built") {
+    const nb = n.closedNeighborhood();
+    cy.elements().not(nb).not(n.ancestors()).not(nb.ancestors()).addClass("faded");
+    nb.edges().addClass("hl");
+    showModule(n.id());
+  } else if (n.id() === "WEB") { showWeb(); } else { showModule(n.data("node"), true); }
+}
+
+// ---------- panel ----------
+function runStats(id){ return T && T.nodes && T.nodes[id]; }
+function overview(){
+  const p = $("panel"), loc = G.nodes.reduce((a, n) => a + n.loc, 0);
+  let h = `<h2>${esc(G.repo.name)}</h2><p class="path">${esc(G.repo.remote || "")} · ${esc(G.repo.commit || "")} · ${esc(G.repo.generated_at)}</p>`;
+  h += `<div class="stats"><div class="stat"><b>${G.nodes.length}</b><span>modules</span></div><div class="stat"><b>${loc.toLocaleString()}</b><span>lines of Python</span></div>
+        <div class="stat"><b>${G.layers.length}</b><span>layers</span></div><div class="stat"><b>${G.edges.length}</b><span>dependencies</span></div></div>`;
+  if (flow) h += `<h3>Product flow</h3><p>${esc(flow.id)}</p><ul class="list">${steps.map((s, i) => `<li><code>${i + 1}. ${esc(s.node)}</code><small>${esc((nodeById[s.node] || {}).doc || "")}</small></li>`).join("")}</ul>`;
+  h += `<h3>Layers</h3><ul class="list">${G.layers.map(L => `<li><code>${esc(L.id)}</code> · ${L.modules} modules · ${L.loc.toLocaleString()} lines<small>${esc(L.doc || "")}</small></li>`).join("")}</ul>`;
+  if (T) {
+    h += `<h3>Recorded run (OpenTelemetry)</h3><p class="path">${esc(T.run.command)}</p>
+      <div class="stats"><div class="stat"><b>${fmtMs(T.run.duration_ms)}</b><span>duration</span></div><div class="stat"><b class="${T.run.exit === "ok" ? "ok" : "err"}">${esc(T.run.exit)}</b><span>exit</span></div>
+      <div class="stat"><b>${T.spans_total.toLocaleString()}</b><span>spans</span></div><div class="stat"><b>${T.http.requests.toLocaleString()}</b><span>web requests</span></div></div>`;
+  }
+  h += `<h3>How to read this</h3><p>Boxes are files, grouped by top-level folder. Arrows point from a file to the files it uses. Numbered blue boxes are the product flow, found automatically from the code. Click any box for details.</p>`;
+  p.innerHTML = h;
+}
+function showModule(id, runFirst){
+  const n = nodeById[id]; if (!n) return;
+  const outE = G.edges.filter(e => e.source === id), inE = G.edges.filter(e => e.target === id), r = runStats(id);
+  let h = `<h2>${esc(id)}</h2><p class="path">${esc(n.path)} · ${n.loc} lines${n.entry ? " · entry point" : ""}</p>`;
+  if (n.doc) h += `<p style="margin-top:8px">${esc(n.doc)}</p>`;
+  const runBlock = () => {
+    if (!r) return T ? `<h3>At runtime</h3><p class="empty">Not called in the recorded run.</p>` : "";
+    const web = (T.http.by_node || {})[id] || 0;
+    const fns = Object.entries(r.functions).sort((a, b) => b[1].ms - a[1].ms).slice(0, 8);
+    const top = fns.length ? fns[0][1].ms || 1 : 1;
+    return `<h3>At runtime</h3><div class="stats"><div class="stat"><b>${r.calls.toLocaleString()}</b><span>calls</span></div><div class="stat"><b>${fmtMs(r.ms)}</b><span>time in this file (summed over threads)</span></div>
+      <div class="stat"><b>${r.items_out ? r.items_out.toLocaleString() : "–"}</b><span>items out</span></div><div class="stat"><b class="${r.errors ? "err" : ""}">${r.errors}</b><span>errors</span></div>
+      ${web ? `<div class="stat"><b>${web.toLocaleString()}</b><span>web requests</span></div>` : ""}</div>
+      <ul class="list" style="margin-top:8px">${fns.map(([f, s]) => `<li><code>${esc(f)}()</code> · ${s.calls}× · ${fmtMs(s.ms)}${s.errors ? ` · <span class="err">${s.errors} errors</span>` : ""}<div class="bar"><div style="width:${Math.max(2, 100 * s.ms / top)}%"></div></div></li>`).join("")}</ul>`;
+  };
+  if (runFirst) h += runBlock();
+  h += `<h3>Functions (${n.functions.length})</h3><ul class="list">${n.functions.slice(0, 40).map(f => `<li><code>${esc(f.name)}()</code> <span class="path">:${f.line}</span>${f.doc ? `<small>${esc(f.doc)}</small>` : ""}</li>`).join("") || '<li class="empty">none</li>'}</ul>`;
+  h += `<h3>Uses (${outE.length})</h3><ul class="list">${outE.map(e => `<li><code>${esc(e.target)}</code>${e.kind === "dynamic" ? " · loaded at runtime" : ""}${e.names.length ? `<small>${esc(e.names.join(", "))}</small>` : ""}</li>`).join("") || '<li class="empty">nothing internal</li>'}</ul>`;
+  h += `<h3>Used by (${inE.length})</h3><ul class="list">${inE.map(e => `<li><code>${esc(e.source)}</code></li>`).join("") || '<li class="empty">no one</li>'}</ul>`;
+  if (!runFirst) h += runBlock();
+  $("panel").innerHTML = h;
+}
+function showWeb(){
+  const hosts = Object.entries(T.http.hosts), top = hosts.length ? hosts[0][1] : 1;
+  const by = Object.entries(T.http.by_node || {}).sort((a, b) => b[1] - a[1]);
+  $("panel").innerHTML = `<h2>External web</h2><p>Every HTTP request the run made, recorded by OpenTelemetry's httpx instrumentation.</p>
+    <div class="stats"><div class="stat"><b>${T.http.requests.toLocaleString()}</b><span>requests</span></div><div class="stat"><b class="${T.http.errors ? "err" : ""}">${T.http.errors}</b><span>failed (error or 4xx/5xx)</span></div></div>
+    <h3>Status codes</h3><ul class="list">${Object.entries(T.http.status || {}).sort().map(([k, c]) => `<li><code>${esc(k)}</code> · ${c}</li>`).join("")}</ul>
+    ${Object.keys(T.http.fail_hosts || {}).length ? `<h3>Most failed hosts</h3><p class="empty">404s are often lookups that find nothing on purpose, e.g. probing whether a company has a job board or a legal-notice page at a standard path.</p><ul class="list">${Object.entries(T.http.fail_hosts).map(([h, c]) => `<li><code>${esc(h)}</code> · ${c}</li>`).join("")}</ul>` : ""}
+    <h3>By stage</h3><ul class="list">${by.map(([n, c]) => `<li><code>${esc(n)}</code> · ${c}</li>`).join("") || '<li class="empty">not attributed</li>'}</ul>
+    <h3>Top hosts</h3><ul class="list">${hosts.slice(0, 15).map(([h, c]) => `<li><code>${esc(h)}</code> · ${c}<div class="bar"><div style="width:${100 * c / top}%"></div></div></li>`).join("")}</ul>`;
+}
+
+// ---------- replay ----------
+let playing = false, tNow = 0, last = 0, raf = 0;
+const D = T ? T.run.duration_ms : 0;
+const flowSpans = T ? T.spans.filter(s => s.kind === "function" && s.flow) : [];
+const httpSpans = T ? T.spans.filter(s => s.kind === "http").map(s => s.start_ms).sort((a, b) => a - b) : [];
+const httpBy = {};
+if (T) T.spans.filter(s => s.kind === "http" && s.by).forEach(s => (httpBy[s.by] = httpBy[s.by] || []).push(s.start_ms));
+function countUpTo(arr, t){ let lo = 0, hi = arr.length; while (lo < hi) { const m = (lo + hi) >> 1; if (arr[m] <= t) lo = m + 1; else hi = m; } return lo; }
+Object.values(httpBy).forEach(a => a.sort((x, y) => x - y));
+function render(){
+  if (!cy || view !== "run" || !T) return;
+  steps.forEach((s, i) => {
+    const el = cy.getElementById("S:" + s.node), sp = flowSpans.filter(x => x.node === s.node);
+    const active = sp.some(x => x.start_ms <= tNow && tNow < x.start_ms + x.dur_ms);
+    const done = sp.filter(x => x.start_ms + x.dur_ms <= tNow);
+    const err = done.some(x => x.status === "error");
+    el.removeClass("pending active done error");
+    el.addClass(active ? "active" : done.length ? (err ? "error" : "done") : "pending");
+    const web = httpBy[s.node] ? countUpTo(httpBy[s.node], tNow) : 0;
+    let sub;
+    if (active) sub = "running…";
+    else if (done.length) {  // stages called several times (e.g. harvest per source): show totals
+      const outs = done.map(x => x.items_out).filter(v => v != null), ms = done.reduce((a, x) => a + x.dur_ms, 0);
+      sub = (outs.length ? (done.length > 1 ? outs.reduce((a, v) => a + v, 0) : outs[0]) + " out" : "done") + " · " + fmtMs(ms) + (done.length > 1 ? " · " + done.length + "×" : "");
+    } else sub = sp.length ? "waiting" : "not called";
+    if (web) sub += " · " + web + " req";
+    el.data("label", (i + 1) + " · " + s.node.split(".").pop() + "\n" + sub);
+    if (i > 0) cy.getElementById("F" + i).toggleClass("live", active);
+  });
+  const web = cy.getElementById("WEB");
+  if (web.length) {
+    const n = countUpTo(httpSpans, tNow), recent = n - countUpTo(httpSpans, tNow - Math.max(250, D / 200));
+    web.data("label", "External web\n" + n.toLocaleString() + " requests");
+    web.toggleClass("web-pulse", recent > 0);
+  }
+  $("tlabel").textContent = (tNow / 1000).toFixed(1) + " / " + (D / 1000).toFixed(1) + " s";
+  $("scrub").value = D ? Math.round(1000 * tNow / D) : 0;
+}
+function tick(ts){
+  if (!playing) return;
+  const len = +$("speed").value, factor = len ? D / (len * 1000) : 1;
+  tNow = Math.min(D, tNow + (ts - (last || ts)) * factor); last = ts;
+  render();
+  if (tNow >= D) { playing = false; $("play").textContent = "Play"; return; }
+  raf = requestAnimationFrame(tick);
+}
+function resetReplay(){ playing = false; tNow = 0; last = 0; cancelAnimationFrame(raf); $("play").textContent = "Play"; render(); }
+$("play").onclick = () => { if (tNow >= D) tNow = 0; playing = !playing; $("play").textContent = playing ? "Pause" : "Play"; last = 0; if (playing) raf = requestAnimationFrame(tick); };
+$("restart").onclick = () => { resetReplay(); $("play").click(); };
+$("scrub").oninput = e => { tNow = D * e.target.value / 1000; render(); };
+
+// ---------- tabs, theme, chips ----------
+function setView(v){
+  view = v;
+  $("tab-built").setAttribute("aria-selected", v === "built"); $("tab-run").setAttribute("aria-selected", v === "run");
+  $("legend-built").hidden = v !== "built"; $("legend-run").hidden = v !== "run"; $("player").hidden = !(v === "run" && T);
+  mount();
+  if (v === "run" && !T) $("panel").innerHTML = `<h2>No recorded run yet</h2><p>Record one with <code>python -m repograph trace &lt;repo&gt; -- &lt;command&gt;</code>, then rebuild.</p>`;
+  else overview();
+}
+$("tab-built").onclick = () => setView("built");
+$("tab-run").onclick = () => setView("run");
+$("show-tests").onchange = () => mount();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => cy && cy.style(styles()));
+$("meta").textContent = [G.repo.commit && "commit " + G.repo.commit, "scanned " + G.repo.generated_at].filter(Boolean).join(" · ");
+$("chip-mods").textContent = G.nodes.length + " modules · " + G.edges.length + " dependencies";
+$("chip-run").textContent = T ? "run: " + fmtMs(T.run.duration_ms) + " · " + T.http.requests.toLocaleString() + " web requests" : "no run recorded";
+setView(location.hash === "#run" && T ? "run" : "built");
+})();
+</script>
+</body>
+</html>

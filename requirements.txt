@@ -8,3 +8,8 @@ fastapi>=0.110
 uvicorn>=0.29
 pytest>=8
 websockets>=12
+
+# repograph (repo graph + OpenTelemetry trace)
+opentelemetry-sdk>=1.45
+opentelemetry-instrumentation-httpx>=0.66b2
+opentelemetry-instrumentation-threading>=0.66b2
